@@ -4,21 +4,21 @@ import time
 import statistics
 import argparse
 
-def benchmark_onnx(model_path, warmup_runs=10, runs=100, use_gpu=False):
+def benchmark_basic(model_path="Models/yolo12n.onnx", warmup_runs=10, runs=100, use_gpu=False):
     providers = ["CUDAExecutionProvider"] if use_gpu else ["CPUExecutionProvider"]
     session = ort.InferenceSession(model_path, providers=providers)
-    print(session.get_inputs())
+
     input_name = session.get_inputs()[0].name
     input_shape = session.get_inputs()[0].shape
     input_data = np.random.rand(*[dim if isinstance(dim, int) else 1 for dim in input_shape]).astype(np.float32)
 
-    # Cold start (includes graph init, memory alloc, etc.)
+    # Cold start
     t0 = time.time()
     _ = session.run(None, {input_name: input_data})
     t1 = time.time()
     cold_time = (t1 - t0) * 1000
 
-    # Warmup runs (stabilizes caches & kernels)
+    # Warmup
     warmup_times = []
     for _ in range(warmup_runs):
         t0 = time.time()
@@ -43,10 +43,8 @@ def benchmark_onnx(model_path, warmup_runs=10, runs=100, use_gpu=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("model", type=str, help="Path to ONNX model")
     parser.add_argument("--gpu", action="store_true", help="Use CUDAExecutionProvider")
     parser.add_argument("--warmup", type=int, default=10)
     parser.add_argument("--runs", type=int, default=100)
     args = parser.parse_args()
-
-    benchmark_onnx(args.model, args.warmup, args.runs, use_gpu=args.gpu)
+    benchmark_basic("Models/yolo12n.onnx", args.warmup, args.runs, use_gpu=args.gpu)
