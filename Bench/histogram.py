@@ -25,4 +25,4 @@ def benchmark_histogram(model_path="Models/yolo12n.onnx", runs=100, use_gpu=Fals
     plt.show()
 
 if __name__ == "__main__":
-    benchmark_histogram("Models/yolo12n.pnnxsim.onnx", runs=100, use_gpu=False)
+    benchmark_histogram("Models/yolo12n.onnx", runs=100, use_gpu=False)
