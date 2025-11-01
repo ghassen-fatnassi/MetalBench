@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/ort_cpp_example.dir/link.d CMakeFiles/ort_cpp_example.dir/Bench/main.cpp.o -o ort_cpp_example   -L/mnt/USEFUL/pro/GetCracked/REPOs/MetalBench/onnxruntime/lib  -Wl,-rpath,/mnt/USEFUL/pro/GetCracked/REPOs/MetalBench/onnxruntime/lib -lonnxruntime

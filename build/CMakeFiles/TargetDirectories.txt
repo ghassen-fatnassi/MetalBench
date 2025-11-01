@@ -1,3 +1,0 @@
-/mnt/USEFUL/pro/GetCracked/REPOs/MetalBench/build/CMakeFiles/ort_cpp_example.dir
-/mnt/USEFUL/pro/GetCracked/REPOs/MetalBench/build/CMakeFiles/edit_cache.dir
-/mnt/USEFUL/pro/GetCracked/REPOs/MetalBench/build/CMakeFiles/rebuild_cache.dir
