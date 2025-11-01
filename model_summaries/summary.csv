@@ -1,9 +1,0 @@
-model,file,size_MB,nodes,unique_ops,top_ops,params,type,path,num_ops,ops
-yolo12n,yolo12n.torchscript,10.469,73.0,2,"prim::GetAttr:51, prim::CallMethod:22",2590824.0,,,,
-yolo12n,yolo12n.onnx,10.053,496.0,14,"Conv:120, Mul:90, Sigmoid:82, Transpose:65, Reshape:37",2591885.0,,,,
-yolo12n.pnnxsim,yolo12n.pnnxsim.onnx,9.977,496.0,14,"Conv:120, Mul:90, Sigmoid:82, Transpose:65, Reshape:37",2591845.0,,,,
-yolo12n,yolo12n.xml,0.456,888.0,23,"Constant:361, Add:156, Convolution:106, Swish:81, Transpose:49",0.0,,,,
-yolo12n,yolo12n.xml,0.951,2075.0,24,"Constant:1144, FakeQuantize:166, Add:156, Multiply:128, Convert:120",0.0,,,,
-,,,,17,,,tflite,Models/yolo12n_TFLite_model/yolo12n_float32.tflite,913.0,"[{'op_type': 'PAD'}, {'op_type': 'CONV_2D'}, {'op_type': 'LOGISTIC'}, {'op_type': 'MUL'}, {'op_type': 'PAD'}, {'op_type': 'CONV_2D'}, {'op_type': 'LOGISTIC'}, {'op_type': 'MUL'}, {'op_type': 'CONV_2D'}, {'op_type': 'LOGISTIC'}]"
-,,,,18,,,tflite,Models/yolo12n_TFLite_model/yolo12n_float16.tflite,1157.0,"[{'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}, {'op_type': 'DEQUANTIZE'}]"
-model.ncnn,model.ncnn.param,0.036,478.0,15,"Convolution:106, Swish:71, BinaryOp:58, Split:57, Permute:57",0.0,,,,
