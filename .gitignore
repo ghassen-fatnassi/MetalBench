@@ -1,3 +1,4 @@
 Models/
 env/
 onnxruntime/
+.vscode/
