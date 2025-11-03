@@ -1,3 +1,0 @@
-just create the ensemble of ur benchmarks on normal cpu , test them on digital ocean amd cpus / intel cpu's
-
-do the vitis ai part normally with vitis ai without any tja3bisssss and go 
