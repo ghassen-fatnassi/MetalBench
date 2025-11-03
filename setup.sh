@@ -24,7 +24,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 if [ -z "$HW" ]; then
-    echo "❌ Hardware type not specified. Usage: ./setup.sh -hw {digitalocean|jetson|avnet}"
+    echo "❌ Hardware type not specified. Usage: ./setup.sh -hw {intel-xeon|jetson|avnet}"
     exit 1
 fi
 
@@ -38,7 +38,7 @@ sudo apt install -y git wget curl python3 python3-pip cmake build-essential unzi
 echo "📦 Installing common dependencies..."
 sudo apt install -y libprotobuf-dev protobuf-compiler libopencv-dev python3-opencv
 pip3 install --upgrade pip
-pip3 install onnx onnxruntime numpy matplotlib psutil tqdm
+pip3 install onnx onnxruntime numpy pandas matplotlib psutil tqdm 
 
 # Git LFS for model weights
 echo "🔧 Installing Git LFS..."
@@ -52,7 +52,7 @@ mkdir -p build && cd build
 # --------------------------------------------
 # DIGITALOCEAN CPU SETUP
 # --------------------------------------------
-if [ "$HW" == "digitalocean" ]; then
+if [ "$HW" == "intel-xeon" ]; then
     echo "💻 Setting up for Intel Xeon (DigitalOcean VM) ..."
     
     # Install ONNX Runtime C++ API
