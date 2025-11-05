@@ -52,12 +52,12 @@ mkdir -p build && cd build
 # --------------------------------------------
 # DIGITALOCEAN CPU SETUP
 # --------------------------------------------
-if [ "$HW" == "intel-xeon" ]; then
+if [ "$HW" == "general-cpu" ]; then
     echo "💻 Setting up for Intel Xeon (DigitalOcean VM) ..."
     
     # Install ONNX Runtime C++ API
     echo "📥 Downloading ONNX Runtime C++ prebuilt package..."
-    wget -q https://github.com/microsoft/onnxruntime/releases/download/v1.20.0/onnxruntime-linux-x64-1.23.2.tgz
+    wget -q https://github.com/microsoft/onnxruntime/releases/download/v1.23.2/onnxruntime-linux-x64-1.23.2.tgz
     tar -xzf onnxruntime-linux-x64-1.23.2.tgz
     echo "export ONNXRUNTIME_PATH=$(pwd)/onnxruntime-linux-x64-1.23.2" >> ~/.bashrc
     echo 'export LD_LIBRARY_PATH=$ONNXRUNTIME_PATH/lib:$LD_LIBRARY_PATH' >> ~/.bashrc

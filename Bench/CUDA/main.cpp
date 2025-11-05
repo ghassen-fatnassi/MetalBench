@@ -23,7 +23,7 @@ int main() {
     options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
     options.EnableProfiling("onnxruntime_profile.json"); // Enable per-node profiling
 
-    std::string model_path = "/mnt/USEFUL/pro/GetCracked/REPOs/MetalBench/Models/yolo12n.onnx";
+    std::string model_path = "../Models/yolo12n.onnx";
     Ort::Session session(env, model_path.c_str(), options);
 
     // ----------------------------

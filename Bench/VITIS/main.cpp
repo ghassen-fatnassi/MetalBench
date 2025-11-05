@@ -26,7 +26,7 @@ int main() {
 
     options.AppendExecutionProvider_VitisAI(vitis_options);
 
-    std::string model_path = "/mnt/USEFUL/pro/GetCracked/REPOs/MetalBench/Models/yolo12n.onnx";
+    std::string model_path = "../Models/yolo12n.onnx";
     Ort::Session session(env, model_path.c_str(), options);
 
     // ----------------------------
