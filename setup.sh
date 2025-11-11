@@ -147,6 +147,7 @@ if [ "$HW" == "cpu" ]; then
     fi
 
     tar -xzf "$ORT_PKG"
+    rm "$ORT_PKG"
     ORT_DIR=$(tar -tf "$ORT_PKG" | head -n1 | cut -f1 -d"/" || true)
     ORT_DIR=${ORT_DIR:-"onnxruntime-linux-x64-${ORT_VER}"}
     ONNXRUNTIME_PATH="$(pwd)/${ORT_DIR}"
@@ -188,6 +189,7 @@ if [ "$HW" == "jetson" ]; then
     fi
 
     tar -xzf "$ORT_PKG"
+    rm "$ORT_PKG"
     ORT_DIR=$(tar -tf "$ORT_PKG" | head -n1 | cut -f1 -d"/" || true)
     ORT_DIR=${ORT_DIR:-"onnxruntime-linux-aarch64-${ORT_VER}"}
     ONNXRUNTIME_PATH="$(pwd)/${ORT_DIR}"
