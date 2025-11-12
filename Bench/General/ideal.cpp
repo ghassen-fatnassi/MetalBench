@@ -1,4 +1,4 @@
-#include <onnxruntime_cxx_api.h>
+#include "build/onnxruntime-linux-x64-1.23.2/include/onnxruntime_cxx_api.h"
 #include <vector>
 #include <random>
 #include <chrono>
@@ -170,7 +170,7 @@ void onnx_benchmark() {
     for (auto &d : input_shape) if (d <= 0) d = 1;
 
     size_t tensor_size = 1;
-    for (auto d : input_shape) tensor_size *= d;
+    for (auto d : input_shape) tensor_size *= d; 
 
     vector<float> input_data(tensor_size);
     mt19937 gen(42);
