@@ -1,4 +1,4 @@
-#include "build/onnxruntime-linux-x64-1.23.2/include/onnxruntime_cxx_api.h"
+#include "onnxruntime_cxx_api.h"
 #include <chrono>
 #include <iostream>
 #include <sys/sysinfo.h>
@@ -10,30 +10,45 @@ using clk=std::chrono::high_resolution_clock;
 
 void get_system_info()
 {
-  cout<< "=== SYSTEM INFO ===\n";
-  cout<< " vCPUs/how many execution contexts there are: " << std::thread::hardware_concurrency()<<"\n";
-  // need to get the useful information about the cpu
-  struct sysinfo info;
-  cout<< "Total Usable Main Memory: " << (info.totalram/(1<<20))<<"\n";
-  cout<< "Total SWAP: " << (info.totalswap/(1<<20))<<"\n";
-  cout<< "Total High Memory: " << (info.totalhigh/(1<<20))<<"\n";
-  cout<< "===================\n";
+    cout << "=== SYSTEM INFO ===\n";
+    cout << " vCPUs/how many execution contexts there are: " 
+         << std::thread::hardware_concurrency() << "\n";
+
+    // need to get the useful information about the cpu
+    struct sysinfo info;
+    sysinfo(&info); // initialize the struct with system info
+
+    // calculate actual bytes using mem_unit
+    unsigned long long  total_ram_bytes = info.totalram * info.mem_unit;
+    unsigned long long free_ram_bytes  = info.freeram  * info.mem_unit;
+    unsigned long long total_swap_bytes= info.totalswap* info.mem_unit;
+    unsigned long long free_swap_bytes = info.freeswap * info.mem_unit;
+
+    cout << "Total Usable Main Memory: " 
+         << (total_ram_bytes / (1ULL  << 20)) << " MB\n";
+    cout << "Free Main Memory: " 
+         << (free_ram_bytes / (1ULL << 20)) << " MB\n";
+
+    cout << "===================\n";
 }
+
+
 void get_onnx_benchmark()
 {
   Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "benchamrk");
   Ort::SessionOptions options;
 
-  //understand the next section in depth
+  //understand the next section in depth, it's very rich when it comes to optimization and can be controlled and can be included in the benchamrks
   //section start
-  options.SetIntraOpNumThreads(4);
-  options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_BASIC); // I GOTTA TRY ALL THE LEVELS 
+  options.SetIntraOpNumThreads(2);
+  options.SetInterOpNumThreads(2);
+  options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL); // I GOTTA TRY ALL THE LEVELS 
   options.EnableCpuMemArena();
   options.EnableMemPattern();
-  options.EnableProfiling("onnxruntime_profile.json");
+  //options.EnableProfiling("onnxruntime_profile.json");
   //section end
 
-  string model_path = "../Models/yolo12n.onnx";
+  string model_path = "./Models/yolo12n.onnx";
   Ort::Session session(env, model_path.c_str(), options);
   // we put index 0 in 
   auto input_shape =session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
@@ -76,9 +91,17 @@ void get_onnx_benchmark()
   for(auto &s : output_names){out_c.push_back(s.c_str());}
 
   //this is how to do a run in onnx , one forward pass over the model
+  auto t1=clk::now();
   session.Run(
               Ort::RunOptions{nullptr},
-              in_c.data(),&input_tensor, input_names.size(), out_c.data(), out_c.size());
+              in_c.data(),
+              &input_tensor, 
+              in_c.size(), 
+              out_c.data(), 
+              out_c.size());
+  auto t2=clk::now();
+  cout<<"latency: "<<std::chrono::duration<double, std::milli>(t2 - t1).count()<<" ms\n";
+
 }
 
 int main()
@@ -86,4 +109,5 @@ int main()
   cout << "benchmarking general";
   get_system_info();
   get_onnx_benchmark();
+  cout << "✅ Benchmarking complete.\n";
 }
