@@ -32,7 +32,6 @@ void get_system_info()
     cout << "===================\n";
 }
 
-
 void get_onnx_benchmark()
 {
   Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "benchamrk");
@@ -40,12 +39,12 @@ void get_onnx_benchmark()
 
   //understand the next section in depth, it's very rich when it comes to optimization and can be controlled and can be included in the benchamrks
   //section start
-  options.SetIntraOpNumThreads(2);
-  options.SetInterOpNumThreads(2);
+  //options.SetIntraOpNumThreads(2);
+  //options.SetInterOpNumThreads(2);
   options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL); // I GOTTA TRY ALL THE LEVELS 
-  options.EnableCpuMemArena();
-  options.EnableMemPattern();
-  //options.EnableProfiling("onnxruntime_profile.json");
+  //options.EnableCpuMemArena();
+  //options.EnableMemPattern();
+  options.EnableProfiling("onnxruntime_profile.json");
   //section end
 
   string model_path = "./Models/yolo12n.onnx";
