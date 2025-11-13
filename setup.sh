@@ -3,7 +3,7 @@ set -euo pipefail
 
 # --------------------------------------------------
 # METALBENCH SETUP SCRIPT (Improved)
-# Usage: ./setup.sh -hw {cpu|openvino|xilinx|jetson}
+# Usage: ./setup.sh -hw {cpu|amd|openvino|xilinx|jetson}
 # --------------------------------------------------
 
 HW=""
@@ -16,7 +16,7 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         -hw) HW="${2:-}"; shift ;;
         -h|--help)
-            echo "Usage: $0 -hw {cpu|openvino|xilinx|jetson}"
+            echo "Usage: $0 -hw {cpu|amd|openvino|xilinx|jetson}"
             exit 0 ;;
         *)
             echo "Unknown parameter: $1"
@@ -27,7 +27,7 @@ done
 
 if [ -z "$HW" ]; then
     echo "❌ Hardware type not specified."
-    echo "Usage: ./setup.sh -hw {cpu|openvino|xilinx|jetson}"
+    echo "Usage: ./setup.sh -hw {cpu|amd|openvino|xilinx|jetson}"
     exit 1
 fi
 
@@ -37,21 +37,6 @@ echo "🚀 Selected hardware: $HW"
 # Helper functions
 # -------------------------------
 log() { echo -e "\n👉 $1\n"; }
-
-ensure_pkg() {
-    if ! dpkg -l | grep -q "$1" >/dev/null 2>&1; then
-        sudo apt install -y "$1"
-    else
-        echo "✅ $1 already installed"
-    fi
-}
-
-ensure_python() {
-    if ! command -v python3 >/dev/null 2>&1; then
-        log "⚠️ Python3 not found, installing..."
-        sudo apt install -y python3 python3-venv python3-dev
-    fi
-}
 
 detect_python_version() {
     python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")'
@@ -112,24 +97,21 @@ setup_env_vars() {
 }
 
 # -------------------------------
-# Common base setup
+# Base setup
 # -------------------------------
-sudo apt update -y
-sudo apt install -y git wget curl cmake build-essential unzip pkg-config
-sudo apt install -y git-lfs
-git lfs install
-git lfs pull
-
 mkdir -p build && cd build
 
 # -------------------------------
-# CPU Setup
+# CPU Setup (Intel/Generic)
 # -------------------------------
 if [ "$HW" == "cpu" ]; then
-    log "💻 Setting up for Intel/CPU (DigitalOcean or desktop)"
-    ensure_python
-    sudo apt install -y libprotobuf-dev protobuf-compiler libopencv-dev python3-opencv \
-        libnuma-dev libssl-dev libgomp1 libjpeg-dev libpng-dev
+    log "💻 Setting up for Intel/CPU (Debian/Ubuntu)"
+    sudo apt update -y
+    sudo apt install -y git wget curl cmake build-essential unzip pkg-config git-lfs \
+        libprotobuf-dev protobuf-compiler libopencv-dev python3-opencv \
+        libnuma-dev libssl-dev libgomp1 libjpeg-dev libpng-dev python3 python3-venv python3-dev
+
+    git lfs install && git lfs pull
 
     cd ..
     create_env
@@ -139,19 +121,10 @@ if [ "$HW" == "cpu" ]; then
     ORT_PKG="onnxruntime-linux-x64-${ORT_VER}.tgz"
     ORT_URL="https://github.com/microsoft/onnxruntime/releases/download/v${ORT_VER}/${ORT_PKG}"
 
-    if [ ! -f "$ORT_PKG" ]; then
-        log "📥 Downloading ONNX Runtime v${ORT_VER}..."
-        wget -q --show-progress "$ORT_URL" -O "$ORT_PKG"
-    else
-        echo "ℹ️ ${ORT_PKG} already present"
-    fi
+    wget -q --show-progress "$ORT_URL" -O "$ORT_PKG"
+    tar -xzf "$ORT_PKG" && rm "$ORT_PKG"
 
-    tar -xzf "$ORT_PKG"
-    rm "$ORT_PKG"
-    ORT_DIR=$(tar -tf "$ORT_PKG" | head -n1 | cut -f1 -d"/" || true)
-    ORT_DIR=${ORT_DIR:-"onnxruntime-linux-x64-${ORT_VER}"}
-    ONNXRUNTIME_PATH="$(pwd)/${ORT_DIR}"
-
+    ONNXRUNTIME_PATH="$(pwd)/onnxruntime-linux-x64-${ORT_VER}"
     setup_env_vars "$ONNXRUNTIME_PATH"
     compile_and_run_sample "$ONNXRUNTIME_PATH"
 
@@ -161,17 +134,15 @@ if [ "$HW" == "cpu" ]; then
 fi
 
 # -------------------------------
-# Jetson (TensorRT)
+# AMD Setup (Arch Linux / aarch64)
 # -------------------------------
-if [ "$HW" == "jetson" ]; then
-    log "💻 Setting up for Jetson (TensorRT)"
-    ensure_python
-    sudo apt install -y libprotobuf-dev protobuf-compiler libopencv-dev python3-opencv \
-        libnuma-dev libssl-dev libgomp1 libjpeg-dev libpng-dev
+if [ "$HW" == "amd" ]; then
+    log "🔥 Setting up for AMD CPU on Arch Linux (aarch64 ORT)"
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm base-devel cmake git wget curl unzip python python-pip opencv \
+        protobuf git-lfs openssl numactl gcc
 
-    # TensorRT system libs
-    ensure_pkg libnvinfer8
-    ensure_pkg libnvinfer-plugin8
+    git lfs install && git lfs pull
 
     cd ..
     create_env
@@ -182,18 +153,46 @@ if [ "$HW" == "jetson" ]; then
     ORT_URL="https://github.com/microsoft/onnxruntime/releases/download/v${ORT_VER}/${ORT_PKG}"
 
     if [ ! -f "$ORT_PKG" ]; then
-        log "📥 Downloading ONNX Runtime v${ORT_VER}..."
+        log "📥 Downloading ONNX Runtime (aarch64) v${ORT_VER}..."
         wget -q --show-progress "$ORT_URL" -O "$ORT_PKG"
-    else
-        echo "ℹ️ ${ORT_PKG} already present"
     fi
 
-    tar -xzf "$ORT_PKG"
-    rm "$ORT_PKG"
-    ORT_DIR=$(tar -tf "$ORT_PKG" | head -n1 | cut -f1 -d"/" || true)
-    ORT_DIR=${ORT_DIR:-"onnxruntime-linux-aarch64-${ORT_VER}"}
-    ONNXRUNTIME_PATH="$(pwd)/${ORT_DIR}"
+    tar -xzf "$ORT_PKG" && rm "$ORT_PKG"
 
+    ONNXRUNTIME_PATH="$(pwd)/onnxruntime-linux-aarch64-${ORT_VER}"
+    setup_env_vars "$ONNXRUNTIME_PATH"
+    compile_and_run_sample "$ONNXRUNTIME_PATH"
+
+    cd ..
+    log "✅ AMD Arch environment ready!"
+    exit 0
+fi
+
+# -------------------------------
+# Jetson (TensorRT)
+# -------------------------------
+if [ "$HW" == "jetson" ]; then
+    log "💻 Setting up for Jetson (TensorRT)"
+    sudo apt update -y
+    sudo apt install -y git wget curl cmake build-essential unzip pkg-config git-lfs \
+        libprotobuf-dev protobuf-compiler libopencv-dev python3-opencv \
+        libnuma-dev libssl-dev libgomp1 libjpeg-dev libpng-dev python3 python3-venv python3-dev \
+        libnvinfer8 libnvinfer-plugin8
+
+    git lfs install && git lfs pull
+
+    cd ..
+    create_env
+    cd build
+
+    ORT_VER="1.23.2"
+    ORT_PKG="onnxruntime-linux-aarch64-${ORT_VER}.tgz"
+    ORT_URL="https://github.com/microsoft/onnxruntime/releases/download/v${ORT_VER}/${ORT_PKG}"
+
+    wget -q --show-progress "$ORT_URL" -O "$ORT_PKG"
+    tar -xzf "$ORT_PKG" && rm "$ORT_PKG"
+
+    ONNXRUNTIME_PATH="$(pwd)/onnxruntime-linux-aarch64-${ORT_VER}"
     setup_env_vars "$ONNXRUNTIME_PATH"
     compile_and_run_sample "$ONNXRUNTIME_PATH"
 
@@ -208,8 +207,6 @@ fi
 if [ "$HW" == "openvino" ]; then
     log "🟡 Setting up for OpenVINO (Intel NCS / CPU + EP)"
     echo "⚠️ TODO: Add OpenVINO runtime or build ORT with OpenVINO EP."
-    echo "   - Option 1: pip install openvino-dev"
-    echo "   - Option 2: build ONNX Runtime with OpenVINO EP enabled"
     exit 77
 fi
 
@@ -219,8 +216,6 @@ fi
 if [ "$HW" == "xilinx" ]; then
     log "🟣 Setting up for Xilinx / Vitis AI (FPGA/DPU)"
     echo "⚠️ TODO: Add Vitis AI runtime setup and model compilation flow."
-    echo "   - Install Vitis AI SDK or use official Docker image"
-    echo "   - Deploy bitstreams and use VART or DPU Runner"
     exit 77
 fi
 

@@ -1,0 +1,4 @@
+git clone https://github.com/ghassen-fatnassi/MetalBench.git
+cd MetalBench
+chmod +x ./setup.sh
+./setup.sh
