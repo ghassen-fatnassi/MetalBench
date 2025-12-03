@@ -32,12 +32,6 @@ MIN_RUN_TIME = 1.0
 TIMEOUT_SECONDS = 60.0  # Increased timeout for Jetson
 RESULTS_PATH = f"benchmark_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
-# ================= HELPER FUNCTIONS =================
-def generate_input(batch_size):
-    """Generate consistent random input"""
-    # Use fixed seed for reproducibility
-    np.random.seed(42)
-    return np.random.rand(batch_size, *IMG_SHAPE).astype(np.float32)
 
 def measure_inference(session, input_data, input_name):
     """Measure inference time with high precision"""
@@ -481,7 +475,7 @@ def benchmark_configuration(config_dict, monitor=None, enable_profiling=False):
 # ================= EXPERIMENTAL DESIGN =================
 def generate_test_configurations():
     """
-    Generate test configurations for Jetson
+    Generate test configurations for Jetson, iterating over resolutions from 64 to 640
     """
     # Map optimization levels
     opt_map = {
@@ -507,19 +501,30 @@ def generate_test_configurations():
                     
                     for intra in intra_options:
                         for inter in inter_options:
-                            config = {
-                                'optimization': opt_map[opt_name],
-                                'intra': intra,
-                                'inter': inter,
-                                'batch': batch,
-                                'warmup': warmup,
-                                'execution_provider': ep,
-                                'description': f"EP:{ep}, Opt:{opt_name}, intra:{intra}, inter:{inter}, batch:{batch}, warmup:{warmup}",
-                                'profile_prefix': f"profile_{ep}_{opt_name}_i{intra}_o{inter}_b{batch}_w{warmup}"
-                            }
-                            configurations.append(config)
+                            for res in range(64, 641, 64):  # Loop over 64 to 640
+                                config = {
+                                    'optimization': opt_map[opt_name],
+                                    'intra': intra,
+                                    'inter': inter,
+                                    'batch': batch,
+                                    'warmup': warmup,
+                                    'execution_provider': ep,
+                                    'resolution': res,
+                                    'description': f"EP:{ep}, Opt:{opt_name}, intra:{intra}, inter:{inter}, batch:{batch}, res:{res}, warmup:{warmup}",
+                                    'profile_prefix': f"profile_{ep}_{opt_name}_i{intra}_o{inter}_b{batch}_r{res}_w{warmup}"
+                                }
+                                configurations.append(config)
     
     return configurations
+
+# ================= HELPER FUNCTION UPDATE =================
+def generate_input(batch_size, resolution=None):
+    """Generate consistent random input"""
+    np.random.seed(42)
+    if resolution is None:
+        resolution = 128
+    return np.random.rand(batch_size, 3, resolution, resolution).astype(np.float32)
+
 
 # ================= MAIN EXECUTION =================
 def main():
