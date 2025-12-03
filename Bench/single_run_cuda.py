@@ -31,8 +31,10 @@ def run_inference(session, input_data):
     # Bind output
     output_name = session.get_outputs()[0].name
     out_shape = session.get_outputs()[0].shape
-    output_np = np.empty(out_shape, dtype=np.float32)
-    binding.bind_output(name=output_name,device_id=0, device_type='cuda', element_type=np.float32, shape=out_shape, buffer_ptr=output_np.__array_interface__['data'][0])
+    # Replace None with actual values
+    out_shape_fixed = tuple(dim if dim is not None else s for dim, s in zip(out_shape, input_data.shape))
+    output_np = np.empty(out_shape_fixed, dtype=np.float32)
+    binding.bind_output(name=output_name, device_id=0,device_type='cuda', element_type=np.float32, shape=out_shape_fixed, buffer_ptr=output_np.__array_interface__['data'][0])
 
     session.run_with_iobinding(binding)
     return output_np
