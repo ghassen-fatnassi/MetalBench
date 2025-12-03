@@ -2,56 +2,62 @@ import onnxruntime as ort
 import numpy as np
 import os
 
+# ================= CONFIG =================
 MODEL_PATH = "Models/yolo12n_op12.onnx"
-IMG_SHAPE = (3, 640, 640)
-BATCH = 1
+IMG_SHAPE = (3, 128, 128)
+BATCH_SIZE = 1
 
+# ================= INPUT GENERATION =================
 def generate_input(batch_size):
     np.random.seed(42)
     return np.random.rand(batch_size, *IMG_SHAPE).astype(np.float32)
 
-def create_cuda_session(model_path):
+# ================= SESSION CREATION (GPU) =================
+def create_optimized_cuda_session(model_path):
     so = ort.SessionOptions()
+    
+    # ---------------- OPTIMIZATIONS ----------------
+    # Enable extended graph optimizations (fusions, constant folding, etc.)
     so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED
-    so.enable_cpu_mem_arena = True
-    so.enable_mem_pattern = True
-    so.intra_op_num_threads = 1
-    so.inter_op_num_threads = 1
 
+    # Enable CPU memory arena (even with GPU EP, useful for CPU fallback)
+    so.enable_cpu_mem_arena = True
+
+    # Enable memory pattern optimization (reuses memory buffers)
+    so.enable_mem_pattern = True
+
+    # Intra-op threads (affects CPU kernels, useful if fallback occurs)
+    so.intra_op_num_threads = 2
+
+    # Inter-op threads (affects parallel execution of independent nodes)
+    so.inter_op_num_threads = 2
+
+    # ---------------- END OPTIMIZATIONS ----------------
+    
+    # Use CUDAExecutionProvider first, fallback to CPUExecutionProvider
     providers = ["CUDAExecutionProvider", "CPUExecutionProvider"]
+
     return ort.InferenceSession(model_path, sess_options=so, providers=providers)
 
-def run_inference(session, input_data):
-    binding = session.io_binding()
-
-    # Bind input
+# ================= INFERENCE =================
+def run_single_inference(session, input_data):
     input_name = session.get_inputs()[0].name
-    binding.bind_input(name=input_name, device_id=0,device_type='cuda', element_type=np.float32, shape=input_data.shape, buffer_ptr=input_data.__array_interface__['data'][0])
+    outputs = session.run(None, {input_name: input_data})
+    print("Single GPU inference completed")
+    return outputs
 
-    # Bind output
-    output_name = session.get_outputs()[0].name
-    out_shape = session.get_outputs()[0].shape
-    # Replace None with actual values
-    out_shape_fixed = tuple(dim if dim is not None else s for dim, s in zip(out_shape, input_data.shape))
-    output_np = np.empty(out_shape_fixed, dtype=np.float32)
-    binding.bind_output(name=output_name, device_id=0,device_type='cuda', element_type=np.float32, shape=out_shape_fixed, buffer_ptr=output_np.__array_interface__['data'][0])
-
-    session.run_with_iobinding(binding)
-    return output_np
-
+# ================= MAIN =================
 def main():
     if not os.path.exists(MODEL_PATH):
-        print("Model not found")
+        print(f"Error: Model not found at {MODEL_PATH}")
         return
 
-    print("Loading model:", MODEL_PATH)
-    sess = create_cuda_session(MODEL_PATH)
+    print(f"Loading model: {MODEL_PATH} ({os.path.getsize(MODEL_PATH)/1024/1024:.1f} MB)")
+    session = create_optimized_cuda_session(MODEL_PATH)
 
-    input_data = generate_input(BATCH)
-    print("Running inference with input shape:", input_data.shape)
-    output = run_inference(sess, input_data)
-
-    print("Done. Output shape:", output.shape)
+    input_data = generate_input(BATCH_SIZE)
+    print(f"Running single GPU inference with input shape: {input_data.shape}")
+    run_single_inference(session, input_data)
 
 if __name__ == "__main__":
     main()
