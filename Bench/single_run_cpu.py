@@ -4,7 +4,7 @@ import os
 
 # ================= CONFIG =================
 MODEL_PATH = "Models/yolo12n_op12.onnx"
-IMG_SHAPE = (3, 640, 640)
+IMG_SHAPE = (3, 128, 128)
 BATCH_SIZE = 1
 NUM_THREADS = 4  # Adjust to your CPU cores
 
