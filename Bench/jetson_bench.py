@@ -25,7 +25,7 @@ warnings.filterwarnings('ignore')
 MODEL_PATH = "Models/yolo12n_op12.onnx"
 NUM_WARMUP = 30  # Reduced for Jetson
 NUM_RUNS = 100   # Reduced but still statistically significant
-IMG_SHAPE = (3, 640, 640)
+IMG_SHAPE = (3, 128, 128)
 COOLING_DELAY = 5.0  # Reduced cooling delay
 TEGRASTATS_INTERVAL = 100  # ms - Jetson-compatible
 MIN_RUN_TIME = 1.0
@@ -395,7 +395,7 @@ def benchmark_configuration(config_dict, monitor=None, enable_profiling=False):
                 
                 # Calculate latency
                 latency = time.perf_counter() - inference_start
-                latencies.append(latency)
+                latencies.append(latency/config_dict['batch'])
                 iterations_completed += 1
                 
                 # Get synchronized system metrics
