@@ -27,10 +27,10 @@ def create_optimized_cuda_session(model_path):
     so.enable_mem_pattern = True
 
     # Intra-op threads (affects CPU kernels, useful if fallback occurs)
-    so.intra_op_num_threads = 2
+    so.intra_op_num_threads = 4
 
     # Inter-op threads (affects parallel execution of independent nodes)
-    so.inter_op_num_threads = 2
+    so.inter_op_num_threads = 4
 
     # ---------------- END OPTIMIZATIONS ----------------
     
