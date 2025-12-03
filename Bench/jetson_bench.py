@@ -97,17 +97,6 @@ def reset_system_state():
     
     # Force garbage collection
     gc.collect()
-    
-    # Try to clear GPU cache if CUDA is available
-    try:
-        # Check if we're on Jetson with CUDA
-        import pycuda.driver as cuda
-        import pycuda.autoinit
-        cuda.Context.pop()
-    except ImportError:
-        pass
-    except:
-        pass
 
 # ================= TEGRASTATS MONITOR (Python 3.6 compatible) =================
 class TegrastatsMonitor:
@@ -381,6 +370,7 @@ def benchmark_configuration(config_dict, monitor=None, enable_profiling=False):
         
         # Main measurement loop
         print(f"Running {NUM_RUNS} inference iterations...")
+
         latencies = []
         system_samples = []
         

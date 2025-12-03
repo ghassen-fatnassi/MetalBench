@@ -1,0 +1,110 @@
+{
+  "total_configurations": 8,
+  "successful_configurations": 8,
+  "failed_configurations": 0,
+  "timestamp": "2025-12-03T17:28:56.981362",
+  "best_performance": {
+    "latency_ms": 214.8767260600107,
+    "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:1, warmup:True"
+  },
+  "worst_performance": {
+    "latency_ms": 4993.295429416473,
+    "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:8, warmup:True"
+  },
+  "by_execution_provider": {
+    "CPU": [
+      {
+        "latency_ms": 635.9595269787144,
+        "throughput_fps": 1.572427108295321,
+        "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:1, warmup:True"
+      },
+      {
+        "latency_ms": 1405.0813651162762,
+        "throughput_fps": 0.7117025567535343,
+        "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:2, warmup:True"
+      },
+      {
+        "latency_ms": 2583.745326583236,
+        "throughput_fps": 0.38703504935697647,
+        "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:4, warmup:True"
+      },
+      {
+        "latency_ms": 4993.295429416473,
+        "throughput_fps": 0.20026854291632853,
+        "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:8, warmup:True"
+      }
+    ],
+    "CUDA": [
+      {
+        "latency_ms": 214.8767260600107,
+        "throughput_fps": 4.653831144656961,
+        "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:1, warmup:True"
+      },
+      {
+        "latency_ms": 385.08947391999754,
+        "throughput_fps": 2.596799101830943,
+        "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:2, warmup:True"
+      },
+      {
+        "latency_ms": 708.6652283333673,
+        "throughput_fps": 1.4111035225360093,
+        "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:4, warmup:True"
+      },
+      {
+        "latency_ms": 1686.1938549444,
+        "throughput_fps": 0.5930516215960078,
+        "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:8, warmup:True"
+      }
+    ]
+  },
+  "by_batch_size": {
+    "1": [
+      {
+        "latency_ms": 635.9595269787144,
+        "throughput_fps": 1.572427108295321,
+        "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:1, warmup:True"
+      },
+      {
+        "latency_ms": 214.8767260600107,
+        "throughput_fps": 4.653831144656961,
+        "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:1, warmup:True"
+      }
+    ],
+    "2": [
+      {
+        "latency_ms": 1405.0813651162762,
+        "throughput_fps": 0.7117025567535343,
+        "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:2, warmup:True"
+      },
+      {
+        "latency_ms": 385.08947391999754,
+        "throughput_fps": 2.596799101830943,
+        "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:2, warmup:True"
+      }
+    ],
+    "4": [
+      {
+        "latency_ms": 2583.745326583236,
+        "throughput_fps": 0.38703504935697647,
+        "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:4, warmup:True"
+      },
+      {
+        "latency_ms": 708.6652283333673,
+        "throughput_fps": 1.4111035225360093,
+        "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:4, warmup:True"
+      }
+    ],
+    "8": [
+      {
+        "latency_ms": 4993.295429416473,
+        "throughput_fps": 0.20026854291632853,
+        "configuration": "EP:CPU, Opt:Extended, intra:4, inter:1, batch:8, warmup:True"
+      },
+      {
+        "latency_ms": 1686.1938549444,
+        "throughput_fps": 0.5930516215960078,
+        "configuration": "EP:CUDA, Opt:Extended, intra:1, inter:1, batch:8, warmup:True"
+      }
+    ]
+  }
+}
