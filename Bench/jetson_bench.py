@@ -1,6 +1,6 @@
 """
-Comprehensive ONNX Runtime Benchmarking Script
-Fixed for proper statistical validity, thermal management, and accurate measurements
+Comprehensive ONNX Runtime Benchmarking Script for Jetson
+Fixed for Python 3.6 compatibility and Jetson-specific issues
 """
 import onnxruntime as ort
 import numpy as np
@@ -16,57 +16,46 @@ import re
 import sys
 import os
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional
-import statistics
-from dataclasses import dataclass, asdict
 import warnings
 
-# Suppress numpy warnings
+# Suppress warnings
 warnings.filterwarnings('ignore')
 
 # ================= CONFIG =================
-@dataclass
-class BenchmarkConfig:
-    """Configuration for benchmarking"""
-    MODEL_PATH: str = "Models/yolo12n_op12.onnx"
-    NUM_WARMUP: int = 50  # Increased for proper warmup
-    NUM_RUNS: int = 200   # Increased for statistical significance
-    IMG_SHAPE: Tuple[int, int, int] = (3, 640, 640)
-    COOLING_DELAY: float = 10.0  # Seconds between configurations
-    TEGRASTATS_INTERVAL: int = 50  # ms - increased frequency
-    MIN_RUN_TIME: float = 2.0  # Minimum seconds per config
-    TIMEOUT_SECONDS: float = 30.0  # Timeout for inference
-    RESULTS_PATH: str = f"benchmark_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-
-config = BenchmarkConfig()
+MODEL_PATH = "Models/yolo12n_op12.onnx"
+NUM_WARMUP = 30  # Reduced for Jetson
+NUM_RUNS = 100   # Reduced but still statistically significant
+IMG_SHAPE = (3, 640, 640)
+COOLING_DELAY = 5.0  # Reduced cooling delay
+TEGRASTATS_INTERVAL = 100  # ms - Jetson-compatible
+MIN_RUN_TIME = 1.0
+TIMEOUT_SECONDS = 60.0  # Increased timeout for Jetson
+RESULTS_PATH = f"benchmark_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
 # ================= HELPER FUNCTIONS =================
-def generate_input(batch_size: int) -> np.ndarray:
+def generate_input(batch_size):
     """Generate consistent random input"""
-    # Use fixed seed for reproducibility within batch
-    rng = np.random.default_rng(42)
-    return rng.random((batch_size, *config.IMG_SHAPE)).astype(np.float32)
+    # Use fixed seed for reproducibility
+    np.random.seed(42)
+    return np.random.rand(batch_size, *IMG_SHAPE).astype(np.float32)
 
-def measure_inference(session: ort.InferenceSession, 
-                     input_data: np.ndarray, 
-                     input_name: str) -> Tuple[List[np.ndarray], float]:
+def measure_inference(session, input_data, input_name):
     """Measure inference time with high precision"""
     start = time.perf_counter()
     outputs = session.run(None, {input_name: input_data})
     end = time.perf_counter()
     return outputs, end - start
 
-def create_session(optimization: ort.GraphOptimizationLevel,
-                   intra: int,
-                   inter: int,
-                   execution_provider: str,
-                   enable_profiling: bool = False,
-                   profile_file: Optional[str] = None) -> ort.InferenceSession:
+def create_session(optimization, intra, inter, execution_provider, enable_profiling=False, profile_file=None):
     """Create ONNX Runtime session with options"""
     so = ort.SessionOptions()
     so.intra_op_num_threads = intra
     so.inter_op_num_threads = inter
     so.graph_optimization_level = optimization
+    
+    # Disable some optimizations for Jetson stability
+    so.enable_cpu_mem_arena = True
+    so.enable_mem_pattern = True
     
     # Enable profiling if requested
     if enable_profiling:
@@ -74,110 +63,149 @@ def create_session(optimization: ort.GraphOptimizationLevel,
         if profile_file:
             so.profile_file_prefix = profile_file
     
-    # Select execution provider
+    # Select execution provider - Jetson specific
     if execution_provider == "CPU":
         providers = ["CPUExecutionProvider"]
     elif execution_provider == "CUDA":
-        providers = ["CUDAExecutionProvider"]
-    elif execution_provider == "TensorRT":
-        providers = ["TensorrtExecutionProvider", "CUDAExecutionProvider", "CPUExecutionProvider"]
+        # Jetson-specific CUDA provider settings
+        providers = [("CUDAExecutionProvider", {
+            'device_id': 0,
+            'arena_extend_strategy': 'kNextPowerOfTwo',
+            'gpu_mem_limit': 2 * 1024 * 1024 * 1024,  # 2GB
+            'cudnn_conv_algo_search': 'EXHAUSTIVE',
+            'do_copy_in_default_stream': True,
+        }), "CPUExecutionProvider"]
     else:
         raise ValueError(f"Unknown execution provider: {execution_provider}")
     
     try:
-        return ort.InferenceSession(config.MODEL_PATH, sess_options=so, providers=providers)
+        session = ort.InferenceSession(MODEL_PATH, sess_options=so, providers=providers)
+        # Warm up session creation
+        _ = session.get_inputs()[0].name
+        return session
     except Exception as e:
         print(f"Failed to create session: {e}")
-        raise
+        # Try with default providers
+        return ort.InferenceSession(MODEL_PATH, sess_options=so)
 
-def reset_system_state() -> None:
+def reset_system_state():
     """
-    Attempt to reset system state between runs.
-    This is platform-dependent and may require adjustments.
+    Reset system state between runs.
     """
-    print(f"Cooling down for {config.COOLING_DELAY:.1f} seconds...")
-    time.sleep(config.COOLING_DELAY)
+    print(f"Cooling down for {COOLING_DELAY:.1f} seconds...")
+    time.sleep(COOLING_DELAY)
     
     # Force garbage collection
     gc.collect()
-# ================= TEGRASTATS WITH SYNCHRONIZATION =================
-class TegrastatsMonitor:
-    """Thread-safe tegrastats monitor with synchronized sampling"""
     
-    def __init__(self, interval_ms: int = 50):
+    # Try to clear GPU cache if CUDA is available
+    try:
+        # Check if we're on Jetson with CUDA
+        import pycuda.driver as cuda
+        import pycuda.autoinit
+        cuda.Context.pop()
+    except ImportError:
+        pass
+    except:
+        pass
+
+# ================= TEGRASTATS MONITOR (Python 3.6 compatible) =================
+class TegrastatsMonitor:
+    """Thread-safe tegrastats monitor for Jetson"""
+    
+    def __init__(self, interval_ms=100):
         self.interval_ms = interval_ms
         self.proc = None
         self.queue = queue.Queue()
         self.reader_thread = None
         self.running = False
-        self.samples: List[Tuple[float, Dict]] = []  # (timestamp, metrics)
+        self.samples = []  # List of (timestamp, metrics)
         self.start_time = None
         
-    def start(self) -> None:
+    def start(self):
         """Start tegrastats monitoring"""
         if self.running:
             return
         
         try:
+            # Python 3.6 compatible subprocess call
             self.proc = subprocess.Popen(
                 ["tegrastats", "--interval", str(self.interval_ms)],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True,
-                bufsize=1
+                universal_newlines=True  # Python 3.6 compatibility
             )
             
             self.running = True
             self.start_time = time.perf_counter()
-            self.reader_thread = threading.Thread(target=self._reader, daemon=True)
+            self.reader_thread = threading.Thread(target=self._reader)
+            self.reader_thread.daemon = True
             self.reader_thread.start()
             print(f"Tegrastats started with {self.interval_ms}ms interval")
             
-        except (FileNotFoundError, subprocess.SubprocessError) as e:
+        except Exception as e:
             print(f"Warning: Could not start tegrastats: {e}")
             self.running = False
     
-    def _reader(self) -> None:
+    def _reader(self):
         """Read tegrastats output"""
-        for line in iter(self.proc.stdout.readline, ''):
-            if not self.running:
+        while self.running and self.proc:
+            try:
+                line = self.proc.stdout.readline()
+                if not line:  # EOF
+                    break
+                timestamp = time.perf_counter() - self.start_time
+                metrics = self.parse_tegrastats_line(line.strip())
+                if metrics:
+                    self.queue.put((timestamp, metrics))
+            except Exception as e:
+                print(f"Error reading tegrastats: {e}")
                 break
-            timestamp = time.perf_counter() - self.start_time
-            metrics = self.parse_tegrastats_line(line)
-            if metrics:
-                self.queue.put((timestamp, metrics))
     
-    def get_sample_at_time(self, target_time: float, window_ms: float = 20) -> Optional[Dict]:
+    def get_sample_at_time(self, target_time, window_ms=50):
         """
         Get the tegrastats sample closest to target_time within window_ms
         """
         if not self.running:
             return None
         
-        # Wait for samples to accumulate if queue is empty
-        timeout = window_ms / 1000.0
+        # Try to get a sample from queue
         try:
+            # Process any pending samples
             while True:
-                timestamp, metrics = self.queue.get(timeout=timeout)
+                timestamp, metrics = self.queue.get_nowait()
                 self.samples.append((timestamp, metrics))
-                if abs(timestamp - target_time) <= window_ms / 1000.0:
-                    return metrics
         except queue.Empty:
+            pass
+        
+        # Find closest sample
+        if not self.samples:
             return None
+        
+        closest_sample = None
+        closest_diff = float('inf')
+        
+        for timestamp, metrics in self.samples:
+            diff = abs(timestamp - target_time)
+            if diff <= window_ms / 1000.0 and diff < closest_diff:
+                closest_diff = diff
+                closest_sample = metrics
+        
+        return closest_sample
     
-    def get_all_samples(self) -> List[Tuple[float, Dict]]:
+    def get_all_samples(self):
         """Get all collected samples"""
         # Drain the queue
-        while not self.queue.empty():
-            try:
+        try:
+            while True:
                 self.samples.append(self.queue.get_nowait())
-            except queue.Empty:
-                break
-        return self.samples.copy()
+        except queue.Empty:
+            pass
+        return [s[1] for s in self.samples if s[1]]
     
     @staticmethod
-    def parse_tegrastats_line(line: str) -> Dict:
-        """Parse tegrastats output line"""
+    def parse_tegrastats_line(line):
+        """Parse tegrastats output line - handles Python 3.6 bytes/string"""
         result = {}
         
         # RAM: RAM 400/3950MB
@@ -206,127 +234,109 @@ class TegrastatsMonitor:
         if m:
             result["emc_load_percent"] = int(m.group(1))
         
-        # Power measurements if available
-        m = re.search(r"POM_5V_GPU (\d+)/\d+", line)
+        # CPU frequencies
+        m = re.search(r"CPU (\d+)%@(\d+)", line)
         if m:
-            result["gpu_power_mw"] = int(m.group(1)) * 1000  # Convert to mW
+            result["cpu_load_percent"] = int(m.group(1))
+            result["cpu_freq_mhz"] = int(m.group(2))
         
         return result if result else None
     
-    def stop(self) -> None:
+    def stop(self):
         """Stop tegrastats monitoring"""
         if self.running:
             self.running = False
             if self.proc:
-                self.proc.terminate()
                 try:
+                    self.proc.terminate()
                     self.proc.wait(timeout=1)
-                except subprocess.TimeoutExpired:
-                    self.proc.kill()
+                except:
+                    try:
+                        self.proc.kill()
+                    except:
+                        pass
             if self.reader_thread:
                 self.reader_thread.join(timeout=2)
             print("Tegrastats stopped")
 
 # ================= STATISTICAL ANALYSIS =================
-def calculate_statistics(data: List[float], 
-                        confidence_level: float = 0.95) -> Dict:
-    """Calculate comprehensive statistics with confidence intervals"""
+def calculate_statistics(data, confidence_level=0.95):
+    """Calculate comprehensive statistics"""
     if not data:
         return {}
     
-    data_array = np.array(data)
-    n = len(data_array)
-    
-    # Remove outliers using IQR method
-    Q1 = np.percentile(data_array, 25)
-    Q3 = np.percentile(data_array, 75)
-    IQR = Q3 - Q1
-    lower_bound = Q1 - 1.5 * IQR
-    upper_bound = Q3 + 1.5 * IQR
-    filtered_data = data_array[(data_array >= lower_bound) & (data_array <= upper_bound)]
-    
-    # Basic statistics
-    mean = np.mean(filtered_data)
-    std = np.std(filtered_data)
-    median = np.median(filtered_data)
-    min_val = np.min(filtered_data)
-    max_val = np.max(filtered_data)
-    
-    # Percentiles
-    percentiles = {
-        'p5': np.percentile(filtered_data, 5),
-        'p25': np.percentile(filtered_data, 25),
-        'p50': median,
-        'p75': np.percentile(filtered_data, 75),
-        'p95': np.percentile(filtered_data, 95),
-        'p99': np.percentile(filtered_data, 99)
-    }
-    
-    # Confidence interval (t-distribution)
-    from scipy import stats
-    if len(filtered_data) > 1:
-        sem = stats.sem(filtered_data)
-        ci = stats.t.interval(confidence_level, len(filtered_data)-1, loc=mean, scale=sem)
-        ci_low, ci_high = ci
-    else:
-        ci_low, ci_high = mean, mean
-    
-    # Throughput calculation
-    throughput = 1.0 / mean if mean > 0 else 0
-    
-    return {
-        'n_samples': n,
-        'n_filtered': len(filtered_data),
-        'mean_ms': float(mean * 1000),
-        'std_ms': float(std * 1000),
-        'median_ms': float(median * 1000),
-        'min_ms': float(min_val * 1000),
-        'max_ms': float(max_val * 1000),
-        'percentiles_ms': {k: float(v * 1000) for k, v in percentiles.items()},
-        'confidence_interval_ms': [float(ci_low * 1000), float(ci_high * 1000)],
-        'throughput_fps': float(throughput),
-        'cv_percent': float((std / mean) * 100) if mean > 0 else 0.0
-    }
+    try:
+        data_array = np.array(data)
+        n = len(data_array)
+        
+        # Basic statistics
+        mean = float(np.mean(data_array))
+        std = float(np.std(data_array))
+        median = float(np.median(data_array))
+        min_val = float(np.min(data_array))
+        max_val = float(np.max(data_array))
+        
+        # Percentiles
+        percentiles = {
+            'p5': float(np.percentile(data_array, 5)),
+            'p25': float(np.percentile(data_array, 25)),
+            'p50': float(median),
+            'p75': float(np.percentile(data_array, 75)),
+            'p95': float(np.percentile(data_array, 95))
+        }
+        
+        # Throughput calculation
+        throughput = 1.0 / mean if mean > 0 else 0
+        
+        return {
+            'n_samples': n,
+            'mean_ms': mean * 1000,
+            'std_ms': std * 1000,
+            'median_ms': median * 1000,
+            'min_ms': min_val * 1000,
+            'max_ms': max_val * 1000,
+            'percentiles_ms': {k: v * 1000 for k, v in percentiles.items()},
+            'throughput_fps': throughput,
+            'cv_percent': (std / mean * 100) if mean > 0 else 0.0
+        }
+    except Exception as e:
+        print(f"Error calculating statistics: {e}")
+        # Fallback to simple stats
+        if data:
+            mean = sum(data) / len(data)
+            return {
+                'n_samples': len(data),
+                'mean_ms': mean * 1000,
+                'throughput_fps': 1.0 / mean if mean > 0 else 0
+            }
+        return {}
 
-# ================= MAIN BENCHMARKING FUNCTION =================
-@dataclass
-class BenchmarkResult:
-    """Container for benchmark results"""
-    config: Dict
-    latency_stats: Dict
-    system_metrics: List[Dict]
-    profile_file: Optional[str] = None
-    timestamp: str = None
-    success: bool = True
-    error_message: Optional[str] = None
-    
-    def __post_init__(self):
-        if self.timestamp is None:
-            self.timestamp = datetime.now().isoformat()
-
-def benchmark_configuration(config_dict: Dict, 
-                          monitor: Optional[TegrastatsMonitor] = None,
-                          enable_profiling: bool = False) -> BenchmarkResult:
+# ================= BENCHMARKING FUNCTION =================
+def benchmark_configuration(config_dict, monitor=None, enable_profiling=False):
     """
     Benchmark a single configuration with proper isolation
     """
     print(f"\n{'='*60}")
-    print(f"Testing configuration: {config_dict['description']}")
+    print(f"Testing: {config_dict['description']}")
     print(f"{'='*60}")
     
     # Reset system state before starting
     reset_system_state()
     
     session = None
-    result = BenchmarkResult(
-        config=config_dict,
-        latency_stats={},
-        system_metrics=[],
-        success=False
-    )
+    result = {
+        "config": config_dict,
+        "latency_stats": {},
+        "system_metrics": [],
+        "profile_file": None,
+        "timestamp": datetime.now().isoformat(),
+        "success": False,
+        "error_message": None
+    }
     
     try:
         # Create session ONCE (excluded from timing)
+        print("Creating session...")
         session = create_session(
             optimization=config_dict['optimization'],
             intra=config_dict['intra'],
@@ -338,71 +348,89 @@ def benchmark_configuration(config_dict: Dict,
         
         # Get input name and prepare data
         input_name = session.get_inputs()[0].name
+        print(f"Input name: {input_name}")
+        
+        # Generate input data
         input_data = generate_input(config_dict['batch'])
+        print(f"Input shape: {input_data.shape}")
         
         # Start monitoring if available
         if monitor:
             monitor.start()
-            time.sleep(0.1)  # Allow monitor to start
+            time.sleep(0.2)  # Allow monitor to start
         
         # Warmup phase (separate from measurements)
-        print(f"Warming up ({config.NUM_WARMUP} iterations)...")
-        warmup_start = time.perf_counter()
+        print(f"Warming up ({NUM_WARMUP} iterations)...")
+        warmup_start = time.time()
         
-        for i in range(config.NUM_WARMUP):
-            _ = session.run(None, {input_name: input_data})
-            if i % 10 == 0:
-                print(f"  Warmup iteration {i+1}/{config.NUM_WARMUP}")
+        warmup_success = 0
+        for i in range(NUM_WARMUP):
+            try:
+                _ = session.run(None, {input_name: input_data})
+                warmup_success += 1
+                if (i + 1) % 10 == 0:
+                    print(f"  Warmup iteration {i+1}/{NUM_WARMUP}")
+            except Exception as e:
+                print(f"  Warmup iteration {i+1} failed: {e}")
         
-        warmup_time = time.perf_counter() - warmup_start
-        print(f"Warmup completed in {warmup_time:.2f}s")
+        if warmup_success == 0:
+            raise RuntimeError("All warmup iterations failed")
+        
+        warmup_time = time.time() - warmup_start
+        print(f"Warmup completed: {warmup_success}/{NUM_WARMUP} in {warmup_time:.2f}s")
         
         # Main measurement loop
-        print(f"Running {config.NUM_RUNS} inference iterations...")
+        print(f"Running {NUM_RUNS} inference iterations...")
         latencies = []
         system_samples = []
         
-        # Ensure minimum run time
-        run_start = time.perf_counter()
+        run_start = time.time()
+        iterations_completed = 0
         
-        with tqdm(total=config.NUM_RUNS, desc="Inference", unit="iter") as pbar:
-            for i in range(config.NUM_RUNS):
-                # Mark inference start time
-                inference_start = time.perf_counter()
-                
-                # Run inference with timeout protection
-                def inference_task():
-                    return session.run(None, {input_name: input_data})
-                
-                # Simple timeout implementation
-                start_time = time.perf_counter()
-                outputs = inference_task()
+        # Progress bar
+        pbar = tqdm(total=NUM_RUNS, desc="Inference", unit="iter", ncols=80)
+        
+        for i in range(NUM_RUNS):
+            # Check timeout
+            if time.time() - run_start > TIMEOUT_SECONDS:
+                print(f"Timeout after {TIMEOUT_SECONDS}s")
+                break
+            
+            # Mark inference start time
+            inference_start = time.perf_counter()
+            
+            try:
+                # Run inference
+                outputs = session.run(None, {input_name: input_data})
                 
                 # Calculate latency
-                latency = time.perf_counter() - start_time
+                latency = time.perf_counter() - inference_start
                 latencies.append(latency)
+                iterations_completed += 1
                 
                 # Get synchronized system metrics
                 if monitor:
-                    sample = monitor.get_sample_at_time(inference_start, window_ms=20)
+                    sample = monitor.get_sample_at_time(inference_start, window_ms=50)
                     if sample:
                         sample['iteration'] = i
                         sample['latency_ms'] = latency * 1000
                         system_samples.append(sample)
                 
+                # Update progress bar
                 pbar.update(1)
-                pbar.set_postfix({'latency': f'{latency*1000:.1f}ms'})
+                if iterations_completed > 0:
+                    avg_latency = sum(latencies) / len(latencies) * 1000
+                    pbar.set_postfix({'avg_ms': f'{avg_latency:.1f}'})
                 
-                # Check total time
-                if (time.perf_counter() - run_start) > config.TIMEOUT_SECONDS:
-                    print(f"Timeout after {config.TIMEOUT_SECONDS}s")
-                    break
+            except Exception as e:
+                print(f"\nInference iteration {i+1} failed: {e}")
+                # Continue with next iteration
         
-        run_time = time.perf_counter() - run_start
+        pbar.close()
+        run_time = time.time() - run_start
         
-        # Ensure minimum run time was achieved
-        if run_time < config.MIN_RUN_TIME:
-            print(f"Warning: Run time ({run_time:.1f}s) below minimum ({config.MIN_RUN_TIME}s)")
+        if iterations_completed == 0:
+            raise RuntimeError("No successful inference iterations")
         
         # Calculate statistics
         stats = calculate_statistics(latencies)
@@ -410,32 +438,47 @@ def benchmark_configuration(config_dict: Dict,
         # Collect remaining system metrics
         if monitor:
             remaining_samples = monitor.get_all_samples()
-            system_samples.extend([s[1] for s in remaining_samples])
+            system_samples.extend(remaining_samples)
+            monitor.stop()
         
         # Create result
-        result.latency_stats = stats
-        result.system_metrics = system_samples
-        result.success = True
+        result["latency_stats"] = stats
+        result["system_metrics"] = system_samples
+        result["success"] = True
         
         # Get profile file if profiling was enabled
         if enable_profiling and session:
-            result.profile_file = session.end_profiling()
+            try:
+                result["profile_file"] = session.end_profiling()
+            except:
+                pass
         
-        print(f"Benchmark completed: {stats['mean_ms']:.1f} ± {stats['std_ms']:.1f} ms")
-        print(f"Throughput: {stats['throughput_fps']:.1f} FPS")
+        print(f"Benchmark completed: {stats.get('mean_ms', 0):.1f} ± {stats.get('std_ms', 0):.1f} ms")
+        print(f"Throughput: {stats.get('throughput_fps', 0):.1f} FPS")
+        print(f"Completed {iterations_completed}/{NUM_RUNS} iterations in {run_time:.1f}s")
         
     except Exception as e:
-        result.success = False
-        result.error_message = str(e)
+        result["success"] = False
+        result["error_message"] = str(e)
         print(f"Error during benchmarking: {e}")
+        
+        # Try to get error details
+        import traceback
+        traceback.print_exc()
     
     finally:
         # Cleanup
+        if monitor and monitor.running:
+            monitor.stop()
+        
         if session:
             try:
                 # End profiling if active
                 if enable_profiling:
-                    session.end_profiling()
+                    try:
+                        session.end_profiling()
+                    except:
+                        pass
             except:
                 pass
             del session
@@ -446,158 +489,127 @@ def benchmark_configuration(config_dict: Dict,
     return result
 
 # ================= EXPERIMENTAL DESIGN =================
-def generate_factorial_design() -> List[Dict]:
+def generate_test_configurations():
     """
-    Generate a factorial experimental design with reasonable combinations
+    Generate test configurations for Jetson
     """
-    base_design = [
-        {
-            'optimization': ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED,
-            'intra': 4,
-            'inter': 1,
-            'batch': 1,
-            'warmup': True,
-            'execution_provider': 'CPU'
-        },
-        {
-            'optimization': ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED,
-            'intra': 4,
-            'inter': 1,
-            'batch': 1,
-            'warmup': True,
-            'execution_provider': 'CUDA'
-        },
-    ]
-    
-    # Add variations for key parameters
-    variations = []
-    for base in base_design:
-        # Batch size variations
-        for batch in [1, 2, 4, 8, 16]:
-            if batch != base['batch']:
-                variant = base.copy()
-                variant['batch'] = batch
-                variations.append(variant)
-        
-        # Thread variations for CPU
-        if base['execution_provider'] == 'CPU':
-            for intra in [1, 2, 4, 8]:
-                if intra != base['intra']:
-                    variant = base.copy()
-                    variant['intra'] = intra
-                    variations.append(variant)
-    
-    all_configs = base_design + variations
-    
-    # Add descriptions
-    opt_names = {
-        ort.GraphOptimizationLevel.ORT_DISABLE_ALL: "Disabled",
-        ort.GraphOptimizationLevel.ORT_ENABLE_BASIC: "Basic",
-        ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED: "Extended"
+    # Map optimization levels
+    opt_map = {
+        "Disabled": ort.GraphOptimizationLevel.ORT_DISABLE_ALL,
+        "Basic": ort.GraphOptimizationLevel.ORT_ENABLE_BASIC,
+        "Extended": ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED
     }
     
-    for i, config in enumerate(all_configs):
-        config['id'] = i
-        config['description'] = (
-            f"EP:{config['execution_provider']}, "
-            f"Opt:{opt_names[config['optimization']]}, "
-            f"intra:{config['intra']}, "
-            f"inter:{config['inter']}, "
-            f"batch:{config['batch']}, "
-            f"warmup:{config['warmup']}"
-        )
-        config['profile_prefix'] = (
-            f"profile_{config['execution_provider']}_"
-            f"{opt_names[config['optimization']]}_"
-            f"i{config['intra']}_o{config['inter']}_"
-            f"b{config['batch']}_w{config['warmup']}"
-        )
+    configurations = []
     
-    return all_configs
+    # Test CPU vs CUDA
+    for ep in ["CPU", "CUDA"]:
+        for opt_name in ["Extended"]:  # Just test extended for now
+            for batch in [1, 2, 4, 8]:
+                for warmup in [True]:
+                    # Set reasonable thread counts for Jetson
+                    if ep == "CPU":
+                        intra_options = [4]  # Jetson typically has 4+ cores
+                        inter_options = [1]
+                    else:
+                        intra_options = [1]
+                        inter_options = [1]
+                    
+                    for intra in intra_options:
+                        for inter in inter_options:
+                            config = {
+                                'optimization': opt_map[opt_name],
+                                'intra': intra,
+                                'inter': inter,
+                                'batch': batch,
+                                'warmup': warmup,
+                                'execution_provider': ep,
+                                'description': f"EP:{ep}, Opt:{opt_name}, intra:{intra}, inter:{inter}, batch:{batch}, warmup:{warmup}",
+                                'profile_prefix': f"profile_{ep}_{opt_name}_i{intra}_o{inter}_b{batch}_w{warmup}"
+                            }
+                            configurations.append(config)
+    
+    return configurations
 
 # ================= MAIN EXECUTION =================
 def main():
     """Main benchmarking execution"""
     print("="*70)
-    print("ONNX Runtime Comprehensive Benchmarking")
-    print(f"Model: {config.MODEL_PATH}")
+    print("ONNX Runtime Benchmarking for Jetson")
+    print(f"Model: {MODEL_PATH}")
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("="*70)
     
     # Check if model exists
-    if not os.path.exists(config.MODEL_PATH):
-        print(f"Error: Model not found at {config.MODEL_PATH}")
+    if not os.path.exists(MODEL_PATH):
+        print(f"Error: Model not found at {MODEL_PATH}")
+        print(f"Current directory: {os.getcwd()}")
+        print(f"Looking for: {os.path.abspath(MODEL_PATH)}")
         return
     
-    # Generate experimental design
-    configurations = generate_factorial_design()
+    print(f"Model found: {os.path.getsize(MODEL_PATH) / 1024 / 1024:.1f} MB")
+    
+    # Generate configurations
+    configurations = generate_test_configurations()
     print(f"\nGenerated {len(configurations)} test configurations")
     
     # Initialize monitoring
-    monitor = TegrastatsMonitor(interval_ms=config.TEGRASTATS_INTERVAL)
+    monitor = TegrastatsMonitor(interval_ms=TEGRASTATS_INTERVAL)
+    
+    # Check if tegrastats is available
+    try:
+        subprocess.run(["which", "tegrastats"], check=True, stdout=subprocess.PIPE)
+        print("Tegrastats is available")
+    except:
+        print("Warning: tegrastats not found. System metrics will not be collected.")
+        monitor = None
     
     # Baseline measurement (idle system)
-    print("\nMeasuring baseline system state...")
-    monitor.start()
-    time.sleep(2.0)
-    baseline_samples = monitor.get_all_samples()
-    monitor.stop()
-    
-    baseline_metrics = {}
-    if baseline_samples:
-        # Calculate average baseline
-        all_metrics = [s[1] for s in baseline_samples if s[1]]
-        for key in all_metrics[0].keys():
-            values = [m.get(key) for m in all_metrics if m.get(key) is not None]
-            if values:
-                baseline_metrics[f'baseline_{key}'] = float(np.mean(values))
+    if monitor:
+        print("\nMeasuring baseline system state...")
+        monitor.start()
+        time.sleep(2.0)
+        baseline_samples = monitor.get_all_samples()
+        monitor.stop()
+        print(f"Collected {len(baseline_samples)} baseline samples")
+    else:
+        baseline_samples = []
     
     # Run benchmarks
     all_results = []
     
     for i, config_dict in enumerate(configurations):
-        print(f"\n\nConfiguration {i+1}/{len(configurations)}")
+        print(f"\n{'#'*70}")
+        print(f"Configuration {i+1}/{len(configurations)}")
         print(f"Description: {config_dict['description']}")
+        print(f"{'#'*70}")
         
         # Run without profiling first
         result = benchmark_configuration(config_dict, monitor=monitor, enable_profiling=False)
         
-        if result.success:
-            # Add baseline metrics
-            result.system_metrics.append(baseline_metrics)
-            all_results.append(asdict(result))
+        if result["success"]:
+            all_results.append(result)
             
-            # Run with profiling (only for a subset to avoid excessive data)
-            if i < min(5, len(configurations)):  # Profile first 5 configs
-                print("\nRunning with profiling enabled...")
-                prof_result = benchmark_configuration(
-                    config_dict, 
-                    monitor=monitor, 
-                    enable_profiling=True
-                )
-                if prof_result.success:
-                    all_results.append(asdict(prof_result))
-        
-        # Save intermediate results
-        if (i + 1) % 5 == 0 or i == len(configurations) - 1:
-            with open(config.RESULTS_PATH, 'w') as f:
+            # Save intermediate results
+            with open(RESULTS_PATH, 'w') as f:
                 json.dump(all_results, f, indent=2, default=str)
-            print(f"\nIntermediate results saved to {config.RESULTS_PATH}")
-    
-    # Stop monitor
-    monitor.stop()
+            print(f"\nIntermediate results saved to {RESULTS_PATH}")
+        else:
+            print(f"\nConfiguration failed: {result.get('error_message', 'Unknown error')}")
+            # Save failed result for debugging
+            all_results.append(result)
     
     # Generate summary
     generate_summary(all_results)
     
     print("\n" + "="*70)
-    print("Benchmarking completed successfully!")
-    print(f"Results saved to: {config.RESULTS_PATH}")
+    print("Benchmarking completed!")
+    print(f"Results saved to: {RESULTS_PATH}")
     print("="*70)
 
-def generate_summary(results: List[Dict]) -> None:
+def generate_summary(results):
     """Generate a summary report"""
-    successful = [r for r in results if r.get('success', False)]
+    successful = [r for r in results if r.get("success", False)]
     
     if not successful:
         print("No successful benchmarks to summarize")
@@ -617,8 +629,9 @@ def generate_summary(results: List[Dict]) -> None:
     # Find best and worst performance
     latencies = []
     for result in successful:
-        if 'latency_stats' in result and 'mean_ms' in result['latency_stats']:
-            latencies.append((result['latency_stats']['mean_ms'], result['config']['description']))
+        stats = result.get('latency_stats', {})
+        if 'mean_ms' in stats:
+            latencies.append((stats['mean_ms'], result['config']['description']))
     
     if latencies:
         best = min(latencies, key=lambda x: x[0])
@@ -638,9 +651,10 @@ def generate_summary(results: List[Dict]) -> None:
         ep = result['config']['execution_provider']
         if ep not in summary['by_execution_provider']:
             summary['by_execution_provider'][ep] = []
+        stats = result.get('latency_stats', {})
         summary['by_execution_provider'][ep].append({
-            'latency_ms': result['latency_stats'].get('mean_ms', 0),
-            'throughput_fps': result['latency_stats'].get('throughput_fps', 0),
+            'latency_ms': stats.get('mean_ms', 0),
+            'throughput_fps': stats.get('throughput_fps', 0),
             'configuration': result['config']['description']
         })
     
@@ -649,14 +663,15 @@ def generate_summary(results: List[Dict]) -> None:
         batch = result['config']['batch']
         if batch not in summary['by_batch_size']:
             summary['by_batch_size'][batch] = []
+        stats = result.get('latency_stats', {})
         summary['by_batch_size'][batch].append({
-            'latency_ms': result['latency_stats'].get('mean_ms', 0),
-            'throughput_fps': result['latency_stats'].get('throughput_fps', 0),
+            'latency_ms': stats.get('mean_ms', 0),
+            'throughput_fps': stats.get('throughput_fps', 0),
             'configuration': result['config']['description']
         })
     
     # Save summary
-    summary_path = config.RESULTS_PATH.replace('.json', '_summary.json')
+    summary_path = RESULTS_PATH.replace('.json', '_summary.json')
     with open(summary_path, 'w') as f:
         json.dump(summary, f, indent=2)
     
@@ -666,17 +681,19 @@ def generate_summary(results: List[Dict]) -> None:
     print("\n" + "="*70)
     print("QUICK SUMMARY")
     print("="*70)
-    print(f"Successful runs: {summary['successful_configurations']}/{summary['total_configurations']}")
+    print(f"Successful: {summary['successful_configurations']}/{summary['total_configurations']}")
+    
     if summary['best_performance']:
-        print(f"Best latency: {summary['best_performance']['latency_ms']:.1f}ms")
-        print(f"  Config: {summary['best_performance']['configuration']}")
+        print(f"\nBest latency: {summary['best_performance']['latency_ms']:.1f}ms")
+        print(f"Config: {summary['best_performance']['configuration']}")
     
     # Print by execution provider
+    print("\nBy Execution Provider:")
     for ep, configs in summary['by_execution_provider'].items():
         if configs:
-            avg_latency = np.mean([c['latency_ms'] for c in configs])
-            print(f"\n{ep}: Average latency = {avg_latency:.1f}ms")
+            avg_latency = np.mean([c['latency_ms'] for c in configs]) if configs else 0
+            avg_throughput = np.mean([c['throughput_fps'] for c in configs]) if configs else 0
+            print(f"  {ep}: {avg_latency:.1f}ms, {avg_throughput:.1f} FPS")
 
 if __name__ == "__main__":
-
     main()
