@@ -15,14 +15,28 @@ def generate_input(batch_size):
 # ================= SESSION CREATION (GPU) =================
 def create_optimized_cuda_session(model_path):
     so = ort.SessionOptions()
-    # Maximum graph optimizations
+    
+    # ---------------- OPTIMIZATIONS ----------------
+    # Enable extended graph optimizations (fusions, constant folding, etc.)
     so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED
-    # CUDA provider settings
-    providers = [("CUDAExecutionProvider", {
-        'device_id': 0,
-        'arena_extend_strategy': 'kNextPowerOfTwo',
-        'gpu_mem_limit': 2 * 1024 * 1024 * 1024,  # 2GB
-    })]
+
+    # Enable CPU memory arena (even with GPU EP, useful for CPU fallback)
+    so.enable_cpu_mem_arena = True
+
+    # Enable memory pattern optimization (reuses memory buffers)
+    so.enable_mem_pattern = True
+
+    # Intra-op threads (affects CPU kernels, useful if fallback occurs)
+    so.intra_op_num_threads = 1
+
+    # Inter-op threads (affects parallel execution of independent nodes)
+    so.inter_op_num_threads = 1
+
+    # ---------------- END OPTIMIZATIONS ----------------
+    
+    # Use CUDAExecutionProvider first, fallback to CPUExecutionProvider
+    providers = ["CUDAExecutionProvider", "CPUExecutionProvider"]
+
     return ort.InferenceSession(model_path, sess_options=so, providers=providers)
 
 # ================= INFERENCE =================
