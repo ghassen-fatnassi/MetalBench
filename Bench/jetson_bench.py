@@ -51,10 +51,10 @@ def start_tegrastats():
     q = queue.Queue()
 
     proc = subprocess.Popen(
-        ["tegrastats", "--interval", "200"],   # 200 ms sampling
+        ["tegrastats", "--interval", "200"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        universal_newlines=True   # <-- Works on all Jetson Python versions
     )
 
     def reader():
