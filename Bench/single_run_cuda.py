@@ -26,13 +26,13 @@ def run_inference(session, input_data):
 
     # Bind input
     input_name = session.get_inputs()[0].name
-    binding.bind_input(name=input_name, device_type='cuda', element_type=np.float32, shape=input_data.shape, buffer_ptr=input_data.__array_interface__['data'][0])
+    binding.bind_input(name=input_name, device_id=0,device_type='cuda', element_type=np.float32, shape=input_data.shape, buffer_ptr=input_data.__array_interface__['data'][0])
 
     # Bind output
     output_name = session.get_outputs()[0].name
     out_shape = session.get_outputs()[0].shape
     output_np = np.empty(out_shape, dtype=np.float32)
-    binding.bind_output(name=output_name, device_type='cuda', element_type=np.float32, shape=out_shape, buffer_ptr=output_np.__array_interface__['data'][0])
+    binding.bind_output(name=output_name,device_id=0, device_type='cuda', element_type=np.float32, shape=out_shape, buffer_ptr=output_np.__array_interface__['data'][0])
 
     session.run_with_iobinding(binding)
     return output_np
