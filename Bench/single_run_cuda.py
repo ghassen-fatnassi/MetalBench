@@ -1,63 +1,100 @@
 import onnxruntime as ort
 import numpy as np
+import torch
 import os
 
 # ================= CONFIG =================
 MODEL_PATH = "Models/yolo12n_op12.onnx"
 IMG_SHAPE = (3, 640, 640)
-BATCH_SIZE = 1
+BATCH = 1
+USE_CUSTOM_STREAM = True     # set False if you don't want custom stream
+DEVICE_ID = 0
 
-# ================= INPUT GENERATION =================
-def generate_input(batch_size):
+
+# ================= DEVICE INPUT GENERATION =================
+def generate_device_tensor(batch):
     np.random.seed(42)
-    return np.random.rand(batch_size, *IMG_SHAPE).astype(np.float32)
+    cpu_arr = np.random.rand(batch, *IMG_SHAPE).astype(np.float32)
 
-# ================= SESSION CREATION (GPU) =================
-def create_optimized_cuda_session(model_path):
+    # pinned CPU memory – async transfers
+    pinned = torch.empty(cpu_arr.shape, dtype=torch.float32, pin_memory=True)
+    pinned[:] = torch.from_numpy(cpu_arr)
+
+    # Allocate directly on GPU as ORT device tensor
+    ort_in = ort.OrtValue.ortvalue_from_numpy(
+        pinned.numpy(),
+        device="cuda",
+        device_id=DEVICE_ID
+    )
+    return ort_in
+
+
+# ================= SESSION CREATION =================
+def create_cuda_session(path):
     so = ort.SessionOptions()
-    
-    # ---------------- OPTIMIZATIONS ----------------
-    # Enable extended graph optimizations (fusions, constant folding, etc.)
     so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED
-
-    # Enable CPU memory arena (even with GPU EP, useful for CPU fallback)
     so.enable_cpu_mem_arena = True
-
-    # Enable memory pattern optimization (reuses memory buffers)
     so.enable_mem_pattern = True
 
-    # Intra-op threads (affects CPU kernels, useful if fallback occurs)
     so.intra_op_num_threads = 1
-
-    # Inter-op threads (affects parallel execution of independent nodes)
     so.inter_op_num_threads = 1
 
-    # ---------------- END OPTIMIZATIONS ----------------
-    
-    # Use CUDAExecutionProvider first, fallback to CPUExecutionProvider
-    providers = ["CUDAExecutionProvider", "CPUExecutionProvider"]
+    provider = "CUDAExecutionProvider"
+    ep_options = {}
 
-    return ort.InferenceSession(model_path, sess_options=so, providers=providers)
+    # attach custom CUDA compute stream
+    if USE_CUSTOM_STREAM:
+        s = torch.cuda.Stream(device=DEVICE_ID)
+        ep_options["user_compute_stream"] = str(s.cuda_stream)
 
-# ================= INFERENCE =================
-def run_single_inference(session, input_data):
-    input_name = session.get_inputs()[0].name
-    outputs = session.run(None, {input_name: input_data})
-    print("Single GPU inference completed")
-    return outputs
+    return ort.InferenceSession(
+        path,
+        sess_options=so,
+        providers=[provider],
+        provider_options=[ep_options] if ep_options else [{}]
+    )
+
+
+# ================= RUN WITH IO BINDING =================
+def infer_with_iobinding(session, ort_input):
+    binding = session.io_binding()
+
+    in_name = session.get_inputs()[0].name
+    in_device = ort_input.device_name()
+    binding.bind_ortvalue_input(in_name, ort_input)
+
+    # Allocate output on GPU as device tensor
+    out_name = session.get_outputs()[0].name
+    out_shape = session.get_outputs()[0].shape
+    out_tensor = ort.OrtValue.ortvalue_from_shape_and_type(
+        out_shape,
+        np.float32,
+        device="cuda",
+        device_id=DEVICE_ID
+    )
+    binding.bind_ortvalue_output(out_name, out_tensor)
+
+    session.run_with_iobinding(binding)
+    return out_tensor
+
 
 # ================= MAIN =================
 def main():
     if not os.path.exists(MODEL_PATH):
-        print(f"Error: Model not found at {MODEL_PATH}")
+        print("Model not found.")
         return
 
-    print(f"Loading model: {MODEL_PATH} ({os.path.getsize(MODEL_PATH)/1024/1024:.1f} MB)")
-    session = create_optimized_cuda_session(MODEL_PATH)
+    print("Loading model:", MODEL_PATH)
+    sess = create_cuda_session(MODEL_PATH)
 
-    input_data = generate_input(BATCH_SIZE)
-    print(f"Running single GPU inference with input shape: {input_data.shape}")
-    run_single_inference(session, input_data)
+    print("Allocating device tensors...")
+    device_input = generate_device_tensor(BATCH)
+
+    print("Running GPU inference (zero-copy)...")
+    out = infer_with_iobinding(sess, device_input)
+
+    print("Done. Output GPU tensor shape:", out.shape())
+
 
 if __name__ == "__main__":
     main()
