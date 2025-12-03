@@ -7,7 +7,7 @@ from tqdm import tqdm
 import os
 
 # ================= CONFIG =================
-MODEL_PATH = "path/to/your/yolo12n.onnx"  # <-- replace with your ONNX model path
+MODEL_PATH = "Models/yolo12n_op12.onnx"  # <-- replace with your ONNX model path
 NUM_WARMUP = 5
 NUM_RUNS = 10
 IMG_SHAPE = (3, 640, 640)  # (C, H, W)
