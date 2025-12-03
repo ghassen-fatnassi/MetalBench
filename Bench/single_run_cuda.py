@@ -18,13 +18,13 @@ def create_optimized_cuda_session(model_path):
     # Maximum graph optimizations
     so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED
     # CUDA provider settings
-    providers = [("CUDAExecutionProvider", {
+    providers = ("CUDAExecutionProvider", {
         'device_id': 0,
         'arena_extend_strategy': 'kNextPowerOfTwo',
         'gpu_mem_limit': 2 * 1024 * 1024 * 1024,  # 2GB
         'cudnn_conv_algo_search': 'EXHAUSTIVE',
         'do_copy_in_default_stream': True,
-    }), "CPUExecutionProvider"]
+    })
     return ort.InferenceSession(model_path, sess_options=so, providers=providers)
 
 # ================= INFERENCE =================
