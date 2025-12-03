@@ -334,7 +334,7 @@ def benchmark_configuration(config_dict, monitor=None, enable_profiling=False):
         print(f"Input name: {input_name}")
         
         # Generate input data
-        input_data = generate_input(config_dict['batch'])
+        input_data = generate_input(config_dict['batch'],config_dict['resolution'])
         print(f"Input shape: {input_data.shape}")
         
         # Start monitoring if available
