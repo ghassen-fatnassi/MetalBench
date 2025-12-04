@@ -493,15 +493,15 @@ def generate_test_configurations():
                 for warmup in [True]:
                     # Set reasonable thread counts for Jetson
                     if ep == "CPU":
-                        intra_options = [1,2,4]  # Jetson typically has 4+ cores
-                        inter_options = [1,2,4]
+                        intra_options = [1,2]  # Jetson typically has 4+ cores
+                        inter_options = [1,2]
                     else:
-                        intra_options = [1,2,4]
-                        inter_options = [1,2,4]
+                        intra_options = [1,2]
+                        inter_options = [1,2]
                     
                     for intra in intra_options:
                         for inter in inter_options:
-                            for res in range(128, 641, 128):
+                            for res in range(128, 513, 128):
                                 config = {
                                     'optimization': opt_map[opt_name],
                                     'intra': intra,
