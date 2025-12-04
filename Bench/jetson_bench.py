@@ -23,8 +23,8 @@ warnings.filterwarnings('ignore')
 
 # ================= CONFIG =================
 MODEL_PATH = "Models/yolo12n_op12.onnx"
-NUM_WARMUP = 30  # Reduced for Jetson
-NUM_RUNS = 100   # Reduced but still statistically significant
+NUM_WARMUP = 3  # Reduced for Jetson
+NUM_RUNS = 30   # Reduced but still statistically significant
 IMG_SHAPE = (3, 128, 128)
 COOLING_DELAY = 5.0  # Reduced cooling delay
 TEGRASTATS_INTERVAL = 100  # ms - Jetson-compatible
@@ -484,17 +484,17 @@ def generate_test_configurations():
     configurations = []
     
     # Test CPU vs CUDA
-    for ep in ["CUDA","CPU"]:
-        for opt_name in ["Disabled","Basic","Extended"]:  # Just test extended for now
+    for ep in ["CUDA"]:
+        for opt_name in ["Disabled","Extended"]:  # Just test extended for now
             for batch in [1, 2, 4, 8]:
                 for warmup in [True]:
                     # Set reasonable thread counts for Jetson
                     if ep == "CPU":
-                        intra_options = [1,2]  # Jetson typically has 4+ cores
-                        inter_options = [1,2]
+                        intra_options = [2]  # Jetson typically has 4+ cores
+                        inter_options = [2]
                     else:
-                        intra_options = [1,2]
-                        inter_options = [1,2]
+                        intra_options =[2]
+                        inter_options = [2]
                     
                     for intra in intra_options:
                         for inter in inter_options:
