@@ -577,7 +577,7 @@ def main():
         print(f"{'#'*70}")
         
         # Run without profiling first
-        result = benchmark_configuration(config_dict, monitor=monitor, enable_profiling=False)
+        result = benchmark_configuration(config_dict, monitor=monitor, enable_profiling=True)
         
         if result["success"]:
             all_results.append(result)
