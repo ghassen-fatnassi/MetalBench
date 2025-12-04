@@ -1,3 +1,5 @@
+https://www.canva.com/design/DAG3_7hxSmI/BtdptIb17pcublnft958FQ/edit?utm_content=DAG3_7hxSmI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
 # TinyML Hardware Benchmarking: Explainable Performance Analysis Across Embedded AI Platforms
 
 ## ðŸ“‹ Executive Summary
