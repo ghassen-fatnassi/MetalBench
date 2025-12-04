@@ -487,8 +487,8 @@ def generate_test_configurations():
     configurations = []
     
     # Test CPU vs CUDA
-    for ep in ["CPU", "CUDA"]:
-        for opt_name in ["Extended"]:  # Just test extended for now
+    for ep in ["CUDA","CPU"]:
+        for opt_name in ["Disabled","Basic","Extended"]:  # Just test extended for now
             for batch in [1, 2, 4, 8]:
                 for warmup in [True]:
                     # Set reasonable thread counts for Jetson
