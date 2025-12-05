@@ -1,226 +1,196 @@
-// jetson_bench.cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <chrono>
+#include <numeric>
+#include <algorithm>
+#include <cmath>
+#include <thread>
+#include <random>
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 
-#include <vector>
-#include <random>
-#include <iostream>
-#include <chrono>
-#include <fstream>
-#include <thread>
-#include <sys/stat.h>
-#include <string>
-#include <numeric>
-#include <cmath>
-#include <algorithm> // Required for std::sort
-
-using namespace std;
-using hr_clock = std::chrono::high_resolution_clock;
-
-const char* MODEL_PATH = "Models/yolo12n_op12.onnx";
-const int IMG_C = 3;
-const int DEFAULT_RES = 128;
+// ================= CONFIG =================
+const std::string MODEL_PATH = "Models/yolo12n_op12.onnx";
 const int NUM_WARMUP = 3;
 const int NUM_RUNS = 30;
-const double COOLING_DELAY = 5.0; 
-const double TIMEOUT_SECONDS = 60.0;
+const int COOLING_DELAY_MS = 2000; // 2 seconds between configs
 
-bool file_exists(const string &path) {
-    struct stat st;
-    return stat(path.c_str(), &st) == 0;
-}
-
-vector<float> generate_input(int batch, int resolution) {
-    std::mt19937 rng(42);
-    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-    vector<float> data(batch * IMG_C * resolution * resolution);
-    for (auto &v : data) v = dist(rng);
-    return data;
-}
-
-struct Config {
-    int optimization; 
-    int intra;
-    int inter;
-    int batch;
+struct BenchmarkConfig {
+    std::string description;
+    std::string execution_provider; // "CPU", "CUDA"
+    GraphOptimizationLevel opt_level;
+    int intra_op_threads;
+    int inter_op_threads;
+    int batch_size;
     int resolution;
-    string execution_provider; 
-    string description;
 };
 
-vector<Config> generate_test_configurations() {
-    vector<Config> configs;
-    for (auto ep : {"CUDA"}) {
-        for (auto opt : {GraphOptimizationLevel::ORT_DISABLE_ALL, GraphOptimizationLevel::ORT_ENABLE_EXTENDED}) {
-            for (int batch : {1,2,4}) {
-                for (int res = 128; res <= 384; res += 128) {
-                    Config c;
-                    c.optimization = opt;
-                    c.intra = 2;
-                    c.inter = 2;
-                    c.batch = batch;
-                    c.resolution = res;
-                    c.execution_provider = ep;
-                    c.description = string("EP:") + ep + ", opt:" + to_string(opt) + ", batch:" + to_string(batch) + ", res:" + to_string(res);
-                    configs.push_back(c);
-                }
-            }
-        }
-    }
-    return configs;
-}
-
-Ort::Session create_session_for_config(Ort::Env& env, const Config& cfg) {
-    Ort::SessionOptions so;
-    so.SetIntraOpNumThreads(cfg.intra);
-    so.SetInterOpNumThreads(cfg.inter);
-    so.SetGraphOptimizationLevel(static_cast<GraphOptimizationLevel>(cfg.optimization));
-    so.EnableCpuMemArena();
-    so.EnableMemPattern();
-    
-    if (cfg.execution_provider == "CUDA") {
-        // Fix: Define raw_opts before using it
-        OrtSessionOptions* raw_opts = so; 
-        OrtStatus* status = AppendExecutionProvider_CUDA(raw_opts, 0);
-        if (status != nullptr) {
-            const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
-            std::cerr << "Failed to append CUDA EP: " << api->GetErrorMessage(status) << "\n";
-            api->ReleaseStatus(status);
-        }
-    }
-    return Ort::Session(env, MODEL_PATH, so);
-}
-
-struct Stats {
-    int n;
+struct BenchmarkResult {
+    BenchmarkConfig config;
     double mean_ms;
     double std_ms;
-    double median_ms;
     double min_ms;
     double max_ms;
     double throughput_fps;
+    bool success;
+    std::string error_msg;
 };
 
-Stats calc_stats(const vector<double>& values_s) {
-    Stats s{};
-    if (values_s.empty()) {
-        return s;
-    }
-    vector<double> v = values_s;
-    int n = v.size();
-    double mean = std::accumulate(v.begin(), v.end(), 0.0) / n;
-    double sq_sum = 0.0;
-    for (double x : v) sq_sum += (x - mean)*(x - mean);
-    double var = sq_sum / n;
-    double stddev = sqrt(var);
-    
-    // Fix: Use std::sort instead of C qsort for vectors
-    std::sort(v.begin(), v.end()); 
-    
-    double median = v[n/2];
-    s.n = n;
-    s.mean_ms = mean * 1000.0;
-    s.std_ms = stddev * 1000.0;
-    s.median_ms = median * 1000.0;
-    s.min_ms = v.front() * 1000.0;
-    s.max_ms = v.back() * 1000.0;
-    s.throughput_fps = (mean > 0.0) ? (1.0 / mean) : 0.0;
-    return s;
+// ================= HELPERS =================
+
+std::vector<float> generate_random_input(size_t size) {
+    std::vector<float> data(size);
+    std::mt19937 gen(42);
+    std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+    for (auto& v : data) v = dis(gen);
+    return data;
 }
 
-void do_cooling() {
-    cout << "Cooling for " << COOLING_DELAY << "s\n";
-    std::this_thread::sleep_for(std::chrono::duration<double>(COOLING_DELAY));
+void print_result(const BenchmarkResult& res) {
+    std::cout << "\n[RESULT] " << res.config.description << "\n";
+    if (res.success) {
+        std::cout << "  Mean Latency: " << res.mean_ms << " ms (+/- " << res.std_ms << ")\n";
+        std::cout << "  Throughput:   " << res.throughput_fps << " FPS\n";
+        std::cout << "  Min/Max:      " << res.min_ms << " / " << res.max_ms << " ms\n";
+    } else {
+        std::cout << "  FAILED: " << res.error_msg << "\n";
+    }
+    std::cout << "------------------------------------------------------------\n";
 }
 
-int benchmark_configuration(const Config& cfg, bool enable_profiling=false) {
-    cout << "=== Running: " << cfg.description << " ===\n";
-    do_cooling();
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "jetson_bench");
+BenchmarkResult run_config(const BenchmarkConfig& config, Ort::Env& env) {
+    BenchmarkResult res;
+    res.config = config;
     
-    Ort::Session session(nullptr); 
-    try {
-         session = create_session_for_config(env, cfg);
-    } catch(const std::exception& e) {
-        cerr << "Session creation failed: " << e.what() << endl;
-        return -1;
+    // Cool down
+    std::this_thread::sleep_for(std::chrono::milliseconds(COOLING_DELAY_MS));
+
+    Ort::SessionOptions so;
+    so.SetIntraOpNumThreads(config.intra_op_threads);
+    so.SetInterOpNumThreads(config.inter_op_threads);
+    so.SetGraphOptimizationLevel(config.opt_level);
+    so.EnableCpuMemArena();
+    so.EnableMemPattern();
+
+    // Provider Setup
+    if (config.execution_provider == "CUDA") {
+        try {
+            OrtCUDAProviderOptions cuda_opts;
+            cuda_opts.device_id = 0;
+            cuda_opts.gpu_mem_limit = 2ULL * 1024 * 1024 * 1024; // 2GB
+            so.AppendExecutionProvider_CUDA(cuda_opts);
+        } catch(std::exception& e) {
+            res.success = false;
+            res.error_msg = std::string("CUDA Init Failed: ") + e.what();
+            return res;
+        }
     }
 
-    vector<int64_t> input_shape = {cfg.batch, IMG_C, cfg.resolution, cfg.resolution};
-    vector<float> input_data = generate_input(cfg.batch, cfg.resolution);
-
-    Ort::AllocatorWithDefaultOptions allocator;
-    auto memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeDefault);
-    Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
-        memory_info, input_data.data(), input_data.size(), input_shape.data(), input_shape.size()
-    );
-
-    // --- FIXED NAME HANDLING ---
-    Ort::AllocatedStringPtr input_name_ptr = session.GetInputName(0, allocator);
-    const char* input_name = input_name_ptr.get();
-    vector<const char*> input_names = {input_name};
-
-    vector<Ort::AllocatedStringPtr> output_name_ptrs;
-    vector<const char*> output_names;
-    size_t out_count = session.GetOutputCount();
-    for (size_t i = 0; i < out_count; ++i) {
-        auto ptr = session.GetOutputName(i, allocator);
-        output_names.push_back(ptr.get());
-        output_name_ptrs.push_back(std::move(ptr));
-    }
-
-    // Warmup
-    cout << "Warming up (" << NUM_WARMUP << " iters)\n";
     try {
-        for (int i = 0; i < NUM_WARMUP; ++i) {
-            session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
+        Ort::Session session(env, MODEL_PATH.c_str(), so);
+        
+        // Input Setup
+        Ort::AllocatorWithDefaultOptions allocator;
+        std::string input_name_str = session.GetInputName(0, allocator);
+        const char* input_names[] = { input_name_str.c_str() };
+        
+        std::string output_name_str = session.GetOutputName(0, allocator);
+        const char* output_names[] = { output_name_str.c_str() };
+
+        std::vector<int64_t> input_dims = {
+            config.batch_size, 3, config.resolution, config.resolution
+        };
+        size_t input_size = config.batch_size * 3 * config.resolution * config.resolution;
+        auto input_data = generate_random_input(input_size);
+
+        auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+        Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
+            memory_info, input_data.data(), input_size, input_dims.data(), input_dims.size()
+        );
+
+        // Warmup
+        for(int i=0; i<NUM_WARMUP; i++) {
+            session.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor, 1, output_names, 1);
         }
 
-        // Main runs
-        vector<double> latencies_s;
-        auto run_start = hr_clock::now();
-        for (int i = 0; i < NUM_RUNS; ++i) {
-            auto t0 = hr_clock::now();
-            session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
-            auto t1 = hr_clock::now();
-            double s = std::chrono::duration<double>(t1 - t0).count();
-            // Note: Storing latency per batch, not per image
-            latencies_s.push_back(s); 
+        // Measure
+        std::vector<double> latencies;
+        latencies.reserve(NUM_RUNS);
+
+        for(int i=0; i<NUM_RUNS; i++) {
+            auto start = std::chrono::high_resolution_clock::now();
+            session.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor, 1, output_names, 1);
+            auto end = std::chrono::high_resolution_clock::now();
+            
+            std::chrono::duration<double, std::milli> elapsed = end - start;
+            latencies.push_back(elapsed.count() / config.batch_size); // Latency per image if preferred, or per batch
         }
-        auto run_end = hr_clock::now();
-        double run_seconds = std::chrono::duration<double>(run_end - run_start).count();
 
-        auto stats = calc_stats(latencies_s);
-        cout << "Completed " << NUM_RUNS << " runs in " << run_seconds << "s\n";
-        cout << "Mean latency: " << stats.mean_ms << " ms, Throughput: " << stats.throughput_fps * cfg.batch << " Imgs/Sec (Batch FPS: " << stats.throughput_fps << ")\n";
+        // Stats
+        double sum = std::accumulate(latencies.begin(), latencies.end(), 0.0);
+        res.mean_ms = sum / latencies.size();
+        res.throughput_fps = 1000.0 / res.mean_ms * config.batch_size;
+        
+        double sq_sum = std::inner_product(latencies.begin(), latencies.end(), latencies.begin(), 0.0);
+        res.std_ms = std::sqrt(sq_sum / latencies.size() - res.mean_ms * res.mean_ms);
+        
+        auto minmax = std::minmax_element(latencies.begin(), latencies.end());
+        res.min_ms = *minmax.first;
+        res.max_ms = *minmax.second;
+        res.success = true;
 
-        // Save summary
-        string outname = "bench_" + to_string(cfg.batch) + "_" + to_string(cfg.resolution) + ".txt";
-        ofstream f(outname);
-        f << "description: " << cfg.description << "\n";
-        f << "mean_ms: " << stats.mean_ms << "\n";
-        f << "std_ms: " << stats.std_ms << "\n";
-        f << "throughput_fps: " << stats.throughput_fps << "\n";
-        f << "n_runs: " << stats.n << "\n";
-        f.close();
-        cout << "Saved to " << outname << "\n";
-    } catch(const std::exception& e) {
-        cerr << "Run failed: " << e.what() << endl;
+    } catch (const Ort::Exception& e) {
+        res.success = false;
+        res.error_msg = e.what();
     }
 
-    return 0;
+    print_result(res);
+    return res;
 }
 
+// ================= MAIN =================
 int main() {
-    cout << "ONNX Runtime Jetson benchmark\n";
-    if (!file_exists(MODEL_PATH)) {
-        cerr << "Model missing: " << MODEL_PATH << "\n";
-        return 1;
+    std::cout << "==========================================\n";
+    std::cout << "ONNX Runtime Benchmark for Jetson (C++)\n";
+    std::cout << "Model: " << MODEL_PATH << "\n";
+    std::cout << "==========================================\n";
+
+    Ort::Env env(ORT_LOGGING_LEVEL_ERROR, "JetsonBench");
+
+    // Define Configurations (mimicking the Python generator)
+    std::vector<BenchmarkConfig> configs;
+
+    // CUDA Configs
+    std::vector<int> batches = {1, 2, 4, 8};
+    // Reduced resolution list for example, add more if needed
+    std::vector<int> resolutions; 
+    for(int r=128; r<=512; r+=128) resolutions.push_back(r);
+
+    for (int b : batches) {
+        for (int r : resolutions) {
+            BenchmarkConfig c;
+            c.execution_provider = "CUDA";
+            c.opt_level = GraphOptimizationLevel::ORT_ENABLE_EXTENDED;
+            c.intra_op_threads = 2;
+            c.inter_op_threads = 2;
+            c.batch_size = b;
+            c.resolution = r;
+            c.description = "EP:CUDA, Batch:" + std::to_string(b) + ", Res:" + std::to_string(r);
+            configs.push_back(c);
+        }
     }
-    auto configs = generate_test_configurations();
-    cout << "Generated " << configs.size() << " configurations\n";
-    for (const auto &cfg : configs) {
-        benchmark_configuration(cfg, false);
+    
+    // You can add CPU configs here if desired
+    
+    std::cout << "Generated " << configs.size() << " configurations.\n";
+
+    // Run Benchmarks
+    int success_count = 0;
+    for (const auto& conf : configs) {
+        BenchmarkResult r = run_config(conf, env);
+        if(r.success) success_count++;
     }
-    cout << "Benchmarking finished\n";
+
+    std::cout << "Benchmark Finished. Successful: " << success_count << "/" << configs.size() << std::endl;
     return 0;
 }
