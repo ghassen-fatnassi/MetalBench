@@ -6,10 +6,6 @@
 #include <chrono>
 #include <sys/stat.h>
 
-// Required if using the specific C-API function for CUDA directly
-// Ensure you link against onnxruntime_providers_cuda or onnxruntime
-#include <onnxruntime/core/providers/cuda/cuda_provider_factory.h> 
-
 using namespace std;
 using hr_clock = std::chrono::high_resolution_clock;
 

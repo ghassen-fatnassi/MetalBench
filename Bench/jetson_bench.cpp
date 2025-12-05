@@ -1,6 +1,5 @@
 // jetson_bench.cpp
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
-#include <onnxruntime/core/providers/cuda/cuda_provider_factory.h> // Required for CUDA call
 
 #include <vector>
 #include <random>
