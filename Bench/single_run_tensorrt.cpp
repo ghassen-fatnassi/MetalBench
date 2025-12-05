@@ -61,7 +61,7 @@ Ort::Session create_tensorrt_session(Ort::Env& env, const char* model_path) {
     // Example prototype variations exist — check your onnxruntime_c_api.h
     extern OrtStatus* OrtSessionOptionsAppendExecutionProvider_Tensorrt(OrtSessionOptions* options, int device_id, size_t trt_max_workspace_size, bool trt_fp16_enable);
     OrtSessionOptionsAppendExecutionProvider_Tensorrt(raw, 0, (size_t)(1 << 28), true);
-    OrtSessionOptionsAppendExecutionProvider_CUDA(raw, 0);
+    //OrtSessionOptionsAppendExecutionProvider_CUDA(raw, 0);
     #else
     // If not available, fallback to using CUDA EP only:
     OrtSessionOptionsAppendExecutionProvider_CUDA(raw, 0);

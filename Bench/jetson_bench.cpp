@@ -84,9 +84,10 @@ Ort::Session create_session_for_config(Ort::Env& env, const Config& cfg) {
     so.EnableMemPattern();
 
     if (cfg.execution_provider == "CUDA") {
-        OrtSessionOptions* raw = so;
-        OrtSessionOptionsAppendExecutionProvider_CUDA(raw, 0);
+        OrtSessionOptions* raw_opts = so;  // implicit cast OK
+        OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(raw_opts, 0);
     }
+
     // else CPU default
 
     return Ort::Session(env, MODEL_PATH, so);
