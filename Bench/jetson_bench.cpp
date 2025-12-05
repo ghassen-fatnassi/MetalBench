@@ -170,7 +170,7 @@ int main() {
         for (int r : resolutions) {
             BenchmarkConfig c;
             c.execution_provider = "CUDA";
-            c.opt_level = GraphOptimizationLevel::ORT_ENABLE_EXTENDED;
+            c.opt_level = GraphOptimizationLevel::ORT_ENABLE_NONE;
             c.intra_op_threads = 2;
             c.inter_op_threads = 2;
             c.batch_size = b;
