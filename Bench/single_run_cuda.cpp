@@ -7,7 +7,7 @@
 // For 1.6.0 we use the C-API struct or specific helper
 #include <onnxruntime/core/session/onnxruntime_c_api.h>
 
-const std::string MODEL_PATH = "../Models/yolo12n_op12.onnx";
+const std::string MODEL_PATH = "Models/yolo12n_op12.onnx";
 const int BATCH_SIZE = 1;
 const int IMG_SIZE = 128;
 
