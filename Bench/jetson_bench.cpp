@@ -97,7 +97,7 @@ BenchmarkResult run_config(const BenchmarkConfig& config, Ort::Env& env) {
         std::string output_name_str = session.GetOutputName(0, allocator);
         const char* output_names[] = { output_name_str.c_str() };
 
-        std::vector<int64_t> input_dims = {
+        std::vector<int32_t> input_dims = {
             config.batch_size, 3, config.resolution, config.resolution
         };
         size_t input_size = config.batch_size * 3 * config.resolution * config.resolution;
