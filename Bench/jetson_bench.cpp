@@ -1,12 +1,7 @@
 // jetson_bench.cpp
-// A Jetson-oriented ONNX Runtime benchmark (condensed translation of your Python script).
-// Features:
-// - Config generator (CUDA only by default in this translation)
-// - Warmup iterations
-// - NUM_RUNS measurement loop
-// - Simple latency stats + JSON-ish output (no external JSON lib)
-
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+#include <onnxruntime/core/providers/cuda/cuda_provider_factory.h> // Required for CUDA call
+
 #include <vector>
 #include <random>
 #include <iostream>
@@ -17,6 +12,7 @@
 #include <string>
 #include <numeric>
 #include <cmath>
+#include <algorithm> // Required for std::sort
 
 using namespace std;
 using hr_clock = std::chrono::high_resolution_clock;
@@ -26,7 +22,7 @@ const int IMG_C = 3;
 const int DEFAULT_RES = 128;
 const int NUM_WARMUP = 3;
 const int NUM_RUNS = 30;
-const double COOLING_DELAY = 5.0; // seconds
+const double COOLING_DELAY = 5.0; 
 const double TIMEOUT_SECONDS = 60.0;
 
 bool file_exists(const string &path) {
@@ -43,18 +39,17 @@ vector<float> generate_input(int batch, int resolution) {
 }
 
 struct Config {
-    int optimization; // use ORT enums
+    int optimization; 
     int intra;
     int inter;
     int batch;
     int resolution;
-    string execution_provider; // "CUDA" or "CPU"
+    string execution_provider; 
     string description;
 };
 
 vector<Config> generate_test_configurations() {
     vector<Config> configs;
-    // We'll only generate a small set similar to your Python script
     for (auto ep : {"CUDA"}) {
         for (auto opt : {GraphOptimizationLevel::ORT_DISABLE_ALL, GraphOptimizationLevel::ORT_ENABLE_EXTENDED}) {
             for (int batch : {1,2,4}) {
@@ -82,7 +77,10 @@ Ort::Session create_session_for_config(Ort::Env& env, const Config& cfg) {
     so.SetGraphOptimizationLevel(static_cast<GraphOptimizationLevel>(cfg.optimization));
     so.EnableCpuMemArena();
     so.EnableMemPattern();
+    
     if (cfg.execution_provider == "CUDA") {
+        // Fix: Define raw_opts before using it
+        OrtSessionOptions* raw_opts = so; 
         OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(raw_opts, 0);
         if (status != nullptr) {
             const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
@@ -115,7 +113,10 @@ Stats calc_stats(const vector<double>& values_s) {
     for (double x : v) sq_sum += (x - mean)*(x - mean);
     double var = sq_sum / n;
     double stddev = sqrt(var);
-    qsort(v.begin(), v.end());
+    
+    // Fix: Use std::sort instead of C qsort for vectors
+    std::sort(v.begin(), v.end()); 
+    
     double median = v[n/2];
     s.n = n;
     s.mean_ms = mean * 1000.0;
@@ -136,7 +137,14 @@ int benchmark_configuration(const Config& cfg, bool enable_profiling=false) {
     cout << "=== Running: " << cfg.description << " ===\n";
     do_cooling();
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "jetson_bench");
-    Ort::Session session = create_session_for_config(env, cfg);
+    
+    Ort::Session session(nullptr); 
+    try {
+         session = create_session_for_config(env, cfg);
+    } catch(const std::exception& e) {
+        cerr << "Session creation failed: " << e.what() << endl;
+        return -1;
+    }
 
     vector<int64_t> input_shape = {cfg.batch, IMG_C, cfg.resolution, cfg.resolution};
     vector<float> input_data = generate_input(cfg.batch, cfg.resolution);
@@ -147,47 +155,58 @@ int benchmark_configuration(const Config& cfg, bool enable_profiling=false) {
         memory_info, input_data.data(), input_data.size(), input_shape.data(), input_shape.size()
     );
 
-    char* input_name = session.GetInputName(0, allocator);
+    // --- FIXED NAME HANDLING ---
+    Ort::AllocatedStringPtr input_name_ptr = session.GetInputNameAllocated(0, allocator);
+    const char* input_name = input_name_ptr.get();
     vector<const char*> input_names = {input_name};
+
+    vector<Ort::AllocatedStringPtr> output_name_ptrs;
     vector<const char*> output_names;
     size_t out_count = session.GetOutputCount();
     for (size_t i = 0; i < out_count; ++i) {
-        output_names.push_back(session.GetOutputName(i, allocator));
+        auto ptr = session.GetOutputNameAllocated(i, allocator);
+        output_names.push_back(ptr.get());
+        output_name_ptrs.push_back(std::move(ptr));
     }
 
     // Warmup
     cout << "Warming up (" << NUM_WARMUP << " iters)\n";
-    for (int i = 0; i < NUM_WARMUP; ++i) {
-        session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
+    try {
+        for (int i = 0; i < NUM_WARMUP; ++i) {
+            session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
+        }
+
+        // Main runs
+        vector<double> latencies_s;
+        auto run_start = hr_clock::now();
+        for (int i = 0; i < NUM_RUNS; ++i) {
+            auto t0 = hr_clock::now();
+            session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
+            auto t1 = hr_clock::now();
+            double s = std::chrono::duration<double>(t1 - t0).count();
+            // Note: Storing latency per batch, not per image
+            latencies_s.push_back(s); 
+        }
+        auto run_end = hr_clock::now();
+        double run_seconds = std::chrono::duration<double>(run_end - run_start).count();
+
+        auto stats = calc_stats(latencies_s);
+        cout << "Completed " << NUM_RUNS << " runs in " << run_seconds << "s\n";
+        cout << "Mean latency: " << stats.mean_ms << " ms, Throughput: " << stats.throughput_fps * cfg.batch << " Imgs/Sec (Batch FPS: " << stats.throughput_fps << ")\n";
+
+        // Save summary
+        string outname = "bench_" + to_string(cfg.batch) + "_" + to_string(cfg.resolution) + ".txt";
+        ofstream f(outname);
+        f << "description: " << cfg.description << "\n";
+        f << "mean_ms: " << stats.mean_ms << "\n";
+        f << "std_ms: " << stats.std_ms << "\n";
+        f << "throughput_fps: " << stats.throughput_fps << "\n";
+        f << "n_runs: " << stats.n << "\n";
+        f.close();
+        cout << "Saved to " << outname << "\n";
+    } catch(const std::exception& e) {
+        cerr << "Run failed: " << e.what() << endl;
     }
-
-    // Main runs
-    vector<double> latencies_s;
-    auto run_start = hr_clock::now();
-    for (int i = 0; i < NUM_RUNS; ++i) {
-        auto t0 = hr_clock::now();
-        session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
-        auto t1 = hr_clock::now();
-        double s = std::chrono::duration<double>(t1 - t0).count();
-        latencies_s.push_back(s / cfg.batch);
-    }
-    auto run_end = hr_clock::now();
-    double run_seconds = std::chrono::duration<double>(run_end - run_start).count();
-
-    auto stats = calc_stats(latencies_s);
-    cout << "Completed " << NUM_RUNS << " runs in " << run_seconds << "s\n";
-    cout << "Mean latency: " << stats.mean_ms << " ms, Throughput: " << stats.throughput_fps << " FPS\n";
-
-    // Save summary to a simple text file
-    string outname = "bench_result_" + to_string(cfg.batch) + "_" + to_string(cfg.resolution) + ".txt";
-    ofstream f(outname);
-    f << "description: " << cfg.description << "\n";
-    f << "mean_ms: " << stats.mean_ms << "\n";
-    f << "std_ms: " << stats.std_ms << "\n";
-    f << "throughput_fps: " << stats.throughput_fps << "\n";
-    f << "n_runs: " << stats.n << "\n";
-    f.close();
-    cout << "Saved to " << outname << "\n";
 
     return 0;
 }

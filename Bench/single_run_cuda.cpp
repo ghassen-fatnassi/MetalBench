@@ -6,6 +6,10 @@
 #include <chrono>
 #include <sys/stat.h>
 
+// Required if using the specific C-API function for CUDA directly
+// Ensure you link against onnxruntime_providers_cuda or onnxruntime
+#include <onnxruntime/core/providers/cuda/cuda_provider_factory.h> 
+
 using namespace std;
 using hr_clock = std::chrono::high_resolution_clock;
 
@@ -36,8 +40,13 @@ Ort::Session create_cuda_session(Ort::Env& env, const char* model_path) {
     so.EnableCpuMemArena();
     so.EnableMemPattern();
 
-    OrtSessionOptions* raw = so;
-    OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(raw, 0);
+    // Fix: Explicitly cast C++ wrapper to C-style pointer
+    OrtSessionOptions* raw_opts = so; 
+    
+    // Note: If this function is unresolved, you may need to use the OrtApi approach
+    // or ensure you are linking 'onnxruntime_providers_cuda'
+    OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(raw_opts, 0);
+    
     if (status != nullptr) {
         const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
         std::cerr << "Failed to append CUDA EP: " << api->GetErrorMessage(status) << "\n";
@@ -55,32 +64,52 @@ int main() {
     cout << "Loading model: " << MODEL_PATH << '\n';
 
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "single_run_cuda");
-    Ort::Session session = create_cuda_session(env, MODEL_PATH);
+    
+    try {
+        Ort::Session session = create_cuda_session(env, MODEL_PATH);
 
-    vector<int64_t> input_shape = {BATCH_SIZE, IMG_C, IMG_H, IMG_W};
-    vector<float> input_data = generate_input(BATCH_SIZE);
+        vector<int64_t> input_shape = {BATCH_SIZE, IMG_C, IMG_H, IMG_W};
+        vector<float> input_data = generate_input(BATCH_SIZE);
 
-    Ort::AllocatorWithDefaultOptions allocator;
-    auto memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeDefault);
-    Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
-        memory_info, input_data.data(), input_data.size(), input_shape.data(), input_shape.size()
-    );
+        Ort::AllocatorWithDefaultOptions allocator;
+        auto memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeDefault);
+        Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
+            memory_info, input_data.data(), input_data.size(), input_shape.data(), input_shape.size()
+        );
 
-    // Get input/output names (C++ API: use GetInputName / GetOutputName)
-    char* input_name = session.GetInputName(0, allocator);
-    vector<const char*> input_names = {input_name};
-    vector<const char*> output_names;
-    size_t out_count = session.GetOutputCount();
-    for (size_t i = 0; i < out_count; ++i) {
-        output_names.push_back(session.GetOutputName(i, allocator));
+        // --- FIXED NAME HANDLING (Modern ORT API) ---
+        // We must keep the smart pointers (AllocatedStringPtr) alive 
+        // while we use the raw char* in the Run call.
+        
+        // 1. Get Input Name
+        Ort::AllocatedStringPtr input_name_ptr = session.GetInputNameAllocated(0, allocator);
+        const char* input_name = input_name_ptr.get();
+        vector<const char*> input_names = {input_name};
+
+        // 2. Get Output Names
+        size_t out_count = session.GetOutputCount();
+        vector<Ort::AllocatedStringPtr> output_name_ptrs;
+        vector<const char*> output_names;
+        
+        for (size_t i = 0; i < out_count; ++i) {
+            auto ptr = session.GetOutputNameAllocated(i, allocator);
+            output_names.push_back(ptr.get());
+            output_name_ptrs.push_back(std::move(ptr)); // Keep alive!
+        }
+
+        auto t0 = hr_clock::now();
+        auto output_tensors = session.Run(Ort::RunOptions{nullptr}, 
+                                          input_names.data(), &input_tensor, 1, 
+                                          output_names.data(), output_names.size());
+        auto t1 = hr_clock::now();
+        double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
+
+        cout << "Single GPU (CUDA) inference completed in " << ms << " ms\n";
+
+    } catch (const Ort::Exception& e) {
+        std::cerr << "ORT Exception: " << e.what() << "\n";
+        return 1;
     }
-
-    auto t0 = hr_clock::now();
-    auto output_tensors = session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
-    auto t1 = hr_clock::now();
-    double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
-
-    cout << "Single GPU (CUDA) inference completed in " << ms << " ms\n";
 
     return 0;
 }
