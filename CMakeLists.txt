@@ -26,12 +26,6 @@ set(ONNX_RUNTIME_LIBS
 
     # CUDA provider (STATIC)
     ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.a
-
-    # Needed when linking provider static libs
-    cudart
-    cublas
-    cublasLt
-    curand
 )
 
 function(add_onnxbin name src)

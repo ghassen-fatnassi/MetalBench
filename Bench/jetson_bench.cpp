@@ -82,14 +82,14 @@ Ort::Session create_session_for_config(Ort::Env& env, const Config& cfg) {
     so.SetGraphOptimizationLevel(static_cast<GraphOptimizationLevel>(cfg.optimization));
     so.EnableCpuMemArena();
     so.EnableMemPattern();
-
     if (cfg.execution_provider == "CUDA") {
-        OrtSessionOptions* raw_opts = so;  // implicit cast OK
         OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(raw_opts, 0);
+        if (status != nullptr) {
+            const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
+            std::cerr << "Failed to append CUDA EP: " << api->GetErrorMessage(status) << "\n";
+            api->ReleaseStatus(status);
+        }
     }
-
-    // else CPU default
-
     return Ort::Session(env, MODEL_PATH, so);
 }
 
@@ -115,7 +115,7 @@ Stats calc_stats(const vector<double>& values_s) {
     for (double x : v) sq_sum += (x - mean)*(x - mean);
     double var = sq_sum / n;
     double stddev = sqrt(var);
-    sort(v.begin(), v.end());
+    qsort(v.begin(), v.end());
     double median = v[n/2];
     s.n = n;
     s.mean_ms = mean * 1000.0;

@@ -1,4 +1,3 @@
-// single_run_cuda.cpp
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <vector>
 #include <random>
@@ -16,7 +15,6 @@ const int IMG_H = 128;
 const int IMG_W = 128;
 const int BATCH_SIZE = 1;
 
-// Create deterministic input like your python script
 static vector<float> generate_input(int batch) {
     std::mt19937 rng(42);
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
@@ -38,14 +36,14 @@ Ort::Session create_cuda_session(Ort::Env& env, const char* model_path) {
     so.EnableCpuMemArena();
     so.EnableMemPattern();
 
-    // Append CUDA EP: this symbol is provided when you build ORT with CUDA EP linked.
-    // Signature (C API): OrtStatus* OrtSessionOptionsAppendExecutionProvider_CUDA(OrtSessionOptions* options, int device_id);
-    // The C++ SessionOptions can be cast to OrtSessionOptions*
     OrtSessionOptions* raw = so;
-    // device_id = 0
-    OrtSessionOptionsAppendExecutionProvider_CUDA(raw, 0);
+    OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(raw, 0);
+    if (status != nullptr) {
+        const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
+        std::cerr << "Failed to append CUDA EP: " << api->GetErrorMessage(status) << "\n";
+        api->ReleaseStatus(status);
+    }
 
-    // Create the session
     return Ort::Session(env, model_path, so);
 }
 
@@ -59,18 +57,16 @@ int main() {
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "single_run_cuda");
     Ort::Session session = create_cuda_session(env, MODEL_PATH);
 
-    // Generate input
     vector<int64_t> input_shape = {BATCH_SIZE, IMG_C, IMG_H, IMG_W};
     vector<float> input_data = generate_input(BATCH_SIZE);
 
-    // Allocate tensor
     Ort::AllocatorWithDefaultOptions allocator;
     auto memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeDefault);
     Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
         memory_info, input_data.data(), input_data.size(), input_shape.data(), input_shape.size()
     );
 
-    // Get input name
+    // Get input/output names (C++ API: use GetInputName / GetOutputName)
     char* input_name = session.GetInputName(0, allocator);
     vector<const char*> input_names = {input_name};
     vector<const char*> output_names;
@@ -79,16 +75,12 @@ int main() {
         output_names.push_back(session.GetOutputName(i, allocator));
     }
 
-    // Run inference
     auto t0 = hr_clock::now();
     auto output_tensors = session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
     auto t1 = hr_clock::now();
     double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
 
     cout << "Single GPU (CUDA) inference completed in " << ms << " ms\n";
-
-    // Free names (allocator will release automatically when going out of scope)
-    // Note: if using GetInputNameAllocated you used allocator.release() above; freed on process exit or free manually.
 
     return 0;
 }
