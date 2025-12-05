@@ -19,7 +19,7 @@
 #include <cmath>
 
 using namespace std;
-using clock_t = std::chrono::high_resolution_clock;
+using hr_clock = std::chrono::high_resolution_clock;
 
 const char* MODEL_PATH = "Models/yolo12n_op12.onnx";
 const int IMG_C = 3;
@@ -146,12 +146,12 @@ int benchmark_configuration(const Config& cfg, bool enable_profiling=false) {
         memory_info, input_data.data(), input_data.size(), input_shape.data(), input_shape.size()
     );
 
-    char* input_name = session.GetInputNameAllocated(0, allocator).release();
+    char* input_name = session.GetInputName(0, allocator);
     vector<const char*> input_names = {input_name};
     vector<const char*> output_names;
     size_t out_count = session.GetOutputCount();
     for (size_t i = 0; i < out_count; ++i) {
-        output_names.push_back(session.GetOutputNameAllocated(i, allocator).release());
+        output_names.push_back(session.GetOutputName(i, allocator));
     }
 
     // Warmup
@@ -162,15 +162,15 @@ int benchmark_configuration(const Config& cfg, bool enable_profiling=false) {
 
     // Main runs
     vector<double> latencies_s;
-    auto run_start = clock_t::now();
+    auto run_start = hr_clock::now();
     for (int i = 0; i < NUM_RUNS; ++i) {
-        auto t0 = clock_t::now();
+        auto t0 = hr_clock::now();
         session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
-        auto t1 = clock_t::now();
+        auto t1 = hr_clock::now();
         double s = std::chrono::duration<double>(t1 - t0).count();
         latencies_s.push_back(s / cfg.batch);
     }
-    auto run_end = clock_t::now();
+    auto run_end = hr_clock::now();
     double run_seconds = std::chrono::duration<double>(run_end - run_start).count();
 
     auto stats = calc_stats(latencies_s);

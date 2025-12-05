@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 
 using namespace std;
-using clock_t = std::chrono::high_resolution_clock;
+using hr_clock = std::chrono::high_resolution_clock;
 
 const char* MODEL_PATH = "Models/yolo12n_op12.onnx";
 const int IMG_C = 3;
@@ -71,18 +71,18 @@ int main() {
     );
 
     // Get input name
-    char* input_name = session.GetInputNameAllocated(0, allocator).release();
+    char* input_name = session.GetInputName(0, allocator);
     vector<const char*> input_names = {input_name};
     vector<const char*> output_names;
     size_t out_count = session.GetOutputCount();
     for (size_t i = 0; i < out_count; ++i) {
-        output_names.push_back(session.GetOutputNameAllocated(i, allocator).release());
+        output_names.push_back(session.GetOutputName(i, allocator));
     }
 
     // Run inference
-    auto t0 = clock_t::now();
+    auto t0 = hr_clock::now();
     auto output_tensors = session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), output_names.size());
-    auto t1 = clock_t::now();
+    auto t1 = hr_clock::now();
     double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
 
     cout << "Single GPU (CUDA) inference completed in " << ms << " ms\n";
