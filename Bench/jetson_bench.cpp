@@ -75,8 +75,9 @@ BenchmarkResult run_config(const BenchmarkConfig& config, Ort::Env& env) {
     // Provider Setup
     if (config.execution_provider == "CUDA") {
         try {
-            OrtCUDAProviderOptions cuda_opts;
+            OrtCUDAProviderOptions cuda_opts{};
             cuda_opts.device_id = 0;
+            cuda_opts.cudnn_conv_algo_search = OrtCudnnConvAlgoSearch::EXHAUSTIVE;
             so.AppendExecutionProvider_CUDA(cuda_opts);
         } catch(std::exception& e) {
             res.success = false;

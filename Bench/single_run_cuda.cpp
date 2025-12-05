@@ -25,7 +25,7 @@ int main() {
     // Append CUDA Provider
     // Note: ORT 1.6.0 C++ API uses OrtCUDAProviderOptions
     try {
-        OrtCUDAProviderOptions cuda_options;
+        OrtCUDAProviderOptions cuda_options{};
         cuda_options.device_id = 0;
 
         session_options.AppendExecutionProvider_CUDA(cuda_options);
