@@ -10,7 +10,7 @@
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 
 // ================= CONFIG =================
-const std::string MODEL_PATH = "Models/yolo12n_op12.onnx";
+const std::string MODEL_PATH = "../Models/yolo12n_op12.onnx";
 const int NUM_WARMUP = 3;
 const int NUM_RUNS = 30;
 const int COOLING_DELAY_MS = 2000; // 2 seconds between configs
