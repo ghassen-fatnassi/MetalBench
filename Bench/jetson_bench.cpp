@@ -6,7 +6,7 @@
 // - NUM_RUNS measurement loop
 // - Simple latency stats + JSON-ish output (no external JSON lib)
 
-#include <onnxruntime_cxx_api.h>
+#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <vector>
 #include <random>
 #include <iostream>
