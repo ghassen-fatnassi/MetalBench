@@ -27,9 +27,7 @@ int main() {
     try {
         OrtCUDAProviderOptions cuda_options;
         cuda_options.device_id = 0;
-        // 2GB limit (in bytes)
-        cuda_options.gpu_mem_limit = 2ULL * 1024 * 1024 * 1024; 
-        
+
         session_options.AppendExecutionProvider_CUDA(cuda_options);
         std::cout << "CUDA Provider Appended." << std::endl;
     } catch (...) {
