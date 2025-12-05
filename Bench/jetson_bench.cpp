@@ -155,7 +155,7 @@ int benchmark_configuration(const Config& cfg, bool enable_profiling=false) {
     );
 
     // --- FIXED NAME HANDLING ---
-    Ort::AllocatedStringPtr input_name_ptr = session.GetInputNameAllocated(0, allocator);
+    Ort::AllocatedStringPtr input_name_ptr = session.GetInputName(0, allocator);
     const char* input_name = input_name_ptr.get();
     vector<const char*> input_names = {input_name};
 
@@ -163,7 +163,7 @@ int benchmark_configuration(const Config& cfg, bool enable_profiling=false) {
     vector<const char*> output_names;
     size_t out_count = session.GetOutputCount();
     for (size_t i = 0; i < out_count; ++i) {
-        auto ptr = session.GetOutputNameAllocated(i, allocator);
+        auto ptr = session.GetOutputName(i, allocator);
         output_names.push_back(ptr.get());
         output_name_ptrs.push_back(std::move(ptr));
     }

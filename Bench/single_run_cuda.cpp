@@ -78,7 +78,7 @@ int main() {
         // while we use the raw char* in the Run call.
         
         // 1. Get Input Name
-        Ort::AllocatedStringPtr input_name_ptr = session.GetInputNameAllocated(0, allocator);
+        Ort::AllocatedStringPtr input_name_ptr = session.GetInputName(0, allocator);
         const char* input_name = input_name_ptr.get();
         vector<const char*> input_names = {input_name};
 
@@ -88,7 +88,7 @@ int main() {
         vector<const char*> output_names;
         
         for (size_t i = 0; i < out_count; ++i) {
-            auto ptr = session.GetOutputNameAllocated(i, allocator);
+            auto ptr = session.GetOutputName(i, allocator);
             output_names.push_back(ptr.get());
             output_name_ptrs.push_back(std::move(ptr)); // Keep alive!
         }
