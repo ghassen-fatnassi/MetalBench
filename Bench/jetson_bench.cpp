@@ -77,7 +77,6 @@ BenchmarkResult run_config(const BenchmarkConfig& config, Ort::Env& env) {
         try {
             OrtCUDAProviderOptions cuda_opts;
             cuda_opts.device_id = 0;
-            cuda_opts.gpu_mem_limit = 2ULL * 1024 * 1024 * 1024; // 2GB
             so.AppendExecutionProvider_CUDA(cuda_opts);
         } catch(std::exception& e) {
             res.success = false;
