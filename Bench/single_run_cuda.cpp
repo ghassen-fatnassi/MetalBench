@@ -41,7 +41,7 @@ Ort::Session create_cuda_session(Ort::Env& env, const char* model_path) {
     
     // Note: If this function is unresolved, you may need to use the OrtApi approach
     // or ensure you are linking 'onnxruntime_providers_cuda'
-    OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(raw_opts, 0);
+    OrtStatus* status = AppendExecutionProvider_CUDA(raw_opts, 0);
     
     if (status != nullptr) {
         const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);

@@ -80,7 +80,7 @@ Ort::Session create_session_for_config(Ort::Env& env, const Config& cfg) {
     if (cfg.execution_provider == "CUDA") {
         // Fix: Define raw_opts before using it
         OrtSessionOptions* raw_opts = so; 
-        OrtStatus* status = OrtSessionOptionsAppendExecutionProvider_CUDA(raw_opts, 0);
+        OrtStatus* status = AppendExecutionProvider_CUDA(raw_opts, 0);
         if (status != nullptr) {
             const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
             std::cerr << "Failed to append CUDA EP: " << api->GetErrorMessage(status) << "\n";
