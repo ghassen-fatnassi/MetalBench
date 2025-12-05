@@ -97,7 +97,7 @@ BenchmarkResult run_config(const BenchmarkConfig& config, Ort::Env& env) {
         std::string output_name_str = session.GetOutputName(0, allocator);
         const char* output_names[] = { output_name_str.c_str() };
 
-        std::vector<int32_t> input_dims = {
+        std::vector<int> input_dims = {
             config.batch_size, 3, config.resolution, config.resolution
         };
         size_t input_size = config.batch_size * 3 * config.resolution * config.resolution;
@@ -170,7 +170,7 @@ int main() {
         for (int r : resolutions) {
             BenchmarkConfig c;
             c.execution_provider = "CUDA";
-            c.opt_level = GraphOptimizationLevel::ORT_ENABLE_BASIC;
+            c.opt_level = GraphOptimizationLevel::ORT_ENABLE_EXTENDED;
             c.intra_op_threads = 2;
             c.inter_op_threads = 2;
             c.batch_size = b;
