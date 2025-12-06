@@ -4,7 +4,7 @@
 __global__ void SimpleReLUAddKernel(const float* input1, const float* input2, float* output, size_t size) {
     size_t idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx < size) {
-        float relu_val = fmaxf(0.0f, input1[idx]);
+        float relu_val = max(0.0f, input1[idx]);
         output[idx] = relu_val + input2[idx];
     }
 }
