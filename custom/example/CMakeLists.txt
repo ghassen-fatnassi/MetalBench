@@ -1,6 +1,9 @@
 # Minimum version of CMake required
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_CUDA_ARCHITECTURES "53") # <--- REPLACE 'XX' HERE
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CUDA_STANDARD 14)
 # Define the project name and enable C++ and CUDA
 project(SimpleCustomOpTest LANGUAGES CXX CUDA)
 
@@ -8,7 +11,6 @@ project(SimpleCustomOpTest LANGUAGES CXX CUDA)
 set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntimel")
 set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
 set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release") 
-set(CMAKE_CUDA_ARCHITECTURES "53")
 # --- Include Directories ---
 
 include_directories(
