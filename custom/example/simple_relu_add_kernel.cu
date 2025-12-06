@@ -1,4 +1,3 @@
-#include "simple_relu_add_kernel.cuh"
 #include <cuda_runtime.h>
 #include <algorithm> // for fmaxf
 // CUDA kernel
