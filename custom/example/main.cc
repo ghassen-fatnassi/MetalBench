@@ -1,16 +1,12 @@
 #include <iostream>
 #include <vector>
-#include "custom_op.h"
-#include "onnxruntime/core/session/onnxruntime_cxx_api.h"
+#include <cuda_runtime.h>
+#include "simple_relu_add_kernel.cuh"  // Header for your CUDA kernel function
 
 int main() {
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "test");
-    Ort::AllocatorWithDefaultOptions allocator;
-
-    // Input sizes
     const size_t size = 8;
 
-    // Create input data
+    // Input data
     std::vector<float> input1(size);
     std::vector<float> input2(size);
     for (size_t i = 0; i < size; ++i) {
@@ -18,22 +14,23 @@ int main() {
         input2[i] = static_cast<float>(i) * 0.5f;
     }
 
-    // Output buffer
-    std::vector<float> output(size, 0.0f);
+    // Allocate device memory
+    float *d_input1, *d_input2, *d_output;
+    cudaMalloc(&d_input1, size * sizeof(float));
+    cudaMalloc(&d_input2, size * sizeof(float));
+    cudaMalloc(&d_output, size * sizeof(float));
 
-    // Create kernel API
-    Ort::CustomOpDomain custom_domain("test_domain");
-    SimpleReLUAddOp simple_op;
+    cudaMemcpy(d_input1, input1.data(), size * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_input2, input2.data(), size * sizeof(float), cudaMemcpyHostToDevice);
 
-    // Normally ONNX Runtime calls CreateKernel for you; here we do it manually
-    const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
-    SimpleReLUAddOpKernel* kernel = new SimpleReLUAddOpKernel(*api, nullptr);
+    // Launch kernel
+    const int threads_per_block = 256;
+    const int blocks = (size + threads_per_block - 1) / threads_per_block;
+    SimpleReLUAddKernel<<<blocks, threads_per_block>>>(d_input1, d_input2, d_output, size);
 
-    // Directly launch the kernel (CPU version)
-    kernel->Compute(nullptr);
-
-    // For simplicity, manually copy input data and call CUDA kernel
-    SimpleReLUAddKernelLaunch(0, input1.data(), input2.data(), output.data(), size);
+    // Copy back results
+    std::vector<float> output(size);
+    cudaMemcpy(output.data(), d_output, size * sizeof(float), cudaMemcpyDeviceToHost);
 
     // Print results
     std::cout << "SimpleReLUAdd output:\n";
@@ -42,6 +39,10 @@ int main() {
     }
     std::cout << std::endl;
 
-    delete kernel;
+    // Free device memory
+    cudaFree(d_input1);
+    cudaFree(d_input2);
+    cudaFree(d_output);
+
     return 0;
 }
