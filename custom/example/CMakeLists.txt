@@ -10,7 +10,7 @@ set(CMAKE_CUDA_ARCHITECTURES "53")
 # -------------------------------
 # ONNX Runtime paths
 # -------------------------------
-set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntimel")
+set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntime")
 set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
 set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release")
 
@@ -20,21 +20,13 @@ set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release")
 include_directories(
     .
     ${ORT_INCLUDE_DIR}
-    /usr/local/cuda/include       # REQUIRED for cuda_runtime.h in .cc files
+    /usr/local/cuda/include        # for cuda_runtime.h
 )
 
-# CUDA libraries path
+# CUDA libs directory
 link_directories(/usr/local/cuda/lib64)
 
-# -------------------------------
-# ONNX Runtime libraries
-# -------------------------------
-set(ONNX_RUNTIME_LIBS
-    ${ORT_LIB_DIR}/libonnxruntime.so
-    ${ORT_LIB_DIR}/libonnxruntime_providers_shared.so
-    ${ORT_LIB_DIR}/libonnxruntime_providers_tensorrt.so
-    ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.a
-)
+add_definitions(-DONNX_ML=1)
 
 find_package(Threads REQUIRED)
 
@@ -42,13 +34,23 @@ find_package(Threads REQUIRED)
 # Sources
 # -------------------------------
 set(KERNEL_SRC simple_relu_add_kernel.cc)
-set(MAIN_SRC main.cc)
-set(CUDA_SRC simple_relu_add_kernel.cu)
+set(CUDA_SRC   simple_relu_add_kernel.cu)
+set(MAIN_SRC   main.cc)
 
 add_executable(custom_op_test
     ${KERNEL_SRC}
-    ${MAIN_SRC}
     ${CUDA_SRC}
+    ${MAIN_SRC}
+)
+
+# -------------------------------
+# ONNX Runtime libraries
+# -------------------------------
+set(ONNX_RUNTIME_LIBS
+    ${ORT_LIB_DIR}/libonnxruntime.so
+    ${ORT_LIB_DIR}/libonnxruntime_providers_shared.so
+    ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.so
+    ${ORT_LIB_DIR}/libonnxruntime_providers_tensorrt.so
 )
 
 # -------------------------------
@@ -58,5 +60,8 @@ target_link_libraries(custom_op_test
     PRIVATE
     ${ONNX_RUNTIME_LIBS}
     Threads::Threads
-    cudart                  # CUDA runtime
+    cudart
+    cuda
+    dl
+    rt
 )

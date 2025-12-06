@@ -1,23 +1,34 @@
-// custom_op.h
-
+#pragma once
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+#include <vector>
 
-// A Simple Custom Op with one input and one output
-struct SimpleReLUAddOp : Ort::CustomOpBase<SimpleReLUAddOp> {
-    void* CreateKernel(const OrtApi& api, const OrtKernelInfo* info) const;
-    const char* GetKernelTypeInfoName() const;
+struct SimpleReLUAddOpKernel; // forward
 
-    // Defines the ONNX properties
-    size_t GetInputTypeCount() const { return 2; }
-    ONNXTensorElementDataType GetInputType(size_t index) const {
-        return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT; // float for both X1 and X2
-    }
+// Custom Op definition: note both template params: Op and Kernel
+struct SimpleReLUAddOp : Ort::CustomOpBase<SimpleReLUAddOp, SimpleReLUAddOpKernel> {
+  SimpleReLUAddOp(const char* provider = "CUDAExecutionProvider") : provider_(provider) {}
 
-    size_t GetOutputTypeCount() const { return 1; }
-    ONNXTensorElementDataType GetOutputType(size_t index) const {
-        return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT; // float for Y
-    }
+  // CreateKernel signature: pass OrtApi and OrtKernelInfo (docs example)
+  void* CreateKernel(const OrtApi& api, const OrtKernelInfo* info) const {
+    return new SimpleReLUAddOpKernel(api, info);
+  }
+
+  const char* GetName() const { return "SimpleReLUAdd"; }
+  const char* GetExecutionProviderType() const { return provider_; }
+
+  size_t GetInputTypeCount() const { return 2; }
+  ONNXTensorElementDataType GetInputType(size_t /*index*/) const {
+    return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT;
+  }
+
+  size_t GetOutputTypeCount() const { return 1; }
+  ONNXTensorElementDataType GetOutputType(size_t /*index*/) const {
+    return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT;
+  }
+
+ private:
+  const char* provider_;
 };
 
-// Function to register the custom ops
+// Helper to register
 void RegisterSimpleReLUAdd(Ort::CustomOpDomain& domain);
