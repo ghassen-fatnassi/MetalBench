@@ -1,57 +1,53 @@
 #include "custom_op.h"
 #include <cuda_runtime.h>
-#include <vector>
 
-extern "C" void SimpleReLUAddKernelLaunch(cudaStream_t stream,
-                                          const float* in1,
-                                          const float* in2,
-                                          float* out,
-                                          size_t n);
+void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
+    const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
 
-struct SimpleReLUAddOpKernel {
+    // -----------------------------
+    // Get input tensors
+    // -----------------------------
+    const OrtValue* in1_val = nullptr;
+    const OrtValue* in2_val = nullptr;
 
-    SimpleReLUAddOpKernel(const OrtApi& api, const OrtKernelInfo* info)
-        : api_(api), info_(info) {}
+    api->KernelContext_GetInput(context, 0, &in1_val);
+    api->KernelContext_GetInput(context, 1, &in2_val);
 
-    void Compute(OrtKernelContext* context) {
+    // Raw data (ORT 1.6 has no template helpers)
+    float* in1 = nullptr;
+    float* in2 = nullptr;
 
-        // C API usage for ORT 1.6
-        const OrtValue* in1_val = api_.KernelContext_GetInput(context, 0);
-        const OrtValue* in2_val = api_.KernelContext_GetInput(context, 1);
+    api->GetTensorMutableData(in1_val, (void**)&in1);
+    api->GetTensorMutableData(in2_val, (void**)&in2);
 
-        const float* in1 = api_.GetTensorData<float>(in1_val);
-        const float* in2 = api_.GetTensorData<float>(in2_val);
+    // -----------------------------
+    // Get tensor shape
+    // -----------------------------
+    OrtTensorTypeAndShapeInfo* shape_info = nullptr;
+    api->GetTensorTypeAndShape(in1_val, &shape_info);
 
-        OrtTensorTypeAndShapeInfo* shape_info = api_.GetTensorTypeAndShape(in1_val);
+    size_t dim_count = 0;
+    api->GetDimensionsCount(shape_info, &dim_count);
 
-        size_t dim_count = api_.GetDimensionsCount(shape_info);
-        std::vector<int64_t> shape(dim_count);
-        api_.GetDimensions(shape_info, shape.data(), dim_count);
+    std::vector<int64_t> shape(dim_count);
+    api->GetDimensions(shape_info, shape.data(), dim_count);
 
-        size_t size = 1;
-        for (auto d : shape) size *= d;
-
-        api_.ReleaseTensorTypeAndShapeInfo(shape_info);
-
-        OrtValue* out_val =
-            api_.KernelContext_GetOutput(context, 0, shape.data(), dim_count);
-
-        float* out = api_.GetTensorMutableData<float>(out_val);
-
-        cudaStream_t stream = 0; // default CUDA stream
-
-        SimpleReLUAddKernelLaunch(stream, in1, in2, out, size);
+    size_t total = 1;
+    for (size_t i = 0; i < dim_count; i++) {
+        total *= shape[i];
     }
 
-    const OrtApi& api_;
-    const OrtKernelInfo* info_;
-};
+    // -----------------------------
+    // Create output tensor
+    // -----------------------------
+    OrtValue* out_val = nullptr;
+    api->KernelContext_GetOutput(context, 0, shape.data(), dim_count, &out_val);
 
-void* SimpleReLUAddOp::CreateKernel(const OrtApi& api, const OrtKernelInfo* info) const {
-    return new SimpleReLUAddOpKernel(api, info);
-}
+    float* out = nullptr;
+    api->GetTensorMutableData(out_val, (void**)&out);
 
-void RegisterSimpleReLUAdd(Ort::CustomOpDomain& domain) {
-    static SimpleReLUAddOp op;
-    domain.Add(&op);
+    // -----------------------------
+    // CUDA kernel launch
+    // -----------------------------
+    simple_add_relu_cuda(in1, in2, out, total);
 }
