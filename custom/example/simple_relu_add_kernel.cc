@@ -25,6 +25,9 @@ void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
 
     size_t size = 1;
     for (auto d : shape) size *= d;
+    
+    // Add this cleanup line:
+    api->ReleaseTensorTypeAndShapeInfo(shape_info); 
 
     OrtValue* out_val = nullptr;
     api->KernelContext_GetOutput(context, 0, shape.data(), dim_count, &out_val);
