@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cuda_runtime.h>
-#include "simple_relu_add_kernel.cuh"  // Header for your CUDA kernel function
+#include "simple_relu_add_kernel.cu"  // Header for your CUDA kernel function
 
 int main() {
     const size_t size = 8;

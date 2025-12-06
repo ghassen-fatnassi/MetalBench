@@ -1,5 +1,6 @@
-#include "custom_op.h"
-
+#include "simple_relu_add_kernel.cuh"
+#include <cuda_runtime.h>
+#include <algorithm> // for fmaxf
 // CUDA kernel
 __global__ void SimpleReLUAddKernel(const float* input1, const float* input2, float* output, size_t size) {
     size_t idx = blockIdx.x * blockDim.x + threadIdx.x;
