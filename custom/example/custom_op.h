@@ -1,9 +1,11 @@
 #pragma once
+
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+#include <vector>
 
-struct SimpleReLUAddOpKernel;
-
-// Provide the full struct definition
+// ---------------------------
+// Kernel struct
+// ---------------------------
 struct SimpleReLUAddOpKernel {
     SimpleReLUAddOpKernel(const OrtApi& api, const OrtKernelInfo* info) : api_(api) {}
     void Compute(OrtKernelContext* context);
@@ -11,16 +13,30 @@ struct SimpleReLUAddOpKernel {
 private:
     const OrtApi& api_;
 };
+
+// ---------------------------
+// Custom Op struct
+// ---------------------------
 struct SimpleReLUAddOp : Ort::CustomOpBase<SimpleReLUAddOp, SimpleReLUAddOpKernel> {
-    void* CreateKernel(const OrtApi& api, const OrtKernelInfo* info) const;
-    const char* GetName() const { return "SimpleReLUAdd"; }
-    const char* GetExecutionProviderType() const { return "CUDAExecutionProvider"; }
+    void* CreateKernel(const OrtApi& api, const OrtKernelInfo* info) const override {
+        return new SimpleReLUAddOpKernel(api, info);
+    }
 
-    size_t GetInputTypeCount() const { return 2; }
-    ONNXTensorElementDataType GetInputType(size_t) const { return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT; }
+    const char* GetName() const override { return "SimpleReLUAdd"; }
+    const char* GetExecutionProviderType() const override { return "CUDAExecutionProvider"; }
 
-    size_t GetOutputTypeCount() const { return 1; }
-    ONNXTensorElementDataType GetOutputType(size_t) const { return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT; }
+    size_t GetInputTypeCount() const override { return 2; }
+    ONNXTensorElementDataType GetInputType(size_t /*index*/) const override {
+        return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT;
+    }
+
+    size_t GetOutputTypeCount() const override { return 1; }
+    ONNXTensorElementDataType GetOutputType(size_t /*index*/) const override {
+        return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT;
+    }
 };
 
+// ---------------------------
+// Register function
+// ---------------------------
 void RegisterSimpleReLUAdd(Ort::CustomOpDomain& domain);
