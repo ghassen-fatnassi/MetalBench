@@ -8,7 +8,7 @@ project(SimpleCustomOpTest LANGUAGES CXX CUDA)
 set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntimel")
 set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
 set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release") 
-
+set(CMAKE_CUDA_ARCHITECTURES "53")
 # --- Include Directories ---
 
 include_directories(
