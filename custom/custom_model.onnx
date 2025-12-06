@@ -1,12 +1,0 @@
-custom-op-test:g
-%
-inputoutput"
-MyCustomOp:mydomainCustomGraphZ
-input
-
-
-b
-output
-
-
-B
