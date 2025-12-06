@@ -5,7 +5,7 @@
 // A Simple Custom Op with one input and one output
 struct SimpleReLUAddOp : Ort::CustomOpBase<SimpleReLUAddOp> {
     void* CreateKernel(const OrtApi& api, const OrtKernelInfo* info) const;
-    const char* Get">CreateKernel_type_info_name() const;
+    const char* GetKernelTypeInfoName() const;
 
     // Defines the ONNX properties
     size_t GetInputTypeCount() const { return 2; }
