@@ -20,6 +20,8 @@ int main() {
     session_options.SetIntraOpNumThreads(4);
     session_options.SetInterOpNumThreads(1);
     session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+    session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
+    session_options.SetOptimizedModelFilePath("optimized_cpu.onnx");
     session_options.EnableCpuMemArena();
     session_options.EnableMemPattern();
 

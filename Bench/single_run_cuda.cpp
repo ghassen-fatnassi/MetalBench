@@ -17,6 +17,8 @@ int main() {
 
     // Optimizations
     session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+    session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
+    session_options.SetOptimizedModelFilePath("optimized_cuda.onnx");
     session_options.EnableCpuMemArena();
     session_options.EnableMemPattern();
     session_options.SetIntraOpNumThreads(4);
