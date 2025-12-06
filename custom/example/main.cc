@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <onnxruntime_cxx_api.h>
+#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include "custom_op.h"
 
 int main() {

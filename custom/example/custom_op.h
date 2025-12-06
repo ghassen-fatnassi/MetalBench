@@ -1,5 +1,5 @@
 #pragma once
-#include <onnxruntime_cxx_api.h>
+#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <vector>
 
 // Forward declare the kernel
