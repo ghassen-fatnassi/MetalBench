@@ -1,58 +1,55 @@
 #include <iostream>
 #include <vector>
-#include <numeric>
-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+#include <cuda_runtime.h>
 #include "custom_op.h" 
 
-// --- Helper to check ORT Status and throw C++ exception ---
-#define ORT_THROW_ON_ERROR(status) \
-    do { \
-        if (status) { \
-            const char* msg = Ort::GetApi().GetErrorMessage(status); \
-            std::cerr << "ORT Exception: " << msg << std::endl; \
-            Ort::GetApi().ReleaseStatus(status); \
-            throw std::runtime_error("ORT operation failed."); \
-        } \
-    } while(0)
+int main() {
+    // Keep size 8 for this test
+    const size_t size = 8;
 
-int main() try {
-    // --- 1. Setup Environment ---
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "TestOrtCustomOp");
-    Ort::SessionOptions session_options;
+    // --- REPLACEMENT START ---
+    // Hardcoded deterministic data
+    // Input 1: Has negatives to prove ReLU works (negatives become 0)
+    std::vector<float> input1 = { -10.0f, -5.0f, -1.0f, 0.0f, 1.0f, 5.0f, 10.0f, 100.0f };
+    
+    // Input 2: Values to add
+    std::vector<float> input2 = {   1.0f,  2.0f,  3.0f, 4.0f, 5.0f, 6.0f,  7.0f,   8.0f };
+    // --- REPLACEMENT END ---
 
-    // Register the custom op library using the class method
-    // NOTE: We pass the OrtSessionOptions by pointer (&session_options) 
-    // because the ORT C API expects it.
-    std::cout << "Attempting to register custom operators..." << std::endl;
-    ORT_THROW_ON_ERROR(CustomOpLibrary().RegisterOps(session_options, OrtGetApiBase()));
+    // Expected Output Logic:
+    // Index 0: ReLU(-10) + 1 = 0 + 1 = 1
+    // Index 1: ReLU(-5)  + 2 = 0 + 2 = 2
+    // Index 4: ReLU(1)   + 5 = 1 + 5 = 6
 
-    // Ensure CUDA Provider is enabled
-    OrtCUDAProviderOptions cuda_options{};
-    session_options.AppendExecutionProvider_CUDA(cuda_options);
-    
-    std::cout << "CUDA Execution Provider enabled." << std::endl;
+    // Allocate device memory
+    float *d_input1, *d_input2, *d_output;
+    cudaMalloc(&d_input1, size * sizeof(float));
+    cudaMalloc(&d_input2, size * sizeof(float));
+    cudaMalloc(&d_output, size * sizeof(float));
 
-    // --- 2. Model Loading and Inference ---
+    cudaMemcpy(d_input1, input1.data(), size * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_input2, input2.data(), size * sizeof(float), cudaMemcpyHostToDevice);
+
+    // Launch kernel via wrapper (passing 0 for default stream)
+    SimpleReLUAddKernelLaunch(0, d_input1, d_input2, d_output, size);
+
+    // Copy back results
+    std::vector<float> output(size);
+    cudaMemcpy(output.data(), d_output, size * sizeof(float), cudaMemcpyDeviceToHost);
+
+    // Print results
+    std::cout << "SimpleReLUAdd output:\n";
+    for (size_t i = 0; i < size; ++i) {
+        std::cout << output[i] << " ";
+    }
+    std::cout << std::endl;
     
-    // !!! IMPORTANT !!!
-    // The path below must point to an actual ONNX model file that contains
-    // a node defined with your custom operator:
-    // op_type="SimpleReLUAdd", domain="com.your.custom"
-    
-    const char* model_path = "model_with_custom_op.onnx"; 
-    
-    std::cout << "Attempting to create ORT session from model: " << model_path << std::endl;
-    
-    // NOTE: This line will fail if the model file doesn't exist or is invalid.
-    // Replace "model_with_custom_op.onnx" with the path to your actual ONNX model.
-    // Ort::Session session(env, model_path, session_options); 
-    
-    std::cout << "\nTest compiled successfully. The custom op registration logic is now verified (Layer 2)." << std::endl;
-    std::cout << "To complete the test, you must create and load an ONNX model file that uses 'SimpleReLUAdd' in the 'com.your.custom' domain." << std::endl;
-    
+    // Expected output: 1 2 3 4 6 11 17 108
+
+    // Free device memory
+    cudaFree(d_input1);
+    cudaFree(d_input2);
+    cudaFree(d_output);
+
     return 0;
-
-} catch (const std::exception& e) {
-    std::cerr << "Fatal Error: " << e.what() << std::endl;
-    return 1;
 }
