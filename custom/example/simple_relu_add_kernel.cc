@@ -18,6 +18,7 @@
 
 // ----------------------------------------------------
 // 1. ORT Kernel Implementation (Compute method)
+// ... (Compute method remains unchanged)
 // ----------------------------------------------------
 
 void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
@@ -69,17 +70,17 @@ void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
 // 2. Dedicated Test Runner (Simulates ORT Environment)
 // ----------------------------------------------------
 
-// NEW MOCK STRUCTURE: Use only C-style members to prevent C++ internal corruption.
+// FIX 1: Reorder function pointers (assuming GetGPUComputeStream comes before GetOutput in this old ORT version).
 struct MockOrtKernelContext {
-    // 1. Function Pointers (MUST be in the exact order the ORT API expects them)
+    // 1. Function Pointers (New order)
     OrtStatus* (*GetInput)(const OrtKernelContext* context, size_t index, const OrtValue** input);
-    OrtStatus* (*GetOutput)(OrtKernelContext* context, size_t index, const int64_t* dim_values, size_t dim_count, OrtValue** output);
-    OrtStatus* (*GetGPUComputeStream)(const OrtKernelContext* context, void** stream);
+    OrtStatus* (*GetGPUComputeStream)(const OrtKernelContext* context, void** stream); // Swapped
+    OrtStatus* (*GetOutput)(OrtKernelContext* context, size_t index, const int64_t* dim_values, size_t dim_count, OrtValue** output); // Swapped
     
-    // 2. Data payload (Pure C-style members)
+    // 2. Data payload
     const OrtApi* api;
-    const OrtValue* inputs[2]; // Fixed size C array for the 2 inputs
-    size_t input_count;        // To track the number of inputs
+    const OrtValue* inputs[2]; 
+    size_t input_count;        
     OrtValue* output = nullptr;
     OrtAllocator* allocator;
 };
@@ -105,7 +106,6 @@ OrtValue* CreateDeviceTensor(const OrtApi* api, OrtAllocator* allocator,
 
 // Mock function for KernelContext_GetInput
 OrtStatus* Mock_KernelContext_GetInput(const OrtKernelContext* context, size_t index, const OrtValue** input) {
-    // Directly cast the context pointer to our mock structure
     auto mock_ctx = reinterpret_cast<const MockOrtKernelContext*>(context);
     
     if (index < mock_ctx->input_count) {
@@ -118,11 +118,9 @@ OrtStatus* Mock_KernelContext_GetInput(const OrtKernelContext* context, size_t i
 // Mock function for KernelContext_GetOutput
 OrtStatus* Mock_KernelContext_GetOutput(OrtKernelContext* context, size_t index, 
                                         const int64_t* dim_values, size_t dim_count, OrtValue** output) {
-    // Directly cast the context pointer to our mock structure
     auto mock_ctx = reinterpret_cast<MockOrtKernelContext*>(context);
     
     if (index == 0) {
-        // Allocate a new output tensor on the GPU using the mock allocator
         ORT_CHECK(mock_ctx->api, mock_ctx->api->CreateTensorAsOrtValue(mock_ctx->allocator, dim_values, dim_count, ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT, output));
         mock_ctx->output = *output;
         return nullptr;
@@ -158,10 +156,10 @@ void SimpleReLUAdd_ORT_Test(const std::vector<float>& input1_data,
     // 2. Setup the Mock Kernel Context Structure (This is the object we pass to Compute)
     MockOrtKernelContext mock_context = {};
     
-    // Fill Function Pointers
+    // Fill Function Pointers (using the new, swapped order)
     mock_context.GetInput = Mock_KernelContext_GetInput;
-    mock_context.GetOutput = Mock_KernelContext_GetOutput;
     mock_context.GetGPUComputeStream = Mock_KernelContext_GetGPUComputeStream;
+    mock_context.GetOutput = Mock_KernelContext_GetOutput;
 
     // Fill Data Payload
     mock_context.api = api;
@@ -179,7 +177,6 @@ void SimpleReLUAdd_ORT_Test(const std::vector<float>& input1_data,
     // 4. Instantiate the Kernel and call its Compute method
     SimpleReLUAddOpKernel kernel(*api, nullptr);
     
-    // Call Compute, passing the structure with the function pointers and data payload
     kernel.Compute(reinterpret_cast<OrtKernelContext*>(&mock_context));
     
     // 5. Get the result from the output tensor
@@ -194,7 +191,8 @@ void SimpleReLUAdd_ORT_Test(const std::vector<float>& input1_data,
     api->ReleaseValue(in1_val);
     api->ReleaseValue(in2_val);
     api->ReleaseValue(mock_context.output); 
-    api->ReleaseAllocator(cuda_allocator);
+    // FIX 2: REMOVE ReleaseAllocator. Releasing a global/default allocator can cause memory corruption (segmentation fault).
+    // api->ReleaseAllocator(cuda_allocator); // REMOVED
     api->ReleaseMemoryInfo(cuda_info);
     api->ReleaseEnv(env_c);
 }
