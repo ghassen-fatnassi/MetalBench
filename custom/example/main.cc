@@ -9,13 +9,12 @@
 int main() {
     const size_t size = 8;
 
-    // Input data
-    std::vector<float> input1(size);
-    std::vector<float> input2(size);
-    for (size_t i = 0; i < size; ++i) {
-        input1[i] = static_cast<float>(i) - 2.0f; // some negative values
-        input2[i] = static_cast<float>(i) * 0.5f;
-    }
+    // Hardcoded deterministic data
+    // Input 1: Has negatives to prove ReLU works (negatives become 0)
+    std::vector<float> input1 = { -10.0f, -5.0f, -1.0f, 0.0f, 1.0f, 5.0f, 10.0f, 100.0f };
+    
+    // Input 2: Values to add
+    std::vector<float> input2 = {   1.0f,  2.0f,  3.0f, 4.0f, 5.0f, 6.0f,  7.0f,   8.0f };
 
     // Allocate device memory
     float *d_input1, *d_input2, *d_output;
