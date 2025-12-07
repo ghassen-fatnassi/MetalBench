@@ -24,11 +24,15 @@ int main() {
         input2[i] = static_cast<float>(i) * 0.5f;
     }
 
-    // Create input tensors
-    Ort::AllocatorWithDefaultOptions allocator;
+    // Create CPU memory info
+    Ort::MemoryInfo memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+
+    // Create tensors using the MemoryInfo object
     std::array<int64_t,1> dims{static_cast<int64_t>(size)};
-    Ort::Value input1_tensor = Ort::Value::CreateTensor<float>(allocator, input1.data(), size, dims.data(), 1);
-    Ort::Value input2_tensor = Ort::Value::CreateTensor<float>(allocator, input2.data(), size, dims.data(), 1);
+    Ort::Value input1_tensor = Ort::Value::CreateTensor<float>(
+        memory_info, input1.data(), size, dims.data(), dims.size());
+    Ort::Value input2_tensor = Ort::Value::CreateTensor<float>(
+        memory_info, input2.data(), size, dims.data(), dims.size());
 
     const char* input_names[] = {"input1","input2"};
     const char* output_names[] = {"output"};
