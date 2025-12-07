@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm> // Added for std::max in the test runner
+#include <string.h>  // Added for memcpy
 
 // Helper to check ORT return status
 #define ORT_CHECK(api, status) \
@@ -64,7 +65,7 @@ void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
     ORT_CHECK(api, api->GetTensorMutableData(out_val, reinterpret_cast<void**>(&output)));
 
     // 5. Get CUDA Stream 
-    // FIX: Removed KernelContext_GetGPUComputeStream in the previous step, using default stream (0)
+    // FIX: Removed KernelContext_GetGPUComputeStream call for older ORT. Use default stream (0)
     cudaStream_t stream = 0; 
 
     // 6. Launch CUDA Kernel
@@ -77,13 +78,19 @@ void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
 
 // Custom structure to hold context data 
 struct MockKernelContextData {
+    // The first three fields must align with the OrtKernelContext function pointers
+    void* GetInput_ptr;
+    void* GetOutput_ptr;
+    void* GetGPUComputeStream_ptr;
+    
+    // Actual data
     const OrtApi* api;
     std::vector<const OrtValue*> inputs;
     OrtValue* output = nullptr;
     OrtAllocator* allocator;
 };
 
-// Forward declarations for the mock functions (since we cannot use the struct definition directly)
+// Forward declarations for the mock functions 
 OrtStatus* Mock_KernelContext_GetInput(const OrtKernelContext* context, size_t index, const OrtValue** input);
 OrtStatus* Mock_KernelContext_GetOutput(OrtKernelContext* context, size_t index, 
                                         const int64_t* dim_values, size_t dim_count, OrtValue** output);
@@ -147,58 +154,58 @@ void SimpleReLUAdd_ORT_Test(const std::vector<float>& input1_data,
 
     std::vector<int64_t> shape = { (int64_t)size };
     
-    // Setup CUDA Memory Allocation 
+    // 1. Setup CUDA Memory Allocation Info
     OrtMemoryInfo* cuda_info;
     
-    // FIX 1: Use the compiler suggestion OrtDeviceAllocator as the device type constant
-    // This is common in some older ORT custom builds.
+    // FIX 1: Use OrtDeviceAllocator as the device type constant
     ORT_CHECK(api, api->CreateMemoryInfo("Cuda", OrtDeviceAllocator, 0, OrtMemTypeDefault, &cuda_info));
 
     OrtAllocator* cuda_allocator;
-    // FIX 2: Use GetAllocatorWithDefaultOptions as suggested by the compiler
-    ORT_CHECK(api, api->GetAllocatorWithDefaultOptions(cuda_info, &cuda_allocator));
     
-    // 1. Create Input Tensors (OrtValues) on CUDA memory
+    // FIX 2 & 3: GetAllocatorWithDefaultOptions failed on argument types. 
+    // Simplify to the one-argument function call, assuming the memory info is implied.
+    ORT_CHECK(api, api->GetAllocatorWithDefaultOptions(&cuda_allocator));
+    
+    // 2. Create Input Tensors (OrtValues) on CUDA memory
+    // This still works because CreateDeviceTensor uses the created allocator (cuda_allocator)
     OrtValue* in1_val = CreateDeviceTensor(api, cuda_allocator, input1_data, shape);
     OrtValue* in2_val = CreateDeviceTensor(api, cuda_allocator, input2_data, shape);
     
-    // 2. Setup the Mock Kernel Context Data
+    // 3. Setup the Mock Kernel Context Data
     MockKernelContextData mock_ctx_data = {};
     mock_ctx_data.api = api;
     mock_ctx_data.inputs = {in1_val, in2_val};
     mock_ctx_data.allocator = cuda_allocator;
-    
-    // 3. Instantiate the Kernel and call its Compute method
-    SimpleReLUAddOpKernel kernel(*api, nullptr);
-    
-    // Create a temporary structure that mimics the OrtKernelContext function pointers
-    struct OrtKernelContext_mock {
+
+    // Overlay the function pointers onto the beginning of our mock data structure
+    // NOTE: This is highly non-standard and necessary only because OrtKernelContext is an incomplete type.
+    struct OrtKernelContext_mock_ptrs {
         OrtStatus* (*GetInput)(const OrtKernelContext* context, size_t index, const OrtValue** input);
         OrtStatus* (*GetOutput)(OrtKernelContext* context, size_t index, const int64_t* dim_values, size_t dim_count, OrtValue** output);
         OrtStatus* (*GetGPUComputeStream)(const OrtKernelContext* context, void** stream);
     };
-
-    OrtKernelContext_mock mock_base_ctx_functions = {};
+    
+    OrtKernelContext_mock_ptrs mock_base_ctx_functions = {};
     mock_base_ctx_functions.GetInput = Mock_KernelContext_GetInput;
     mock_base_ctx_functions.GetOutput = Mock_KernelContext_GetOutput;
     mock_base_ctx_functions.GetGPUComputeStream = Mock_KernelContext_GetGPUComputeStream;
-
-    // Overlay the function pointers onto the beginning of our mock data structure
-    // This allows the kernel's Compute function to call the mock functions.
-    // NOTE: This relies on the memory layout of OrtKernelContext, which is non-standard but required for this mock.
-    memcpy(&mock_ctx_data, &mock_base_ctx_functions, sizeof(OrtKernelContext_mock));
-
+    
+    memcpy(&mock_ctx_data, &mock_base_ctx_functions, sizeof(OrtKernelContext_mock_ptrs));
+    
+    // 4. Instantiate the Kernel and call its Compute method
+    SimpleReLUAddOpKernel kernel(*api, nullptr);
+    
     // Call Compute, passing the data structure as the required OrtKernelContext*
     kernel.Compute(reinterpret_cast<OrtKernelContext*>(&mock_ctx_data));
     
-    // 4. Get the result from the output tensor created by the mock context (from mock_ctx_data.output)
+    // 5. Get the result from the output tensor created by the mock context (from mock_ctx_data.output)
     float* output_dev_ptr = nullptr;
     ORT_CHECK(api, api->GetTensorMutableData(mock_ctx_data.output, reinterpret_cast<void**>(&output_dev_ptr)));
     
-    // 5. Copy result back to host
+    // 6. Copy result back to host
     cudaMemcpy(output_data.data(), output_dev_ptr, size * sizeof(float), cudaMemcpyDeviceToHost);
 
-    // 6. Cleanup
+    // 7. Cleanup
     api->ReleaseValue(in1_val);
     api->ReleaseValue(in2_val);
     api->ReleaseValue(mock_ctx_data.output); 
