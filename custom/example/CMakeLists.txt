@@ -1,19 +1,15 @@
 cmake_minimum_required(VERSION 3.10)
 project(SimpleCustomOpTest LANGUAGES CXX CUDA)
-
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CUDA_STANDARD 14)
-
-# Jetson TX2/Xavier default architecture
+# Jetson TX2/Xavier default architecture (Adjust if needed)
 set(CMAKE_CUDA_ARCHITECTURES "53")
-
 # -------------------------------
 # ONNX Runtime paths
 # -------------------------------
 set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntime")
 set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
 set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release")
-
 # -------------------------------
 # Include directories
 # -------------------------------
@@ -22,27 +18,23 @@ include_directories(
     ${ORT_INCLUDE_DIR}
     /usr/local/cuda/include        # for cuda_runtime.h
 )
-
 # CUDA libs directory
 link_directories(/usr/local/cuda/lib64)
-
 add_definitions(-DONNX_ML=1)
-
 find_package(Threads REQUIRED)
-
 # -------------------------------
 # Sources
 # -------------------------------
 set(KERNEL_SRC simple_relu_add_kernel.cc)
 set(CUDA_SRC   simple_relu_add_kernel.cu)
+set(REGISTRAR_SRC custom_op_registrar.cc)
 set(MAIN_SRC   main.cc)
-
 add_executable(custom_op_test
     ${KERNEL_SRC}
     ${CUDA_SRC}
+    ${REGISTRAR_SRC} # ADDED
     ${MAIN_SRC}
 )
-
 # -------------------------------
 # ONNX Runtime libraries
 # -------------------------------
@@ -50,9 +42,8 @@ set(ONNX_RUNTIME_LIBS
     ${ORT_LIB_DIR}/libonnxruntime.so
     ${ORT_LIB_DIR}/libonnxruntime_providers_shared.so
     ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.a
-    ${ORT_LIB_DIR}/libonnxruntime_providers_tensorrt.so
+    # You may need to adjust the library names based on your ORT build
 )
-
 # -------------------------------
 # Link libraries
 # -------------------------------

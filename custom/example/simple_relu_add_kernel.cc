@@ -1,19 +1,5 @@
 #include "custom_op.h"
 #include <vector>
-#include <iostream>
-
-// Helper to check ORT return status
-#define ORT_CHECK(api, status) \
-    do { \
-        OrtStatus* _s = (status); \
-        if (_s != nullptr) { \
-            const char* msg = api->GetErrorMessage(_s); \
-            std::cerr << "ORT Error: " << msg << std::endl; \
-            api->ReleaseStatus(_s); \
-            /* In a real scenario, you might throw or handle better */ \
-            abort(); \
-        } \
-    } while(0)
 
 void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
     const OrtApi* api = &api_;
@@ -27,9 +13,7 @@ void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
     // 2. Get Input Data Pointers
     float* input1 = nullptr;
     float* input2 = nullptr;
-    
-    // Note: Generally for inputs we use GetTensorData (const), but CustomOps often allow Mutable 
-    // if you cast away const or if the API version allows it. Keeping your logic:
+    // Note: This relies on the memory being on the GPU (as per CUDAExecutionProvider)
     ORT_CHECK(api, api->GetTensorMutableData(const_cast<OrtValue*>(in1_val), reinterpret_cast<void**>(&input1)));
     ORT_CHECK(api, api->GetTensorMutableData(const_cast<OrtValue*>(in2_val), reinterpret_cast<void**>(&input2)));
 
@@ -49,19 +33,18 @@ void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
     // Cleanup shape info
     api->ReleaseTensorTypeAndShapeInfo(shape_info); 
 
-    // 4. Allocate Output
+    // 4. Allocate Output (ORT allocates memory on the GPU)
     OrtValue* out_val = nullptr;
     ORT_CHECK(api, api->KernelContext_GetOutput(context, 0, shape.data(), dim_count, &out_val));
 
     float* output = nullptr;
     ORT_CHECK(api, api->GetTensorMutableData(out_val, reinterpret_cast<void**>(&output)));
 
-    // 5. Launch CUDA Kernel
-    // In a real ORT execution, we should get the compute stream from context, 
-    // but for ORT 1.6 / custom ops, passing 0 (default stream) is common for simple tests.
-    // If you need the specific ORT stream, you would use api->KernelContext_GetGPUComputeStream(context)
+    // 5. Get CUDA Stream and Launch Kernel
+    // Get the stream managed by the ORT CUDA Execution Provider
     cudaStream_t stream = nullptr; 
+    api->KernelContext_GetGPUComputeStream(context, &stream);
     
-    // Launch
+    // Launch wrapper (The actual kernel call is inside this function)
     SimpleReLUAddKernelLaunch(stream, input1, input2, output, size);
 }
