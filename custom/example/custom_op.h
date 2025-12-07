@@ -19,6 +19,7 @@ void SimpleReLUAddKernelLaunch(cudaStream_t stream,
 struct SimpleReLUAddOpKernel {
     SimpleReLUAddOpKernel(const OrtApi& api, const OrtKernelInfo* /*info*/) : api_(api) {}
 
+    // This is the primary function called by ORT's execution provider
     void Compute(OrtKernelContext* context);
 
     const OrtApi& api_;
@@ -49,3 +50,12 @@ struct SimpleReLUAddOp : Ort::CustomOpBase<SimpleReLUAddOp, SimpleReLUAddOpKerne
         return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT;
     }
 };
+
+// -------------------------------
+// Dedicated Test Runner (for main.cc)
+// This function simulates ORT setup and calls the kernel logic for testing.
+// -------------------------------
+void SimpleReLUAdd_ORT_Test(const std::vector<float>& input1_data, 
+                             const std::vector<float>& input2_data, 
+                             std::vector<float>& output_data, 
+                             size_t size);

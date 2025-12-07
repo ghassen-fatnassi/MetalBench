@@ -1,55 +1,44 @@
 #include <iostream>
 #include <vector>
-#include <cuda_runtime.h>
+#include <numeric>
 #include "custom_op.h" 
 
 int main() {
-    // Keep size 8 for this test
-    const size_t size = 8;
-
-    // --- REPLACEMENT START ---
-    // Hardcoded deterministic data
-    // Input 1: Has negatives to prove ReLU works (negatives become 0)
-    std::vector<float> input1 = { -10.0f, -5.0f, -1.0f, 0.0f, 1.0f, 5.0f, 10.0f, 100.0f };
+    std::cout << "--- Starting ONNX Runtime Kernel Integration Test ---" << std::endl;
     
+    // 1. Setup Data
+    const size_t size = 8;
+    
+    // Input 1: Has negatives to prove ReLU works
+    std::vector<float> input1_data = { -10.0f, -5.0f, -1.0f, 0.0f, 1.0f, 5.0f, 10.0f, 100.0f };
     // Input 2: Values to add
-    std::vector<float> input2 = {   1.0f,  2.0f,  3.0f, 4.0f, 5.0f, 6.0f,  7.0f,   8.0f };
-    // --- REPLACEMENT END ---
+    std::vector<float> input2_data = {   1.0f,  2.0f,  3.0f, 4.0f, 5.0f, 6.0f,  7.0f,   8.0f };
+    
+    // Expected Output Logic: max(0, input1) + input2
+    // Expected: 1.0, 2.0, 3.0, 4.0, 6.0, 11.0, 17.0, 108.0
 
-    // Expected Output Logic:
-    // Index 0: ReLU(-10) + 1 = 0 + 1 = 1
-    // Index 1: ReLU(-5)  + 2 = 0 + 2 = 2
-    // Index 4: ReLU(1)   + 5 = 1 + 5 = 6
+    std::vector<float> output_data(size);
+    
+    // 2. Call the dedicated test function
+    // This function manages the ORT environment setup (Env, Allocator, Tensors) 
+    // and calls SimpleReLUAddOpKernel::Compute with a Mock context.
+    SimpleReLUAdd_ORT_Test(input1_data, input2_data, output_data, size);
 
-    // Allocate device memory
-    float *d_input1, *d_input2, *d_output;
-    cudaMalloc(&d_input1, size * sizeof(float));
-    cudaMalloc(&d_input2, size * sizeof(float));
-    cudaMalloc(&d_output, size * sizeof(float));
-
-    cudaMemcpy(d_input1, input1.data(), size * sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_input2, input2.data(), size * sizeof(float), cudaMemcpyHostToDevice);
-
-    // Launch kernel via wrapper (passing 0 for default stream)
-    SimpleReLUAddKernelLaunch(0, d_input1, d_input2, d_output, size);
-
-    // Copy back results
-    std::vector<float> output(size);
-    cudaMemcpy(output.data(), d_output, size * sizeof(float), cudaMemcpyDeviceToHost);
-
-    // Print results
-    std::cout << "SimpleReLUAdd output:\n";
+    // 3. Print and verify results
+    std::cout << "\nInput 1 (ReLU Applied): ";
+    // Expected ReLU(I1): 0 0 0 0 1 5 10 100
+    for(size_t i=0; i<size; ++i) {
+        std::cout << std::max(0.0f, input1_data[i]) << " ";
+    }
+    std::cout << "\nInput 2 (Added):        1 2 3 4 5 6 7 8";
+    
+    std::cout << "\n\nResult (via ORT Kernel Test): \n";
     for (size_t i = 0; i < size; ++i) {
-        std::cout << output[i] << " ";
+        std::cout << output_data[i] << " ";
     }
     std::cout << std::endl;
     
-    // Expected output: 1 2 3 4 6 11 17 108
-
-    // Free device memory
-    cudaFree(d_input1);
-    cudaFree(d_input2);
-    cudaFree(d_output);
-
+    std::cout << "\nExpected Output:        1 2 3 4 6 11 17 108" << std::endl;
+    
     return 0;
 }
