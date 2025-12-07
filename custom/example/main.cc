@@ -13,7 +13,7 @@ int main() {
     session_options.Add(custom_domain);
 
     // Minimal dummy ONNX model file path
-    const char* model_path = "/home/jetson/MetalBench/custom/example/yolo12n_op12.onnx";
+    const char* model_path = "../yolo12n_op12.onnx";
     Ort::Session session(env, model_path, session_options);
 
     size_t size = 8;
