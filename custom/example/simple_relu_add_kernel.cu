@@ -28,7 +28,4 @@ void SimpleReLUAddKernelLaunch(cudaStream_t stream,
     SimpleReLUAddKernel<<<num_blocks, threads_per_block, 0, stream>>>(input1, input2, output, size);
     cudaDeviceSynchronize(); // catch errors early
     cudaError_t err = cudaGetLastError();
-    if (err != cudaSuccess) {
-        printf("CUDA kernel error: %s\n", cudaGetErrorString(err));
-    }
 }
