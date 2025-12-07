@@ -69,17 +69,17 @@ void SimpleReLUAddOpKernel::Compute(OrtKernelContext* context) {
 // 2. Dedicated Test Runner (Simulates ORT Environment)
 // ----------------------------------------------------
 
-// NEW MOCK STRUCTURE: Combines the function pointers and data payload into one contiguous struct.
-// This eliminates the fragile pointer dereference (->data) that was likely causing the crash.
+// NEW MOCK STRUCTURE: Use only C-style members to prevent C++ internal corruption.
 struct MockOrtKernelContext {
     // 1. Function Pointers (MUST be in the exact order the ORT API expects them)
     OrtStatus* (*GetInput)(const OrtKernelContext* context, size_t index, const OrtValue** input);
     OrtStatus* (*GetOutput)(OrtKernelContext* context, size_t index, const int64_t* dim_values, size_t dim_count, OrtValue** output);
     OrtStatus* (*GetGPUComputeStream)(const OrtKernelContext* context, void** stream);
     
-    // 2. Data payload (MUST immediately follow the function pointers)
+    // 2. Data payload (Pure C-style members)
     const OrtApi* api;
-    std::vector<const OrtValue*> inputs;
+    const OrtValue* inputs[2]; // Fixed size C array for the 2 inputs
+    size_t input_count;        // To track the number of inputs
     OrtValue* output = nullptr;
     OrtAllocator* allocator;
 };
@@ -108,7 +108,7 @@ OrtStatus* Mock_KernelContext_GetInput(const OrtKernelContext* context, size_t i
     // Directly cast the context pointer to our mock structure
     auto mock_ctx = reinterpret_cast<const MockOrtKernelContext*>(context);
     
-    if (index < mock_ctx->inputs.size()) {
+    if (index < mock_ctx->input_count) {
         *input = mock_ctx->inputs[index];
         return nullptr;
     }
@@ -166,12 +166,15 @@ void SimpleReLUAdd_ORT_Test(const std::vector<float>& input1_data,
     // Fill Data Payload
     mock_context.api = api;
     mock_context.allocator = cuda_allocator;
+    mock_context.input_count = 2;
 
     // 3. Create Input Tensors (OrtValues) on CUDA memory
     OrtValue* in1_val = CreateDeviceTensor(api, cuda_allocator, input1_data, shape);
     OrtValue* in2_val = CreateDeviceTensor(api, cuda_allocator, input2_data, shape);
     
-    mock_context.inputs = {in1_val, in2_val}; // Store inputs in the mock context
+    // Store inputs in the C-array within the mock context
+    mock_context.inputs[0] = in1_val; 
+    mock_context.inputs[1] = in2_val; 
     
     // 4. Instantiate the Kernel and call its Compute method
     SimpleReLUAddOpKernel kernel(*api, nullptr);
@@ -184,6 +187,7 @@ void SimpleReLUAdd_ORT_Test(const std::vector<float>& input1_data,
     ORT_CHECK(api, api->GetTensorMutableData(mock_context.output, reinterpret_cast<void**>(&output_dev_ptr)));
     
     // 6. Copy result back to host
+    output_data.resize(size);
     cudaMemcpy(output_data.data(), output_dev_ptr, size * sizeof(float), cudaMemcpyDeviceToHost);
 
     // 7. Cleanup
