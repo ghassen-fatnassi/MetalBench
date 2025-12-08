@@ -20,12 +20,12 @@ int main() {
     session_options.EnableMemPattern();
     session_options.SetIntraOpNumThreads(2);
 
-    // Optional: prevent fallback to CPU for debugging (will throw if a node can't run on GPU)
-    // session_options.DisableFallback();
-
+    // ----------------------
     // CUDA provider (ORT 1.6)
+    // ----------------------
     OrtCUDAProviderOptions cuda_options{};
     cuda_options.device_id = 0;
+    cuda_options.do_copy_in_default_stream = 0; // Avoid illegal stream dependencies during capture
     session_options.AppendExecutionProvider_CUDA(cuda_options);
 
     // ----------------------
@@ -51,7 +51,7 @@ int main() {
     for (auto& v : input_data) v = dis(gen);
 
     Ort::MemoryInfo mem_info_cpu = Ort::MemoryInfo::CreateCpu(
-        OrtArenaAllocator, OrtMemTypeDefault
+        OrtArenaAllocator, OrtMemTypeCUDAPinned
     );
 
     Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
@@ -74,7 +74,7 @@ int main() {
     std::vector<Ort::Value> output_tensors = session.Run(
         Ort::RunOptions{nullptr}, 
         input_names, &input_tensor, 1,
-        output_names, 1  // number of outputs = 1
+        output_names, 1
     );
     cudaDeviceSynchronize();
 
@@ -84,7 +84,7 @@ int main() {
     std::cout << "Capturing CUDA graph..." << std::endl;
     cudaStreamBeginCapture(stream, cudaStreamCaptureModeGlobal);
 
-    // Run the same model; CPU fallback nodes will execute normally
+    // Run the model; CPU-fallback nodes (like Concat) execute normally outside graph
     output_tensors = session.Run(
         Ort::RunOptions{nullptr}, 
         input_names, &input_tensor, 1,
