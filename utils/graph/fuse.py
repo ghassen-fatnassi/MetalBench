@@ -44,7 +44,7 @@ def get_tensor_info(name, model):
 # ------------------------------------------------------------
 # Load model
 # ------------------------------------------------------------
-model_path = "Models/yolo12n_op12.onnx"
+model_path = "Models/yolo12n_op12_static_1_640.onnx"
 model = onnx.load(model_path)
 graph = model.graph
 nodes = list(graph.node)
