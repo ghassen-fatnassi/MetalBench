@@ -9,14 +9,15 @@ set(CMAKE_CUDA_ARCHITECTURES "53")
 # ONNX Runtime paths
 set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntime")
 set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
-# --- FIX: Set the source path to the directory that contains 'core/' ---
-# Assuming the structure is: /home/jetson/onnxruntime/onnxruntime/core/...
-set(ORT_INTERNAL_SOURCE_DIR "${ONNXRUNTIME_ROOT}/include/onnxruntime") 
+# Path for internal headers like "core/framework/op_kernel.h"
+set(ORT_INTERNAL_SOURCE_DIR "${ONNXRUNTIME_ROOT}/onnxruntime") 
+# --- FIX: Add the path for the missing GSL headers ---
+set(GSL_INCLUDE_DIR "${ORT_INTERNAL_SOURCE_DIR}/contrib/gsl-lite/include")
 
 set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release")
 
-# Include public headers, internal headers (Source Dir), and CUDA
-include_directories(${ORT_INCLUDE_DIR} ${ORT_INTERNAL_SOURCE_DIR} /usr/local/cuda/include)
+# Include public headers, internal headers, GSL, and CUDA
+include_directories(${ORT_INCLUDE_DIR} ${ORT_INTERNAL_SOURCE_DIR} ${GSL_INCLUDE_DIR} /usr/local/cuda/include)
 link_directories(/usr/local/cuda/lib64)
 
 add_definitions(-DONNX_ML=1)
