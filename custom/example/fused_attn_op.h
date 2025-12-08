@@ -1,5 +1,5 @@
 #pragma once
-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+#include <onnxruntime/core/session/onnxruntime_c_api.h>
 #include <vector>
 
 // 1. The C++ Kernel implementation (formerly the TKernel template parameter)
