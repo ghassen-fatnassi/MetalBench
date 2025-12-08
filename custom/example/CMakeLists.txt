@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(FusedAttnOpTest LANGUAGES CXX CUDA)
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CUDA_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17) # FIX: Use C++17
+set(CMAKE_CUDA_STANDARD 17) # FIX: Use C++17
 
 # Jetson Nano architecture
 set(CMAKE_CUDA_ARCHITECTURES "53")
@@ -11,11 +11,12 @@ set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntime")
 set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
 set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release")
 
-# Ensure ORT public headers and CUDA headers are included
 include_directories(${ORT_INCLUDE_DIR} /usr/local/cuda/include)
 link_directories(/usr/local/cuda/lib64)
 
 add_definitions(-DONNX_ML=1)
+# FIX: Add the permissive flag for C++ CustomOpBase lambda conversion issues
+add_compile_options(-fpermissive)
 find_package(Threads REQUIRED)
 
 # Sources
@@ -31,13 +32,11 @@ endif()
 
 add_executable(custom_attn_test ${SRC})
 
-# ONNX Runtime libraries. 
-# We link the main ORT library and the necessary providers (shared and CUDA).
+# ONNX Runtime libraries
 set(ONNX_RUNTIME_LIBS
     ${ORT_LIB_DIR}/libonnxruntime.so
     ${ORT_LIB_DIR}/libonnxruntime_providers_shared.so
     ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.a
 )
 
-# Link all required libraries: ORT, Threads, CUDA runtime, dynamic linker, real-time
 target_link_libraries(custom_attn_test PRIVATE ${ONNX_RUNTIME_LIBS} Threads::Threads cudart dl rt)
