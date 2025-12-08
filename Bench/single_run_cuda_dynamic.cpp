@@ -1,69 +1,88 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <chrono>
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
-
-// Check for provider availability (macros usually defined by build system)
-// For 1.6.0 we use the C-API struct or specific helper
 #include <onnxruntime/core/session/onnxruntime_c_api.h>
 
 const std::string MODEL_PATH = "Models/yolo12n_op12.onnx";
 const int BATCH_SIZE = 1;
 const int IMG_SIZE = 640;
+const int NUM_WARMUP = 5;
+const int NUM_RUNS   = 50;
 
 int main() {
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "SingleRunCUDA");
+    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "Bench");
     Ort::SessionOptions session_options;
 
-    // Optimizations
-    session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
     session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-    session_options.SetOptimizedModelFilePath("optimized_cuda.onnx");
     session_options.EnableCpuMemArena();
     session_options.EnableMemPattern();
     session_options.SetIntraOpNumThreads(4);
     session_options.SetInterOpNumThreads(4);
 
-    // Append CUDA Provider
-    // Note: ORT 1.6.0 C++ API uses OrtCUDAProviderOptions
     try {
         OrtCUDAProviderOptions cuda_options{};
         cuda_options.device_id = 0;
-
         session_options.AppendExecutionProvider_CUDA(cuda_options);
-        std::cout << "CUDA Provider Appended." << std::endl;
+        std::cout << "CUDA Provider Appended.\n";
     } catch (...) {
-        std::cerr << "Warning: Could not append CUDA provider. Is ORT built with CUDA?" << std::endl;
+        std::cerr << "WARNING: Could not append CUDA provider.\n";
     }
 
     try {
         std::cout << "Loading model: " << MODEL_PATH << std::endl;
         Ort::Session session(env, MODEL_PATH.c_str(), session_options);
 
-        // Data Prep
         std::vector<int64_t> input_dims = {BATCH_SIZE, 3, IMG_SIZE, IMG_SIZE};
         size_t input_size = BATCH_SIZE * 3 * IMG_SIZE * IMG_SIZE;
         std::vector<float> input_data(input_size);
-        
+
         std::mt19937 gen(42);
         std::uniform_real_distribution<float> dis(0.0f, 1.0f);
-        for(auto& v : input_data) v = dis(gen);
+        for (auto& v : input_data) v = dis(gen);
 
         Ort::AllocatorWithDefaultOptions allocator;
         std::string input_name_str = session.GetInputName(0, allocator);
-        const char* input_names[] = { input_name_str.c_str() };
+        const char* input_names[] = {input_name_str.c_str()};
         
         std::string output_name_str = session.GetOutputName(0, allocator);
-        const char* output_names[] = { output_name_str.c_str() };
+        const char* output_names[] = {output_name_str.c_str()};
 
-        auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+        auto mem_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
         Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
-            memory_info, input_data.data(), input_size, input_dims.data(), input_dims.size()
+            mem_info, input_data.data(), input_size,
+            input_dims.data(), input_dims.size()
         );
 
-        std::cout << "Running single GPU inference..." << std::endl;
-        session.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor, 1, output_names, 1);
-        std::cout << "Single GPU inference completed." << std::endl;
+        // warmup
+        for (int i = 0; i < NUM_WARMUP; i++) {
+            session.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor, 1, output_names, 1);
+        }
+
+        // benchmark
+        std::vector<double> times;
+        times.reserve(NUM_RUNS);
+
+        for (int i = 0; i < NUM_RUNS; i++) {
+            auto t0 = std::chrono::high_resolution_clock::now();
+            session.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor, 1, output_names, 1);
+            auto t1 = std::chrono::high_resolution_clock::now();
+
+            double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
+            times.push_back(ms);
+        }
+
+        double sum = 0, mn = 1e9, mx = 0;
+        for (auto v : times) { sum += v; mn = std::min(mn, v); mx = std::max(mx, v); }
+
+        double avg = sum / times.size();
+
+        std::cout << "\n---- RESULTS (" << NUM_RUNS << " runs) ----\n";
+        std::cout << "Avg: " << avg << " ms\n";
+        std::cout << "Min: " << mn << " ms\n";
+        std::cout << "Max: " << mx << " ms\n";
+        std::cout << "FPS: " << 1000.0 / avg << "\n";
 
     } catch (const Ort::Exception& e) {
         std::cerr << "ORT Error: " << e.what() << std::endl;
