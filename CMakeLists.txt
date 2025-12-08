@@ -11,6 +11,8 @@ set(ORT_INCLUDE_DIR "${ORT_ROOT}/include")
 set(ORT_LIB_DIR "${ORT_ROOT}/build/Linux/Release")
 
 include_directories(${ORT_INCLUDE_DIR})
+include_directories(${ORT_INCLUDE_DIR} /usr/local/cuda/include)
+link_directories(/usr/local/cuda/lib64)
 
 find_package(Threads REQUIRED)
 
