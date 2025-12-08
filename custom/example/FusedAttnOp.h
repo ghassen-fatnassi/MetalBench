@@ -1,4 +1,4 @@
-#include "onnxruntime_cxx_api.h"
+#include "onnxruntime/core/session/onnxruntime_cxx_api.h"
 #include "FusedAttnOpKernel.h"
 
 struct FusedAttnOp : Ort::CustomOpBase<FusedAttnOp, FusedAttnOpKernel> {
