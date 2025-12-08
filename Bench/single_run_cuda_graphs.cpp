@@ -4,7 +4,7 @@
 #include <cuda_runtime.h>
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 
-const std::string MODEL_PATH = "Models/yolo12n_op12.onnx";
+const std::string MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
 const int BATCH_SIZE = 1;
 const int IMG_SIZE = 128;
 
@@ -25,7 +25,7 @@ int main() {
     // ----------------------
     OrtCUDAProviderOptions cuda_options{};
     cuda_options.device_id = 0;
-    cuda_options.do_copy_in_default_stream = 1; // Avoid illegal stream dependencies during capture
+    cuda_options.do_copy_in_default_stream = 0; // Avoid illegal stream dependencies during capture
     session_options.AppendExecutionProvider_CUDA(cuda_options);
 
     // ----------------------
