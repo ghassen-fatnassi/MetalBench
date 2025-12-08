@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cassert>
 #include "onnxruntime/core/session/onnxruntime_cxx_api.h"
+#include "onnxruntime/core/session/onnxruntime_c_api.h"
 
 // Define the name of the custom op library file created by CMake
 #if defined(_WIN32)
