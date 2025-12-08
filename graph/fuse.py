@@ -1,6 +1,7 @@
 import onnx
 from onnx import helper, TensorProto
 import json
+import re
 
 # ------------------------------------------------------------
 # Utility: Get tensor shape + dtype with fallback
@@ -74,10 +75,16 @@ if current_block:
     blocks.append(current_block)
 
 # ------------------------------------------------------------
-# Step 2: Fuse blocks into single nodes
+# Step 2: Fuse blocks into single nodes with unique names
 # ------------------------------------------------------------
 new_nodes = []
 fusion_report = []
+
+# Get all existing node names to avoid conflicts
+existing_names = set(node.name for node in nodes)
+
+# Counter for generating unique names
+attn_counter = 0
 
 for i, block in enumerate(blocks):
     start_node = block[0]
@@ -86,7 +93,20 @@ for i, block in enumerate(blocks):
     input_names = list(start_node.input)
     output_names = list(end_node.output)
 
-    fused_name = f"custom.attn_{i}"  # unique name
+    # Generate a unique name for the fused node
+    base_name = f"custom.attn_{attn_counter}"
+    
+    # Ensure the name is truly unique (handle potential conflicts)
+    while base_name in existing_names:
+        attn_counter += 1
+        base_name = f"custom.attn_{attn_counter}"
+    
+    fused_name = base_name
+    
+    # Add the new name to existing_names to prevent future conflicts
+    existing_names.add(fused_name)
+    attn_counter += 1
+
     fused_node = helper.make_node(
         op_type="FusedAttnOp",
         inputs=input_names,
@@ -122,27 +142,58 @@ for i, block in enumerate(blocks):
 # ------------------------------------------------------------
 all_block_names = {n.name for block in blocks for n in block}
 final_nodes = []
+replaced_block_names = set()
 
 for n in nodes:
     if n.name in all_block_names:
-        # insert fused node at the position of the first node in the block
-        for start_name, fused_node in new_nodes:
-            if n.name == start_name:
-                final_nodes.append(fused_node)
+        # Only insert fused node at the position of the first node in the block
+        if n.name not in replaced_block_names:
+            for start_name, fused_node in new_nodes:
+                if n.name == start_name:
+                    final_nodes.append(fused_node)
+                    # Mark all nodes in this block as replaced
+                    for block in blocks:
+                        if n in block:
+                            replaced_block_names.update(node.name for node in block)
+                            break
     elif n.name not in all_block_names:
         final_nodes.append(n)
 
+# Clean up the graph
 graph.ClearField("node")
 graph.node.extend(final_nodes)
 
 # ------------------------------------------------------------
-# Step 4: Save fused model
+# Step 4: Verify all nodes have unique names
+# ------------------------------------------------------------
+final_node_names = set()
+duplicate_names = set()
+
+for node in graph.node:
+    if node.name in final_node_names:
+        duplicate_names.add(node.name)
+        # Generate a new unique name if duplicate is found
+        counter = 0
+        new_name = f"{node.name}_renamed_{counter}"
+        while new_name in final_node_names or new_name in duplicate_names:
+            counter += 1
+            new_name = f"{node.name}_renamed_{counter}"
+        node.name = new_name
+    final_node_names.add(node.name)
+
+if duplicate_names:
+    print(f"Warning: Found and renamed {len(duplicate_names)} duplicate node names")
+
+# ------------------------------------------------------------
+# Step 5: Save fused model
 # ------------------------------------------------------------
 onnx.save(model, "model_fused.onnx")
 print("Fused model saved → model_fused.onnx")
+print(f"Total attention blocks fused: {len(blocks)}")
+print(f"Total nodes in final graph: {len(graph.node)}")
 
 # ------------------------------------------------------------
-# Step 5: Save JSON metadata
+# Step 6: Save JSON metadata
 # ------------------------------------------------------------
 with open("fusion_report.json", "w") as f:
     json.dump(fusion_report, f, indent=4)
