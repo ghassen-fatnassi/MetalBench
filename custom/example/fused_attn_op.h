@@ -1,7 +1,7 @@
 // fused_attn_op.h
 #pragma once
 
-#include "onnxruntime/core/framework/op_kernel.h"
+#include "core/framework/op_kernel.h"
 #include "core/graph/onnx_protobuf.h"
 #include "core/framework/customregistry.h"
 
