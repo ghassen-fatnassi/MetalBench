@@ -67,20 +67,17 @@ int main() {
     // WARMUP: ensures buffers allocated
     // ----------------------
     std::cout << "Warmup run..." << std::endl;
-    session.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor, 1,
-                output_names, nullptr, 0);
+    output_tensors = session.Run(Ort::RunOptions{nullptr}, 
+                                input_names, &input_tensor, 1,
+                                output_names, 1);
     cudaDeviceSynchronize();
 
-    // ----------------------
-    // CAPTURE CUDA GRAPH
-    // ----------------------
     std::cout << "Capturing CUDA graph..." << std::endl;
-
     cudaStreamBeginCapture(stream, cudaStreamCaptureModeGlobal);
 
-    // Launch graph-captured inference
-    session.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor, 1,
-                output_names, nullptr, 0);
+    output_tensors = session.Run(Ort::RunOptions{nullptr}, 
+                                input_names, &input_tensor, 1,
+                                output_names, 1);
 
     cudaStreamEndCapture(stream, &graph);
 
