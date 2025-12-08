@@ -9,15 +9,10 @@ set(CMAKE_CUDA_ARCHITECTURES "53")
 # ONNX Runtime paths
 set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntime")
 set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
-# Path for internal headers like "core/framework/op_kernel.h"
-set(ORT_INTERNAL_SOURCE_DIR "${ONNXRUNTIME_ROOT}/onnxruntime") 
-# --- FIX: Add the path for the missing GSL headers ---
-set(GSL_INCLUDE_DIR "${ORT_INTERNAL_SOURCE_DIR}/contrib/gsl-lite/include")
-
 set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release")
 
-# Include public headers, internal headers, GSL, and CUDA
-include_directories(${ORT_INCLUDE_DIR} ${ORT_INTERNAL_SOURCE_DIR} ${GSL_INCLUDE_DIR} /usr/local/cuda/include)
+# Ensure ORT public headers and CUDA headers are included
+include_directories(${ORT_INCLUDE_DIR} /usr/local/cuda/include)
 link_directories(/usr/local/cuda/lib64)
 
 add_definitions(-DONNX_ML=1)
@@ -29,18 +24,20 @@ set(SRC
     main.cc            # test executable
 )
 
-# Optional: if you have a CUDA kernel
+# Optional: if you have a CUDA kernel implementation in .cu
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/fused_attn_op.cu")
     list(APPEND SRC fused_attn_op.cu)
 endif()
 
 add_executable(custom_attn_test ${SRC})
 
-# ONNX Runtime libraries
+# ONNX Runtime libraries. 
+# We link the main ORT library and the necessary providers (shared and CUDA).
 set(ONNX_RUNTIME_LIBS
     ${ORT_LIB_DIR}/libonnxruntime.so
     ${ORT_LIB_DIR}/libonnxruntime_providers_shared.so
     ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.a
 )
 
+# Link all required libraries: ORT, Threads, CUDA runtime, dynamic linker, real-time
 target_link_libraries(custom_attn_test PRIVATE ${ONNX_RUNTIME_LIBS} Threads::Threads cudart dl rt)

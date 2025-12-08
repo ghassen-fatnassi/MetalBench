@@ -1,27 +1,23 @@
 // fused_attn_op.h
 #pragma once
+#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 
-#include "core/framework/op_kernel.h"
-#include "core/graph/onnx_protobuf.h"
-#include "core/framework/customregistry.h"
-
-// Forward declaration of the OpKernel class
-namespace onnxruntime {
-namespace custom_op {
-
-// The FusedAttn kernel is templated on the data type (T)
-template <typename T>
-class FusedAttnKernel : public OpKernel {
-public:
-    // Constructor requires OpKernelInfo
-    FusedAttnKernel(const OpKernelInfo& info) : OpKernel(info) {}
-
-    // The main computation method
-    Status Compute(OpKernelContext* context) const override;
+struct FusedAttnOp : Ort::CustomOpBase<FusedAttnOp, FusedAttnOp> {
+    FusedAttnOp();
+    
+    // The kernel is the op itself in the C++ API wrapper.
+    void Compute(OrtKernelContext* context);
+    
+    // Op properties
+    const char* GetName() const { return "FusedAttnOp"; }
+    
+    // This correctly specifies the CUDA Execution Provider
+    const char* GetExecutionProviderType() const { return "CUDA"; } 
+    
+    // Input/Output definitions
+    size_t GetInputTypeCount() const { return 1; }
+    ONNXTensorElementDataType GetInputType(size_t) const { return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT; }
+    size_t GetOutputTypeCount() const { return 1; }
+    ONNXTensorElementDataType GetOutputType(size_t) const { return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT; }
 };
-
-// Function to register the custom operators (kernels and schema)
-Status RegisterFusedAttnCustomOps(onnxruntime::CustomRegistry& registry);
-
-} // namespace custom_op
-} // namespace onnxruntime
+// Removed the closing '}' here.
