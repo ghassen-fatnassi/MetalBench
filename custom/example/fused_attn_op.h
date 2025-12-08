@@ -1,23 +1,32 @@
-// fused_attn_op.h
 #pragma once
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+#include <vector>
 
-struct FusedAttnOp : Ort::CustomOpBase<FusedAttnOp, FusedAttnOp> {
-    FusedAttnOp();
-    
-    // The kernel is the op itself in the C++ API wrapper.
+// 1. The C++ Kernel implementation (formerly the TKernel template parameter)
+class FusedAttnKernel {
+public:
+    // This constructor matches the expected signature for a CustomOp kernel constructor
+    // (Ort::CustomOpApi ort, const OrtKernelInfo* info)
+    FusedAttnKernel(const OrtApi& api, const OrtKernelInfo* info);
+
+    // This is the core compute function
     void Compute(OrtKernelContext* context);
-    
-    // Op properties
-    const char* GetName() const { return "FusedAttnOp"; }
-    
-    // This correctly specifies the CUDA Execution Provider
-    const char* GetExecutionProviderType() const { return "CUDA"; } 
-    
-    // Input/Output definitions
-    size_t GetInputTypeCount() const { return 1; }
-    ONNXTensorElementDataType GetInputType(size_t) const { return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT; }
-    size_t GetOutputTypeCount() const { return 1; }
-    ONNXTensorElementDataType GetOutputType(size_t) const { return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT; }
+
+private:
+    Ort::CustomOpApi api_;
+    // Add any private members needed for the kernel here (e.g., attributes)
 };
-// Removed the closing '}' here.
+
+// 2. Declaration of C-style functions that the C API requires for registration
+OrtCustomOp* CreateFusedAttnOp();
+
+// These functions will be implemented in the .cc file and assigned to the OrtCustomOp struct
+const char* ORT_API_CALL FusedAttnOp_GetName(const void* op);
+const char* ORT_API_CALL FusedAttnOp_GetExecutionProviderType(const void* op);
+size_t ORT_API_CALL FusedAttnOp_GetInputTypeCount(const void* op);
+ONNXTensorElementDataType ORT_API_CALL FusedAttnOp_GetInputType(const void* op, size_t index);
+size_t ORT_API_CALL FusedAttnOp_GetOutputTypeCount(const void* op);
+ONNXTensorElementDataType ORT_API_CALL FusedAttnOp_GetOutputType(const void* op, size_t index);
+void* ORT_API_CALL FusedAttnOp_CreateKernel(const void* op, const OrtApi* api, const OrtKernelInfo* info);
+void ORT_API_CALL FusedAttnOp_KernelCompute(void* op_kernel, OrtKernelContext* context);
+void ORT_API_CALL FusedAttnOp_KernelDestroy(void* op_kernel);
