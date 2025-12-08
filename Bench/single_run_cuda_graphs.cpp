@@ -49,9 +49,12 @@ int main() {
     std::uniform_real_distribution<float> dis(0.0f, 1.0f);
     for (auto& v : input_data) v = dis(gen);
 
-    Ort::MemoryInfo mem_info_gpu = Ort::MemoryInfo::CreateCuda(0); // device 0
+    Ort::MemoryInfo mem_info_cpu = Ort::MemoryInfo::CreateCpu(
+        OrtArenaAllocator, OrtMemTypeDefault
+    );
+
     Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
-        mem_info_gpu, input_data.data(), input_size, input_dims.data(), input_dims.size()
+        mem_info_cpu, input_data.data(), input_size, input_dims.data(), input_dims.size()
     );
 
     // ----------------------
@@ -80,14 +83,13 @@ int main() {
     std::cout << "Capturing CUDA graph..." << std::endl;
     cudaStreamBeginCapture(stream, cudaStreamCaptureModeGlobal);
 
-    // Run the model; CPU-fallback nodes (like Concat) execute normally outside graph
-    output_tensors = session.Run(
-        Ort::RunOptions{nullptr}, 
-        input_names, &input_tensor, 1,
-        output_names, 1
-    );
+    // Run only the subgraph that is fully GPU
+    output_tensors = session.Run(Ort::RunOptions{nullptr}, 
+                                input_names, &input_tensor, 1,
+                                output_names, 1);
 
     cudaStreamEndCapture(stream, &graph);
+
 
     cudaGraphInstantiate(&graph_exec, graph, nullptr, nullptr, 0);
 
