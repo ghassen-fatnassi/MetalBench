@@ -37,7 +37,7 @@ void RunInferenceTest() {
             &library_handle));
 
         // Use CPU provider for simplicity, assuming your op is CPU-only for this test
-        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CPU(session_options, 1));
+        // Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CPU(session_options, 1));
         
     } catch (const Ort::Exception& e) {
         std::cerr << "Error during setup/registration: " << e.what() << std::endl;
