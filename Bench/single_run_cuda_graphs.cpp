@@ -25,7 +25,6 @@ int main() {
     // ----------------------
     OrtCUDAProviderOptions cuda_options{};
     cuda_options.device_id = 0;
-    cuda_options.do_copy_in_default_stream = 0; // Avoid illegal stream dependencies during capture
     session_options.AppendExecutionProvider_CUDA(cuda_options);
 
     // ----------------------
@@ -50,12 +49,9 @@ int main() {
     std::uniform_real_distribution<float> dis(0.0f, 1.0f);
     for (auto& v : input_data) v = dis(gen);
 
-    Ort::MemoryInfo mem_info_cpu = Ort::MemoryInfo::CreateCpu(
-        OrtArenaAllocator, OrtMemTypeDefault
-    );
-
+    Ort::MemoryInfo mem_info_gpu = Ort::MemoryInfo::CreateCuda(0); // device 0
     Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
-        mem_info_cpu, input_data.data(), input_size, input_dims.data(), input_dims.size()
+        mem_info_gpu, input_data.data(), input_size, input_dims.data(), input_dims.size()
     );
 
     // ----------------------
