@@ -6,9 +6,9 @@
 struct OrtTensorDimensions : std::vector<int64_t> {
   OrtTensorDimensions(const OrtApi& api, const OrtValue* value) {
     Ort::CustomOpApi ort(api);
-    OrtTensorTypeAndShapeInfo* info = ort.GetTensorTypeAndShape(value);
-    std::vector<int64_t>::operator=(ort.GetTensorShape(info));
-    ort.ReleaseTensorTypeAndShapeInfo(info);
+    OrtTensorTypeAndShapeInfo* info = ort->GetTensorTypeAndShape(value);
+    std::vector<int64_t>::operator=(ort->GetTensorShape(info));
+    ort->ReleaseTensorTypeAndShapeInfo(info);
   }
 };
 
@@ -24,14 +24,14 @@ void FusedAttnKernel::Compute(OrtKernelContext* context) {
     
     // Using the member 'api_' for all calls:
     
-    const OrtValue* input_tensor = api_.KernelContext_GetInput(context, 0);
-    const float* input_data = api_.GetTensorData<float>(input_tensor);
+    const OrtValue* input_tensor = api_->KernelContext_GetInput(context, 0);
+    const float* input_data = api_->GetTensorData<float>(input_tensor);
 
     // Note: Use 'api_' when creating the dimension helper
     OrtTensorDimensions dims(api_, input_tensor);
 
-    OrtValue* output_tensor = api_.KernelContext_GetOutput(context, 0, dims.data(), dims.size());
-    float* output_data = api_.GetTensorMutableData<float>(output_tensor);
+    OrtValue* output_tensor = api_->KernelContext_GetOutput(context, 0, dims.data(), dims.size());
+    float* output_data = api_->GetTensorMutableData<float>(output_tensor);
 
     // No-op: just copy input to output (using CUDA)
     size_t total_len = 1;
