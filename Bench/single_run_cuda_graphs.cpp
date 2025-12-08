@@ -44,7 +44,7 @@ int main() {
     std::uniform_real_distribution<float> dis(0.0f, 1.0f);
     for(auto& v : input_data) v = dis(gen);
 
-    Ort::MemoryInfo mem_info_cpu = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemCUDAPinned);
+    Ort::MemoryInfo mem_info_cpu = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeCUDAPinned);
 
     Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
         mem_info_cpu, input_data.data(), input_size, input_dims.data(), input_dims.size()
