@@ -30,7 +30,6 @@ int main() {
     // Create session
     // ----------------------
     Ort::Session session(env, MODEL_PATH.c_str(), session_options);
-    session_options.DisableFallback();
     Ort::AllocatorWithDefaultOptions allocator;
     std::string input_name_str = session.GetInputName(0, allocator);
     std::string output_name_str = session.GetOutputName(0, allocator);
