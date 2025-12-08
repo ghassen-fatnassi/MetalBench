@@ -3,7 +3,7 @@ project(FusedAttnOpTest LANGUAGES CXX CUDA)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CUDA_STANDARD 14)
 
-# Jetson Nano default architecture
+# Jetson Nano architecture
 set(CMAKE_CUDA_ARCHITECTURES "53")
 
 # ONNX Runtime paths
@@ -11,18 +11,24 @@ set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntime")
 set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
 set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release")
 
-include_directories(. ${ORT_INCLUDE_DIR} /usr/local/cuda/include)
+include_directories(${ORT_INCLUDE_DIR} /usr/local/cuda/include)
 link_directories(/usr/local/cuda/lib64)
 
 add_definitions(-DONNX_ML=1)
 find_package(Threads REQUIRED)
 
 # Sources
-set(KERNEL_SRC fused_attn_op.cc)    # Your custom fused attn kernel
-set(CUDA_SRC fused_attn_op.cu)      # If using a CUDA kernel
-set(MAIN_SRC main.cc)               # Test executable
+set(SRC
+    fused_attn_op.cc   # kernel implementation
+    main.cc            # test executable
+)
 
-add_executable(custom_attn_test ${KERNEL_SRC} ${CUDA_SRC} ${MAIN_SRC})
+# Optional: if you have a CUDA kernel
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/fused_attn_op.cu")
+    list(APPEND SRC fused_attn_op.cu)
+endif()
+
+add_executable(custom_attn_test ${SRC})
 
 # ONNX Runtime libraries
 set(ONNX_RUNTIME_LIBS
