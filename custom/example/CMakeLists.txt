@@ -27,7 +27,10 @@ set(CUSTOM_OP_SRC
     FusedAttnOpKernel.cc    # The actual compute logic
     FusedAttnOp.cc          # Op definition and RegisterCustomOps function
 )
-
+# Add these lines to your CMakeLists.txt
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CUDA_FLAGS_DEBUG "-g")
 # Optional: if you have a CUDA kernel implementation in .cu
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/FusedAttnOpKernel.cu")
     list(APPEND CUSTOM_OP_SRC FusedAttnOpKernel.cu)
