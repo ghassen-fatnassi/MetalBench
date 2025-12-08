@@ -49,12 +49,14 @@ struct FusedAttnOp : Ort::CustomOpBase<FusedAttnOp, FusedAttnOpKernel> {
 // 'RegisterCustomOps' that ONNX Runtime looks for.
 extern "C" {
     OrtStatus* ORT_API_CALL RegisterCustomOps(Ort::CustomOpDomain& domain) {
-        static FusedAttnOp custom_op;
         
-        // 1. Add the op (returns void, as previously fixed)
-        domain.Add(&custom_op);
+        // FIX: Allocate the custom op object on the heap and intentionally leak it.
+        // This guarantees the lifetime of the structure for ONNX Runtime.
+        FusedAttnOp* custom_op_ptr = new FusedAttnOp(); 
         
-        // 2. Return nullptr to signal success
+        // domain.Add() accepts a pointer to OrtCustomOp. The C++ helper takes the C++ object pointer.
+        domain.Add(custom_op_ptr);
+        
         return nullptr;
     }
-} // End extern "C" block
+}
