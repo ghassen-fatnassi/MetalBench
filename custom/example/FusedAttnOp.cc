@@ -44,12 +44,17 @@ struct FusedAttnOp : Ort::CustomOpBase<FusedAttnOp, FusedAttnOpKernel> {
 
 // --- 2. The Mandatory Registration Function (FIXED) ---
 
-OrtStatus* ORT_API_CALL RegisterCustomOps(Ort::CustomOpDomain& domain) {
-    static FusedAttnOp custom_op;
-    
-    // 1. Call Add, which returns void.
-    domain.Add(&custom_op);
-    
-    // 2. Return nullptr to signal success (required by the OrtStatus* signature).
-    return nullptr;
-}
+// FIX: The extern "C" block prevents C++ name mangling, 
+// ensuring the function is exported under the exact name 
+// 'RegisterCustomOps' that ONNX Runtime looks for.
+extern "C" {
+    OrtStatus* ORT_API_CALL RegisterCustomOps(Ort::CustomOpDomain& domain) {
+        static FusedAttnOp custom_op;
+        
+        // 1. Add the op (returns void, as previously fixed)
+        domain.Add(&custom_op);
+        
+        // 2. Return nullptr to signal success
+        return nullptr;
+    }
+} // End extern "C" block
