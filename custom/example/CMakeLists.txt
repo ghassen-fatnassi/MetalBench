@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(SimpleCustomOpTest LANGUAGES CXX CUDA)
+project(FusedAttnOpTest LANGUAGES CXX CUDA)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CUDA_STANDARD 14)
 
@@ -18,11 +18,11 @@ add_definitions(-DONNX_ML=1)
 find_package(Threads REQUIRED)
 
 # Sources
-set(KERNEL_SRC simple_relu_add_kernel.cc)
-set(CUDA_SRC simple_relu_add_kernel.cu)
-set(MAIN_SRC main.cc)
+set(KERNEL_SRC fused_attn_op.cc)    # Your custom fused attn kernel
+set(CUDA_SRC fused_attn_op.cu)      # If using a CUDA kernel
+set(MAIN_SRC main.cc)               # Test executable
 
-add_executable(custom_op_test ${KERNEL_SRC} ${CUDA_SRC} ${MAIN_SRC})
+add_executable(custom_attn_test ${KERNEL_SRC} ${CUDA_SRC} ${MAIN_SRC})
 
 # ONNX Runtime libraries
 set(ONNX_RUNTIME_LIBS
@@ -31,4 +31,4 @@ set(ONNX_RUNTIME_LIBS
     ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.a
 )
 
-target_link_libraries(custom_op_test PRIVATE ${ONNX_RUNTIME_LIBS} Threads::Threads cudart dl rt)
+target_link_libraries(custom_attn_test PRIVATE ${ONNX_RUNTIME_LIBS} Threads::Threads cudart dl rt)
