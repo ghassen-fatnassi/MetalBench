@@ -37,4 +37,6 @@ endfunction()
 add_onnxbin(single_run_cuda Bench/single_run_cuda.cpp)
 add_onnxbin(single_run_cpu Bench/single_run_cpu.cpp)
 add_onnxbin(jetson_bench Bench/jetson_bench.cpp)
+add_onnxbin(single_run_cuda_graphs Bench/single_run_cuda_graphs.cpp)
+
 
