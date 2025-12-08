@@ -30,7 +30,7 @@ int main() {
     // Create session
     // ----------------------
     Ort::Session session(env, MODEL_PATH.c_str(), session_options);
-
+    session_options.DisableFallback();
     Ort::AllocatorWithDefaultOptions allocator;
     std::string input_name_str = session.GetInputName(0, allocator);
     std::string output_name_str = session.GetOutputName(0, allocator);
@@ -45,7 +45,7 @@ int main() {
     std::uniform_real_distribution<float> dis(0.0f, 1.0f);
     for(auto& v : input_data) v = dis(gen);
 
-    Ort::MemoryInfo mem_info_cpu = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+    Ort::MemoryInfo mem_info_cpu = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemCUDAPinned);
 
     Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
         mem_info_cpu, input_data.data(), input_size, input_dims.data(), input_dims.size()
