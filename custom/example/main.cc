@@ -13,7 +13,7 @@ static constexpr const char* CUSTOM_OP_LIBRARY_FILENAME = "custom_attn.dll";
 #elif defined(__APPLE__)
 static constexpr const char* CUSTOM_OP_LIBRARY_FILENAME = "libcustom_attn.dylib";
 #else
-static constexpr const char* CUSTOM_OP_LIBRARY_FILENAME = "./liblibcustom_attn.so";
+static constexpr const char* CUSTOM_OP_LIBRARY_FILENAME = "./libcustom_attn.so";
 #endif
 
 // Define the path to the fused model created by your Python script
