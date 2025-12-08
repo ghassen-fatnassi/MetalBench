@@ -5,7 +5,7 @@
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 
 // Configuration
-const std::string MODEL_PATH = "Models/yolo12n_op12.onnx";
+const std::string MODEL_PATH = "Models/model_fused.onnx";
 const int BATCH_SIZE = 1;
 const int IMG_CHANNELS = 3;
 const int IMG_HEIGHT = 128;
