@@ -25,7 +25,7 @@ int main() {
     // ----------------------
     OrtCUDAProviderOptions cuda_options{};
     cuda_options.device_id = 0;
-    cuda_options.do_copy_in_default_stream = 0; // Avoid illegal stream dependencies during capture
+    cuda_options.do_copy_in_default_stream = 1; // Avoid illegal stream dependencies during capture
     session_options.AppendExecutionProvider_CUDA(cuda_options);
 
     // ----------------------
