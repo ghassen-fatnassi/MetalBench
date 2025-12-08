@@ -6,7 +6,7 @@
 
 const std::string MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
 const int BATCH_SIZE = 1;
-const int IMG_SIZE = 128;
+const int IMG_SIZE = 640;
 
 int main() {
     // ----------------------
