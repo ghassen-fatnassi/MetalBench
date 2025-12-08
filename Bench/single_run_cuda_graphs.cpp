@@ -51,7 +51,7 @@ int main() {
     for (auto& v : input_data) v = dis(gen);
 
     Ort::MemoryInfo mem_info_cpu = Ort::MemoryInfo::CreateCpu(
-        OrtArenaAllocator, OrtMemTypeCUDAPinned
+        OrtArenaAllocator, OrtMemTypeDefault
     );
 
     Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
