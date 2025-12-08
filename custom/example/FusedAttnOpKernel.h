@@ -11,8 +11,10 @@ struct OrtTensorDimensions : std::vector<int64_t> {
 };
 
 struct FusedAttnOpKernel {
-    FusedAttnOpKernel(const Ort::CustomOpApi& ort, const OrtKernelInfo* info) : ort_(ort) {}
+    // CHANGE: Remove 'const' from the API parameter
+    FusedAttnOpKernel(Ort::CustomOpApi ort, const OrtKernelInfo* info) : ort_(ort) {}
     void Compute(OrtKernelContext* context);
 private:
-    const Ort::CustomOpApi& ort_;
+    // CHANGE: Remove 'const' from the member type
+    Ort::CustomOpApi ort_; 
 };
