@@ -1,8 +1,8 @@
 // fused_attn_op.cc
 #include "fused_attn_op.h"
-#include "onnxruntime/core/framework/tensor.h"
-#include "onnxruntime/core/framework/kernel_registry.h"
-#include "onnxruntime/core/providers/cuda/cuda_kernel.h" // For CUDA provider specifics
+#include "core/framework/tensor.h"
+#include "core/framework/kernel_registry.h"
+#include "core/providers/cuda/cuda_kernel.h" // For CUDA provider specifics
 
 using namespace onnxruntime;
 using namespace ONNX_NAMESPACE;

@@ -2,7 +2,7 @@
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include "fused_attn_op.h"
 #include <iostream>
-#include "onnxruntimecore/framework/customregistry.h" // Needed for CustomRegistry
+#include "core/framework/customregistry.h" // Needed for CustomRegistry
 
 // Note: Using the onnxruntime namespace as the registration function lives there
 using namespace onnxruntime;
