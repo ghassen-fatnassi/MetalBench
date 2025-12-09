@@ -20,6 +20,7 @@ set(ORT_LIB_DIR "${ORT_ROOT}/build/Linux/Release")
 
 include_directories(${ORT_INCLUDE_DIR} /usr/local/cuda/include)
 link_directories(${ORT_LIB_DIR} /usr/local/cuda/lib64)
+message(STATUS "ORT_LIB_DIR = ${ORT_LIB_DIR}")
 
 find_package(Threads REQUIRED)
 find_package(CUDA REQUIRED)
