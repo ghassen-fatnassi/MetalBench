@@ -3,6 +3,10 @@
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <onnxruntime/core/session/onnxruntime_c_api.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static const char* MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
 
 int main() {
@@ -68,3 +72,6 @@ int main() {
 
     return 0;
 }
+#ifdef __cplusplus
+}
+#endif
