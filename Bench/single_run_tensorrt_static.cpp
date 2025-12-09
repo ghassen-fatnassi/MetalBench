@@ -2,7 +2,7 @@
 #include <vector>
 #include <random>
 #include <chrono>
-#include <onnxruntime_cxx_api.h>
+#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <core/common/logging/logging.h>
 #include <core/common/logging/sinks/clog_sink.h>
 #include <core/session/ort_env.h>      // Environment::Create
