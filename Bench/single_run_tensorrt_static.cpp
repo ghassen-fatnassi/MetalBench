@@ -15,7 +15,7 @@ int main() {
         // Get raw C API pointer for status/error handling
 
         // ---- APPEND TENSORRT EP (C API) ----
-        int device_id=0
+        int device_id=0;
     
         // Many ORT C++ wrappers provide implicit conversion to OrtSessionOptions*.
         // We obtain the raw pointer here.
