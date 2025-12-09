@@ -7,6 +7,7 @@
 #include <onnxruntime/core/common/logging/sinks/clog_sink.h>
 #include <onnxruntime/core/session/ort_env.h>      // Environment::Create
 #include <onnxruntime/core/session/inference_session.h>
+#include <onnxruntime>
 
 using namespace onnxruntime;
 
