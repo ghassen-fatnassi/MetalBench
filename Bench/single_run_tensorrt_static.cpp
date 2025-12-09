@@ -16,12 +16,12 @@ int main() {
 
         // ---- APPEND TENSORRT EP (C API) ----
         int device_id=0
-        {
-            // Many ORT C++ wrappers provide implicit conversion to OrtSessionOptions*.
-            // We obtain the raw pointer here.
-            Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
-            Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, device_id));
-        }
+    
+        // Many ORT C++ wrappers provide implicit conversion to OrtSessionOptions*.
+        // We obtain the raw pointer here.
+        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
+        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, device_id));
+    
 
         // ---- LOAD MODEL ----
         std::cout << "Loading: " << MODEL_PATH << std::endl;
