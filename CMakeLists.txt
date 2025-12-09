@@ -14,8 +14,8 @@ set(CMAKE_CUDA_ARCHITECTURES 53)
 # ------------------------------------------------------------
 # ONNXRUNTIME PATHS
 # ------------------------------------------------------------
-set(ORT_ROOT "/home/jetson/onnxruntime")
-set(ORT_INCLUDE_DIR "${ORT_ROOT}/include")
+set(ORT_ROOT "/home/jetson/onnxruntime/onnxruntime")
+set(ORT_INCLUDE_DIR "${ORT_ROOT}/../include")
 set(ORT_LIB_DIR "${ORT_ROOT}/build/Linux/Release")
 
 message(STATUS "Using ORT include: ${ORT_INCLUDE_DIR}")
