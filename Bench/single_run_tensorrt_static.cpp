@@ -15,7 +15,7 @@ int main() {
         // ---- APPEND TENSORRT EP (ORT 1.6 STYLE) ----
         try {
             int device_id = 0;
-            Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
+            Ort::ThrowOnError(session_options.AppendExecutionProvider_Tensorrt(device_id));
             std::cout << "[OK] TensorRT EP appended.\n";
         } catch (...) {
             std::cout << "[FAIL] Could not append TensorRT EP.\n";
@@ -24,7 +24,7 @@ int main() {
         // ---- APPEND CUDA EP (required fallback) ----
         try {
             int device_id = 0;
-            Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, device_id));
+            Ort::ThrowOnError(session_options.AppendExecutionProvider_CUDA(device_id));
             std::cout << "[OK] CUDA EP appended.\n";
         } catch (...) {
             std::cout << "[FAIL] Could not append CUDA EP.\n";
