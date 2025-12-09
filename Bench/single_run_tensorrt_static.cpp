@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <onnxruntime/core/session/onnxruntime_c_api.h>
-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+//#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 
 static const char* MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
 
