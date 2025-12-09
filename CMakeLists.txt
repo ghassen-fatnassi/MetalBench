@@ -44,7 +44,7 @@ find_package(Threads REQUIRED)
 set(ONNX_RUNTIME_LIBS
     ${ORT_LIB_DIR}/libonnxruntime.so
     ${ORT_LIB_DIR}/libonnxruntime_providers_shared.so
-    ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.so
+    ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.a
     ${ORT_LIB_DIR}/libonnxruntime_providers_tensorrt.so
 )
 
