@@ -1,7 +1,6 @@
 // Bench/test_tensorrt_fixed.cpp
 #include <iostream>
 #include <vector>
-#include <onnxruntime/core/session/onnxruntime_c_api.h>
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 
 static const char* MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
@@ -14,34 +13,14 @@ int main() {
         session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
 
         // Get raw C API pointer for status/error handling
-        const OrtApi* g_api = Ort::GetApi();
 
         // ---- APPEND TENSORRT EP (C API) ----
+        int device_id=0
         {
             // Many ORT C++ wrappers provide implicit conversion to OrtSessionOptions*.
             // We obtain the raw pointer here.
-            OrtSessionOptions* raw_opts = session_options;
-            OrtStatus* st = OrtSessionOptionsAppendExecutionProvider_Tensorrt(raw_opts, 0);
-            if (st) {
-                const char* msg = g_api->GetErrorMessage(st);
-                std::cerr << "[FAIL] Append TensorRT EP: " << (msg ? msg : "unknown") << "\n";
-                g_api->ReleaseStatus(st);
-            } else {
-                std::cout << "[OK] TensorRT EP appended.\n";
-            }
-        }
-
-        // ---- APPEND CUDA EP (C API) ----
-        {
-            OrtSessionOptions* raw_opts = session_options;
-            OrtStatus* st = OrtSessionOptionsAppendExecutionProvider_CUDA(raw_opts, 0);
-            if (st) {
-                const char* msg = g_api->GetErrorMessage(st);
-                std::cerr << "[WARN] Append CUDA EP: " << (msg ? msg : "unknown") << "\n";
-                g_api->ReleaseStatus(st);
-            } else {
-                std::cout << "[OK] CUDA EP appended.\n";
-            }
+            Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
+            Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, device_id));
         }
 
         // ---- LOAD MODEL ----
