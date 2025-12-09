@@ -60,4 +60,4 @@ add_onnxbin(jetson_bench            Bench/jetson_bench.cpp)
 
 # New binaries
 add_onnxbin(single_run_tensorrt_static           Bench/single_run_tensorrt_static.cpp)
-add_onnxbin(list_eps                Bench/list_eps.cpp)
+add_onnxbin(list_eps                Bench/list_EPS.cpp)
