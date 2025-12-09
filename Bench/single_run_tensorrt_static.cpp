@@ -1,11 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
-#include <onnxruntime/core/session/onnxruntime_c_api.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 static const char* MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
 
@@ -20,7 +15,7 @@ int main() {
         // ---- APPEND TENSORRT EP (ORT 1.6 STYLE) ----
         try {
             int device_id = 0;
-            Ort::ThrowOnError(session_options.AppendExecutionProvider_Tensorrt(device_id));
+            Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
             std::cout << "[OK] TensorRT EP appended.\n";
         } catch (...) {
             std::cout << "[FAIL] Could not append TensorRT EP.\n";
@@ -29,7 +24,7 @@ int main() {
         // ---- APPEND CUDA EP (required fallback) ----
         try {
             int device_id = 0;
-            Ort::ThrowOnError(session_options.AppendExecutionProvider_CUDA(device_id));
+            Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, device_id));
             std::cout << "[OK] CUDA EP appended.\n";
         } catch (...) {
             std::cout << "[FAIL] Could not append CUDA EP.\n";
@@ -72,6 +67,3 @@ int main() {
 
     return 0;
 }
-#ifdef __cplusplus
-}
-#endif
