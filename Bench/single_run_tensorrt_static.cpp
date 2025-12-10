@@ -24,7 +24,7 @@ int main() {
     try {
         OrtCUDAProviderOptions cuda_options{};
         cuda_options.device_id = 0;
-        session_options.AppendExecutionProvider_TensorRT(cuda_options);
+        session_options.AppendExecutionProvider_Tensorrt(cuda_options);
         std::cout << "CUDA Provider Appended.\n";
     } catch (...) {
         std::cerr << "WARNING: Could not append CUDA provider.\n";
