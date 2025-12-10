@@ -2,7 +2,7 @@
 #include <vector>
 #include <numeric>
 #include <random>
-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+#include <onnxruntime_cxx_api.h>
 
 // Configuration
 const std::string MODEL_PATH = "Models/model_fused.onnx";
