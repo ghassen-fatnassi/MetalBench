@@ -36,7 +36,7 @@ int main() {
 
         // Append TensorRT EP (C API)
         int device_id = 0;
-        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(so, device_id));
+        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(so, device_id));
 
         // ---------------------------
         // CREATE SESSION OBJECT
