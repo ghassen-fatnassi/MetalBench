@@ -5,7 +5,6 @@
 #include <onnxruntime_cxx_api.h>
 
 
-using namespace onnxruntime;
 
 static const char* MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
 
