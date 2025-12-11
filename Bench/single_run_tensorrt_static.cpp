@@ -23,7 +23,7 @@ int main() {
 
     // CUDA provider
     try {
-        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
+        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_TensorRT(session_options, device_id));
         std::cout << "CUDA Provider Appended.\n";
     } catch (...) {
         std::cerr << "WARNING: Could not append CUDA provider.\n";
