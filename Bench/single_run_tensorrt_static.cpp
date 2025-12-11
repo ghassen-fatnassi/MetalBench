@@ -2,6 +2,7 @@
 #include <vector>
 #include <random>
 #include <chrono>
+#include <onnxruntime/core/providers/tensorrt/tensorrt_provider_factory.h>
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <onnxruntime/core/session/onnxruntime_c_api.h>
 
@@ -23,7 +24,8 @@ int main() {
 
     // CUDA provider
     try {
-        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_TensorRT(session_options, device_id));
+        int device_id=0
+        Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
         std::cout << "CUDA Provider Appended.\n";
     } catch (...) {
         std::cerr << "WARNING: Could not append CUDA provider.\n";
