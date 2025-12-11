@@ -3,6 +3,7 @@
 #include <random>
 #include <chrono>
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
+#include <onnxruntime/core/session/onnxruntime_c_api.h>
 
 const std::string MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
 const int BATCH_SIZE = 1;
