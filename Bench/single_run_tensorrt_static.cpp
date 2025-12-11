@@ -10,7 +10,7 @@ const std::string MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
 const int BATCH_SIZE = 1;
 const int IMG_SIZE = 640;
 const int NUM_WARMUP = 5;
-const int NUM_RUNS   = 50;
+const int NUM_RUNS   = 10;
 
 int main() {
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "Bench");
