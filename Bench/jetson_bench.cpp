@@ -7,7 +7,7 @@
 #include <cmath>
 #include <thread>
 #include <random>
-#include <onnxruntime_cxx_api.h>
+#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 
 // ================= CONFIG =================
 const std::string MODEL_PATH = "Models/yolo12n_op12.onnx";
