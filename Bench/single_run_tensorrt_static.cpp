@@ -24,7 +24,7 @@ int main() {
 
     // CUDA provider
     try {
-        int device_id=0
+        int device_id=0;
         Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
         std::cout << "CUDA Provider Appended.\n";
     } catch (...) {
