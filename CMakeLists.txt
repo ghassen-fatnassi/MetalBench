@@ -13,7 +13,7 @@ set(ORT_INSTALL_DIR "/home/jetson/ort_install")
 set(ORT_INCLUDE_DIR "${ORT_INSTALL_DIR}/include")
 set(ORT_LIB_DIR "${ORT_INSTALL_DIR}/lib")
 
-include_directories(${ORT_INCLUDE_DIR})
+include_directories(${ORT_INCLUDE_DIR} ${ORT_INCLUDE_DIR}/onnxruntime/core/session)
 link_directories(${ORT_LIB_DIR})
 
 # ============================================================
