@@ -1,59 +1,68 @@
+# Use a modern, stable CMake version
 cmake_minimum_required(VERSION 3.10)
-project(FusedAttnOpTest LANGUAGES CXX CUDA)
+project(custom_op_benchmark LANGUAGES CXX CUDA) 
 
-set(CMAKE_CXX_STANDARD 17) # Use C++17
-set(CMAKE_CUDA_STANDARD 17) # Use C++17
+set(ORT_ROOT_DIR "/home/jetson/onnxruntime/build")
 
-# Jetson Nano architecture (Architecture 53 is valid for Jetson Nano)
-set(CMAKE_CUDA_ARCHITECTURES "53")
+set(ONNX_INCLUDE_DIR "${ORT_ROOT_DIR}/include/onnxruntime")
 
-# --- ONNX Runtime and Environment Paths ---
-# You can keep these paths, assuming they are correct for your Jetson setup.
-set(ONNXRUNTIME_ROOT "/home/jetson/onnxruntime")
-set(ORT_INCLUDE_DIR "${ONNXRUNTIME_ROOT}/include")
-set(ORT_LIB_DIR "${ONNXRUNTIME_ROOT}/build/Linux/Release")
+set(ONNX_LIB_DIR "${ORT_ROOT_DIR}/Linux/Release") 
 
-include_directories(${ORT_INCLUDE_DIR} /usr/local/cuda/include)
-link_directories(/usr/local/cuda/lib64)
+set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda") 
 
-add_definitions(-DONNX_ML=1)
-# Add the permissive flag for C++ CustomOpBase issues
-add_compile_options(-fpermissive)
-find_package(Threads REQUIRED)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CUDA_STANDARD 14)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# --- 1. DEFINE SHARED LIBRARY TARGET (Your Custom Op) ---
-## We assume the Op definition/registration is in FusedAttnOp.cc
-set(CUSTOM_OP_SRC
-    FusedAttnOpKernel.cc    # The actual compute logic
-    FusedAttnOp.cc          # Op definition and RegisterCustomOps function
-)
-# Add these lines to your CMakeLists.txt
-set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CUDA_FLAGS_DEBUG "-g")
-# Optional: if you have a CUDA kernel implementation in .cu
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/FusedAttnOpKernel.cu")
-    list(APPEND CUSTOM_OP_SRC FusedAttnOpKernel.cu)
-endif()
+find_package(CUDA REQUIRED PATHS ${CUDA_TOOLKIT_ROOT_DIR} NO_DEFAULT_PATH)
 
-# Create the shared library (libcustom_attn.so)
-add_library(custom_attn SHARED ${CUSTOM_OP_SRC})
-target_link_libraries(custom_attn PRIVATE Threads::Threads cudart dl rt)
+set(CMAKE_CUDA_ARCHITECTURES 53) 
 
-# Set the output name for consistency
-set_target_properties(custom_attn PROPERTIES OUTPUT_NAME "libcustom_attn")
-
-# --- 2. DEFINE TEST EXECUTABLE TARGET ---
-set(TEST_SRC
-    main.cc # Your test file that calls the session and loads libcustom_attn.so
+include_directories(
+    ${ONNX_INCLUDE_DIR}
+    ${CUDA_INCLUDE_DIRS}
 )
 
-add_executable(custom_attn_test ${TEST_SRC})
-# ONNX Runtime libraries
-set(ONNX_RUNTIME_LIBS
-    ${ORT_LIB_DIR}/libonnxruntime.so
-    ${ORT_LIB_DIR}/libonnxruntime_providers_shared.so
-    ${ORT_LIB_DIR}/libonnxruntime_providers_cuda.a
+add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-fPIC -Wall>)
+cuda_add_compile_options(-Xcompiler -fPIC) 
+
+set(CUSTOM_OP_LIB_NAME "ort_custom_fused_attn")
+set(CUSTOM_OP_SOURCES
+    fused_attn.cc
+    fused_attn.cu
 )
 
-target_link_libraries(custom_attn_test PRIVATE ${ONNX_RUNTIME_LIBS} Threads::Threads cudart dl rt)
+add_library(${CUSTOM_OP_LIB_NAME} SHARED ${CUSTOM_OP_SOURCES})
+
+target_link_libraries(${CUSTOM_OP_LIB_NAME}
+    PRIVATE
+    ${ONNX_LIB_DIR}/libonnxruntime.so  
+    
+    ${CUDA_LIBRARIES}
+)
+
+set(APP_NAME "ort_benchmark_app")
+
+add_executable(${APP_NAME} main.cpp)
+
+target_link_libraries(${APP_NAME}
+    PRIVATE
+    ${ONNX_LIB_DIR}/libonnxruntime.so
+    ${ONNX_LIB_DIR}/libonnxruntime_providers_cuda.a
+    ${ONNX_LIB_DIR}/libonnxruntime_providers_shared.so
+    ${CUSTOM_OP_LIB_NAME}
+    
+    dl
+)
+
+set_target_properties(${APP_NAME} PROPERTIES 
+    INSTALL_RPATH "${ONNX_LIB_DIR}:\$ORIGIN"
+    BUILD_RPATH "${ONNX_LIB_DIR}"
+)
+
+add_custom_command(
+    TARGET ${APP_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "$<TARGET_FILE:${CUSTOM_OP_LIB_NAME}>"
+    "$<TARGET_FILE_DIR:${APP_NAME}>"
+)
