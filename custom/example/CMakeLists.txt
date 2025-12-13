@@ -23,6 +23,7 @@ include_directories(
 
     ${ORT_INCLUDE_DIR}/onnxruntime/core/session
     ${ORT_INCLUDE_DIR}/onnxruntime
+    ~/onnxruntime/onnxruntime/core/session
     ${CUDA_INCLUDE_DIR}
 )
 
