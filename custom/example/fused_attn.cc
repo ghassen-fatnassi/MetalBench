@@ -1,4 +1,3 @@
-#include "onnxruntime/core/framework/op_kernel.h"
 #include "onnxruntime/core/framework/execution_provider.h"
 #include "onnxruntime/core/framework/customregistry.h"
 #include "onnxruntime/core/graph/schema_registry.h"
