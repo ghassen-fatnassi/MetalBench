@@ -19,7 +19,8 @@ set(CUDA_LIB_DIR "/usr/local/cuda/lib64")
 
 include_directories(
     ${ORT_INCLUDE_DIR} 
-    ${ORT_INCLUDE_DIR}/external
+    ${ORT_INCLUDE_DIR}/external/onnx
+
     ${ORT_INCLUDE_DIR}/onnxruntime/core/session
     ${ORT_INCLUDE_DIR}/onnxruntime
     ${CUDA_INCLUDE_DIR}
