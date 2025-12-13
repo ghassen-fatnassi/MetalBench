@@ -1,6 +1,4 @@
 #include "onnxruntime_cxx_api.h"
-#include "onnxruntime/core/framework/op_kernel.h"
-#include "onnxruntime/core/framework/customregistry.h"
 #include <cuda_runtime.h>
 
 using namespace onnxruntime;
