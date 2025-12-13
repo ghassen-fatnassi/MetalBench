@@ -1,8 +1,8 @@
-#include "core/framework/op_kernel.h"
-#include "core/framework/execution_provider.h"
-#include "core/framework/customregistry.h"
-#include "core/graph/schema_registry.h"
-#include "core/providers/cuda/cuda_execution_provider.h" 
+#include "onnxruntime/core/framework/op_kernel.h"
+#include "onnxruntime/core/framework/execution_provider.h"
+#include "onnxruntime/core/framework/customregistry.h"
+#include "onnxruntime/core/graph/schema_registry.h"
+#include "onnxruntime/core/providers/cuda/cuda_execution_provider.h" 
 
 using namespace onnxruntime;
 using namespace onnxruntime::common;

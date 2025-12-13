@@ -22,7 +22,6 @@ int main() {
     session_options.SetIntraOpNumThreads(4);
     session_options.SetInterOpNumThreads(4);
 
-    // CUDA provider
     try {
         int device_id=0;
         Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
