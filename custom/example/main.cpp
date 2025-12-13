@@ -2,9 +2,9 @@
 #include <vector>
 #include <random>
 #include <chrono>
-#include <onnxruntime_cxx_api.h>
+#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <dlfcn.h>               // POSIX Dynamic Library Loading
-#include "core/framework/customregistry.h" 
+#include "onnxruntime/core/framework/customregistry.h" 
 
 // --- Configuration Constants ---
 const std::string MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
