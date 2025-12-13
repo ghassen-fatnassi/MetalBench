@@ -3,7 +3,7 @@
 #include "onnxruntime/core/framework/customregistry.h"
 #include "onnxruntime/core/graph/schema_registry.h"
 #include "onnxruntime/core/providers/cuda/cuda_execution_provider.h" 
-
+#include "onnxruntime/core/" 
 using namespace onnxruntime;
 using namespace onnxruntime::common;
 
