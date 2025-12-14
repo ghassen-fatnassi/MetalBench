@@ -112,7 +112,7 @@ for i, block in enumerate(blocks):
         inputs=input_names,
         outputs=output_names,
         name=fused_name,
-        domain="custom.attn"  # match your C++ registration
+        domain=""  # match your C++ registration
     )
 
     new_nodes.append((start_node.name, fused_node))  # store insertion point
@@ -183,7 +183,7 @@ for node in graph.node:
 
 if duplicate_names:
     print(f"Warning: Found and renamed {len(duplicate_names)} duplicate node names")
-model.opset_import.append(onnx.helper.make_opsetid("custom.attn",1))
+model.opset_import.append(onnx.helper.make_opsetid("",1))
 # ------------------------------------------------------------
 # Step 5: Save fused model
 # ------------------------------------------------------------
