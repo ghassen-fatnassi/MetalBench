@@ -33,7 +33,7 @@ public:
     void serialize(void*) const override {}
     void destroy() override { delete this; }
 
-    void setPluginNamespace(const char* ns) override { mNamespace = ns ? ns : ""; }
+    void setPluginNamespace(const char* ns) override { mNamespace = ns ? ns : "custom.attn"; }
     const char* getPluginNamespace() const override { return mNamespace.c_str(); }
 
     nvinfer1::DataType getOutputDataType(int, const nvinfer1::DataType* inputTypes, int) const override { return inputTypes[0]; }

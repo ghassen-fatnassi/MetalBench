@@ -5,30 +5,53 @@
 int FusedAttentionPlugin::enqueue(
     const nvinfer1::PluginTensorDesc*,
     const nvinfer1::PluginTensorDesc*,
-    const void* const*,
-    void* const*,
+    const void* const* inputs,
+    void* const* outputs,
     void*,
     cudaStream_t)
 {
+    // NO CUDA YET
     printf("🔥 FusedAttention enqueue called\n");
     return 0;
 }
 
 class FusedAttentionPluginCreator : public nvinfer1::IPluginCreator {
 public:
-    const char* getPluginName() const override { return "FusedAttnOp"; }
-    const char* getPluginVersion() const override { return "1"; }
-    const nvinfer1::PluginFieldCollection* getFieldNames() override { return &mFC; }
+    const char* getPluginName() const override {
+        return "FusedAttnOp";
+    }
 
-    nvinfer1::IPluginV2* createPlugin(const char*, const nvinfer1::PluginFieldCollection*) override {
+
+    const char* getPluginVersion() const override {
+        return "1";
+    }
+
+    const nvinfer1::PluginFieldCollection* getFieldNames() override {
+        return &mFC;
+    }
+
+    nvinfer1::IPluginV2* createPlugin(
+        const char*,
+        const nvinfer1::PluginFieldCollection*) override
+    {
         return new FusedAttentionPlugin();
     }
-    nvinfer1::IPluginV2* deserializePlugin(const char*, const void* data, size_t length) override {
+
+    nvinfer1::IPluginV2* deserializePlugin(
+        const char*,
+        const void* data,
+        size_t length) override
+    {
         return new FusedAttentionPlugin(data, length);
     }
 
-    void setPluginNamespace(const char* ns) override { mNamespace = "custom.attn" ? "custom.attn" : "custom.attn"; }
-    const char* getPluginNamespace() const override { return mNamespace.c_str(); }
+    void setPluginNamespace(const char* ns) override {
+        mNamespace = "custom.attn";
+    }
+
+    const char* getPluginNamespace() const override {
+        return mNamespace.c_str();
+    }
 
 private:
     std::string mNamespace;
