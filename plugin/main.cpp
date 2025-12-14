@@ -14,11 +14,12 @@ public:
     }
 };
 
+// Load plugin shared library
 static void loadPluginLibrary()
 {
     std::cout << "=== Loading plugin library ===" << std::endl;
 
-    void* handle = dlopen("./plugin/build/libfused_attention_plugin.so", RTLD_NOW);
+    void* handle = dlopen("./plugin/libfused_attn.so", RTLD_NOW);
     if (!handle) {
         std::cerr << "❌ dlopen failed: " << dlerror() << std::endl;
         std::exit(1);
@@ -27,11 +28,12 @@ static void loadPluginLibrary()
     std::cout << "✅ Plugin library loaded successfully" << std::endl;
 }
 
+// Dump plugin registry to check creator registration
 static void dumpPluginRegistry()
 {
     std::cout << "=== Dumping TensorRT plugin registry ===" << std::endl;
 
-    auto* registry = nvinfer1::getPluginRegistry();
+    auto* registry = nvinfer1::plugin::getPluginRegistry();
     int n = registry->getNbPluginCreators();
 
     std::cout << "Registered plugin creators: " << n << std::endl;
@@ -62,7 +64,7 @@ int main()
     Logger logger;
 
     std::cout << "\n=== Initializing TensorRT plugins ===" << std::endl;
-    initLibNvInferPlugins(&logger, "");
+    nvinfer1::initLibNvInferPlugins(&logger, "");
 
     loadPluginLibrary();
     dumpPluginRegistry();
@@ -70,6 +72,11 @@ int main()
     std::cout << "\n=== Building network ===" << std::endl;
 
     auto builder = nvinfer1::createInferBuilder(logger);
+    if (!builder) {
+        std::cerr << "❌ Failed to create builder" << std::endl;
+        return 1;
+    }
+
     auto config  = builder->createBuilderConfig();
     auto network = builder->createNetworkV2(1U << 0);
     auto parser  = nvonnxparser::createParser(*network, logger);
