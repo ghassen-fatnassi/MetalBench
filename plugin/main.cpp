@@ -5,7 +5,7 @@
 
 class Logger : public nvinfer1::ILogger {
 public:
-    void log(Severity s, const char* msg) noexcept override {
+    void log(Severity s, const char* msg) override {
         if (s <= Severity::kINFO) std::cout << msg << std::endl;
     }
 };

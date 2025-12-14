@@ -9,19 +9,19 @@ public:
     FusedAttentionPlugin(const void* data, size_t length) {}
 
     // --- Mandatory overrides ---
-    const char* getPluginType() const noexcept override {
+    const char* getPluginType() const override {
         return "FusedAttention";
     }
 
-    const char* getPluginVersion() const noexcept override {
+    const char* getPluginVersion() const override {
         return "1";
     }
 
-    int getNbOutputs() const noexcept override {
+    int getNbOutputs() const override {
         return 1;
     }
 
-    nvinfer1::IPluginV2DynamicExt* clone() const noexcept override {
+    nvinfer1::IPluginV2DynamicExt* clone() const override {
         return new FusedAttentionPlugin();
     }
 
@@ -29,7 +29,7 @@ public:
         int outputIndex,
         const nvinfer1::DimsExprs* inputs,
         int nbInputs,
-        nvinfer1::IExprBuilder& exprBuilder) noexcept override
+        nvinfer1::IExprBuilder& exprBuilder) override
     {
         return inputs[0]; // output shape = input shape (for now)
     }
@@ -38,7 +38,7 @@ public:
         int pos,
         const nvinfer1::PluginTensorDesc* inOut,
         int nbInputs,
-        int nbOutputs) noexcept override
+        int nbOutputs) override
     {
         return inOut[pos].format == nvinfer1::TensorFormat::kLINEAR &&
                inOut[pos].type == nvinfer1::DataType::kFLOAT;
@@ -48,13 +48,13 @@ public:
         const nvinfer1::DynamicPluginTensorDesc* inputs,
         int nbInputs,
         const nvinfer1::DynamicPluginTensorDesc* outputs,
-        int nbOutputs) noexcept override {}
+        int nbOutputs) override {}
 
     size_t getWorkspaceSize(
         const nvinfer1::PluginTensorDesc* inputs,
         int nbInputs,
         const nvinfer1::PluginTensorDesc* outputs,
-        int nbOutputs) const noexcept override
+        int nbOutputs) const override
     {
         return 0;
     }
@@ -65,27 +65,27 @@ public:
         const void* const* inputs,
         void* const* outputs,
         void* workspace,
-        cudaStream_t stream) noexcept override;
+        cudaStream_t stream) override;
 
     // --- Boilerplate ---
-    int initialize() noexcept override { return 0; }
-    void terminate() noexcept override {}
-    size_t getSerializationSize() const noexcept override { return 0; }
-    void serialize(void* buffer) const noexcept override {}
-    void destroy() noexcept override { delete this; }
+    int initialize() override { return 0; }
+    void terminate() override {}
+    size_t getSerializationSize() const override { return 0; }
+    void serialize(void* buffer) const override {}
+    void destroy() override { delete this; }
 
-    void setPluginNamespace(const char* ns) noexcept override {
+    void setPluginNamespace(const char* ns) override {
         mNamespace = ns;
     }
 
-    const char* getPluginNamespace() const noexcept override {
+    const char* getPluginNamespace() const override {
         return mNamespace.c_str();
     }
 
     nvinfer1::DataType getOutputDataType(
         int index,
         const nvinfer1::DataType* inputTypes,
-        int nbInputs) const noexcept override
+        int nbInputs) const override
     {
         return inputTypes[0];
     }
