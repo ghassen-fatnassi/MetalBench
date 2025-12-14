@@ -27,7 +27,7 @@ public:
         return new FusedAttentionPlugin(data, length);
     }
 
-    void setPluginNamespace(const char* ns) override { mNamespace = ns ? ns : ""; }
+    void setPluginNamespace(const char* ns) override { mNamespace = ns ? ns : "custom.attn"; }
     const char* getPluginNamespace() const override { return mNamespace.c_str(); }
 
 private:
