@@ -10,6 +10,7 @@ public:
     }
 };
 
+
 int main() {
     Logger logger;
 

@@ -21,6 +21,7 @@ target_link_libraries(fused_attention_plugin
     ${CUDA_CUDART_LIBRARY}
 )
 
+
 add_executable(build_engine main.cpp)
 target_link_libraries(build_engine
     fused_attention_plugin
