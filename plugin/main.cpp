@@ -1,5 +1,6 @@
 #include <NvInfer.h>
 #include <NvOnnxParser.h>
+#include <dlfcn.h>
 #include <fstream>
 #include <iostream>
 
@@ -10,8 +11,14 @@ public:
     }
 };
 
-
 int main() {
+    // Force-load the plugin shared library so REGISTER_TENSORRT_PLUGIN runs
+    void* handle = dlopen("libfused_attention_plugin.so", RTLD_LAZY | RTLD_GLOBAL);
+    if (!handle) {
+        std::cerr << "Failed to load libfused_attention_plugin.so: " << dlerror() << std::endl;
+        return 1;
+    }
+
     Logger logger;
 
     auto builder = nvinfer1::createInferBuilder(logger);
@@ -19,7 +26,7 @@ int main() {
     auto network = builder->createNetworkV2(1U << 0);
     auto parser = nvonnxparser::createParser(*network, logger);
 
-    if (!parser->parseFromFile("../Models/model_fused.onnx",
+    if (!parser->parseFromFile("Models/model_fused.onnx",
                                (int)nvinfer1::ILogger::Severity::kINFO)) {
         std::cerr << "ONNX parse failed\n";
         return 1;
