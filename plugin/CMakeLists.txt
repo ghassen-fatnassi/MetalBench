@@ -23,11 +23,7 @@ target_link_libraries(fused_attention_plugin
 
 
 add_executable(build_engine main.cpp)
-# Add after add_executable(build_engine ...)
-set_target_properties(build_engine PROPERTIES
-    BUILD_RPATH "$ORIGIN"
-    INSTALL_RPATH "$ORIGIN"
-)
+
 target_link_libraries(build_engine
     fused_attention_plugin
     nvinfer
