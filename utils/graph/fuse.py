@@ -183,7 +183,6 @@ for node in graph.node:
 
 if duplicate_names:
     print(f"Warning: Found and renamed {len(duplicate_names)} duplicate node names")
-model.opset_import.append(onnx.helper.make_opsetid("",1))
 # ------------------------------------------------------------
 # Step 5: Save fused model
 # ------------------------------------------------------------
