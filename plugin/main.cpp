@@ -18,7 +18,7 @@ int main() {
     auto network = builder->createNetworkV2(1U << 0);
     auto parser = nvonnxparser::createParser(*network, logger);
 
-    if (!parser->parseFromFile("model_with_fused_attention.onnx",
+    if (!parser->parseFromFile("Models/model_fused.onnx",
                                (int)nvinfer1::ILogger::Severity::kINFO)) {
         std::cerr << "ONNX parse failed\n";
         return 1;
