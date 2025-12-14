@@ -10,7 +10,7 @@ public:
 
     // --- Mandatory overrides ---
     const char* getPluginType() const override {
-        return "FusedAttention";
+        return "FusedAttnOp";
     }
 
     const char* getPluginVersion() const override {

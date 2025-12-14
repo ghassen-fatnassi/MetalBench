@@ -18,7 +18,7 @@ int FusedAttentionPlugin::enqueue(
 class FusedAttentionPluginCreator : public nvinfer1::IPluginCreator {
 public:
     const char* getPluginName() const override {
-        return "FusedAttention";
+        return "FusedAttnOp";
     }
 
     const char* getPluginVersion() const override {
