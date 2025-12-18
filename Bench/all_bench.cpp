@@ -160,11 +160,7 @@ BenchmarkResult run_benchmark(const BenchmarkConfig& config, Ort::Env& env) {
 }
 
 int main() {
-    // -------- Global TRT Environment --------
-    setenv("ORT_TENSORRT_ENGINE_CACHE_ENABLE", "1", 1);
-    setenv("ORT_TENSORRT_CACHE_PATH", "./trt_cache", 1);
-    setenv("ORT_TENSORRT_FP16_ENABLE", "0", 1);
-    system("mkdir -p ./trt_cache");
+
 
     Ort::Env env(ORT_LOGGING_LEVEL_ERROR, "MetalBenchUnifiedSafe");
     std::vector<BenchmarkResult> all_results;
