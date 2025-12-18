@@ -60,6 +60,8 @@ endfunction()
 # Your tools
 # ============================================================
 add_onnx_bin(list_eps Bench/list_eps.cpp)
+add_onnx_bin(jetson_bench Bench/jetson_bench.cpp)
+add_onnx_bin(tensorrt_bench Bench/tensorrt_bench.cpp)
 add_onnx_bin(single_run_cpu_dynamic Bench/single_run_cpu_dynamic.cpp)
 add_onnx_bin(single_run_cpu_static Bench/single_run_cpu_static.cpp)
 add_onnx_bin(single_run_cuda_static Bench/single_run_cuda_static.cpp)
