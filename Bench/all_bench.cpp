@@ -163,7 +163,7 @@ int main() {
     // -------- Global TRT Environment --------
     setenv("ORT_TENSORRT_ENGINE_CACHE_ENABLE", "1", 1);
     setenv("ORT_TENSORRT_CACHE_PATH", "./trt_cache", 1);
-    setenv("ORT_TENSORRT_FP16_ENABLE", "1", 1);
+    setenv("ORT_TENSORRT_FP16_ENABLE", "0", 1);
     system("mkdir -p ./trt_cache");
 
     Ort::Env env(ORT_LOGGING_LEVEL_ERROR, "MetalBenchUnifiedSafe");
@@ -189,9 +189,7 @@ int main() {
                 conf.model_path = "Models/yolo12n_op12_static_"
                                 + std::to_string(b) + "_"
                                 + std::to_string(r) + ".onnx";
-                conf.opt_level = (ep == "TRT")
-                                 ? ORT_ENABLE_ALL
-                                 : ORT_DISABLE_ALL;
+                conf.opt_level = ORT_DISABLE_ALL;
 
                 all_results.push_back(run_benchmark(conf, env));
             }
