@@ -148,7 +148,7 @@ int main() {
                 conf.ep_name = ep;
                 conf.batch_size = b;
                 conf.resolution = r;
-                conf.model_path = "StaticModels/yolo12n_op12_static_" + std::to_string(b) + "_" + std::to_string(r) + ".onnx";
+                conf.model_path = "Models/yolo12n_op12_static_" + std::to_string(b) + "_" + std::to_string(r) + ".onnx";
                 conf.opt_level = (ep == "TRT") ? ORT_ENABLE_ALL : ORT_DISABLE_ALL;
 
                 BenchmarkResult res = run_benchmark(conf, env);
