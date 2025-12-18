@@ -14,7 +14,7 @@
 #include <onnxruntime/core/session/onnxruntime_c_api.h>
 
 // ================= CONFIG =================
-const std::string MODEL_PATH = "Models/yolo12n_op12_shaped.onnx";
+const std::string MODEL_PATH = "Models/optimized_cuda.onnx";
 const int NUM_WARMUP = 5;       // Increased warmup for TRT stability
 const int NUM_RUNS = 20;
 const int COOLING_DELAY_MS = 5000; 
