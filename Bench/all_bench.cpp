@@ -172,7 +172,7 @@ int main() {
     // IMPORTANT: TRT must run BEFORE CUDA in same process
     std::vector<std::string> providers = { "TRT", "CPU", "CUDA"};
     std::vector<int> batches = {1, 2, 4, 8};
-    std::vector<int> resolutions = {128, 256, 384, 512, 640};
+    std::vector<int> resolutions = {512, 640};
 
     std::cout << "Starting Unified Benchmark (TRT-safe order)..." << std::endl;
 
