@@ -7,14 +7,14 @@
 #include <cmath>
 #include <thread>
 #include <random>
-#include <cstdlib> // Required for setenv
+
 // REQUIRED for TensorRT in ORT 1.6
 #include <onnxruntime/core/providers/tensorrt/tensorrt_provider_factory.h>
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <onnxruntime/core/session/onnxruntime_c_api.h>
 
 // ================= CONFIG =================
-const std::string MODEL_PATH = "Models/optimized_cuda.onnx";
+const std::string MODEL_PATH = "Models/yolo12n_op12.onnx";
 const int NUM_WARMUP = 5;       // Increased warmup for TRT stability
 const int NUM_RUNS = 20;
 const int COOLING_DELAY_MS = 5000; 
@@ -165,23 +165,6 @@ BenchmarkResult run_config(const BenchmarkConfig& config, Ort::Env& env) {
 
 // ================= MAIN =================
 int main() {
-    // --- LINUX INTEGRATION: Set Env Vars Automatically ---
-    // 1. Enable TensorRT Engine Caching (Critical for multiple runs)
-    setenv("ORT_TENSORRT_ENGINE_CACHE_ENABLE", "1", 1);
-    
-    // 2. Set the cache path to a folder named 'trt_cache' in the current dir
-    //    Make sure to create this folder or let TRT create it
-    setenv("ORT_TENSORRT_CACHE_PATH", "./trt_engine_cache", 1);
-
-    // 3. Enable FP16 (Optional, but recommended for Jetson)
-    setenv("ORT_TENSORRT_FP16_ENABLE", "1", 1);
-    
-    // 4. Create the directory if it doesn't exist (Linux command)
-    system("mkdir -p ./trt_engine_cache");
-    // -----------------------------------------------------
-
-    std::cout << "==========================================\n";
-    std::cout << "ONNX Runtime 1.6 - TensorRT Benchmark\n";
     std::cout << "==========================================\n";
     std::cout << "ONNX Runtime 1.6 - TensorRT Benchmark\n";
     std::cout << "Model: " << MODEL_PATH << "\n";
