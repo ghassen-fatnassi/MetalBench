@@ -1,6 +1,5 @@
 #include <NvInfer.h>
 #include <NvInferPlugin.h>
-#include <NvOnnxParser.h>
 #include <iostream>
 #include <cuda_runtime_api.h>
 
@@ -49,6 +48,11 @@ public:
 
     bool isOutputBroadcastAcrossBatch(int outputIndex, const bool* inputIsBroadcasted, int nbInputs) const noexcept override { return false; }
     bool canBroadcastInputAcrossBatch(int inputIndex) const noexcept override { return false; }
+
+    // ----- REQUIRED: configurePlugin -----
+    void configurePlugin(const PluginTensorDesc* in, int nbInput, const PluginTensorDesc* out, int nbOutput) noexcept override {
+        // nothing to configure for dummy
+    }
 };
 
 // ------------------- Main -------------------
