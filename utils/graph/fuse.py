@@ -1,5 +1,5 @@
 import onnx
-from onnx import helper, TensorProto
+from onnx import helper
 import json
 
 ATTN_SCALE = 0.1767766922712326
@@ -15,7 +15,7 @@ nodes = list(graph.node)
 initializer_map = {i.name: i for i in graph.initializer}
 
 # ------------------------------------------------------------
-# Step 1: Detect attention blocks (UNCHANGED)
+# Step 1: Detect attention blocks
 # ------------------------------------------------------------
 blocks = []
 current_block = []
@@ -40,11 +40,10 @@ if current_block:
     blocks.append(current_block)
 
 # ------------------------------------------------------------
-# Step 2: Fuse blocks + STRICT attribute extraction
+# Step 2: Fuse blocks (CORRECT Conv handling)
 # ------------------------------------------------------------
 new_nodes = []
 fusion_report = []
-used_initializers = set()
 existing_names = set(n.name for n in nodes)
 
 attn_counter = 0
@@ -60,47 +59,49 @@ for block in blocks:
     existing_names.add(fused_name)
     attn_counter += 1
 
+    # --------------------------------------------------------
+    # Extract Conv params PER CONV (NO DUPLICATES)
+    # --------------------------------------------------------
+    conv_params = []
+
+    for n in block:
+        if n.op_type == "Conv":
+            weight = None
+            bias = None
+
+            for inp in n.input:
+                if inp in initializer_map:
+                    tensor = initializer_map[inp]
+                    if len(tensor.dims) == 4:
+                        weight = tensor.name
+                    elif len(tensor.dims) == 1:
+                        bias = tensor.name
+
+            assert weight is not None, f"{n.name} missing weight"
+            assert bias is not None, f"{n.name} missing bias"
+
+            conv_params.append((weight, bias))
+
+    assert len(conv_params) == 3, "Expected exactly 3 Conv layers"
+
+    # --------------------------------------------------------
+    # Build fused inputs (EXACTLY 7)
+    # --------------------------------------------------------
+    fused_inputs = [start.input[0]]
+    for w, b in conv_params:
+        fused_inputs.append(w)
+        fused_inputs.append(b)
+
+    assert len(fused_inputs) == 7
+
     fused_node = helper.make_node(
         op_type="FusedAttnOp",
-        inputs=list(start.input),
+        inputs=fused_inputs,
         outputs=list(end.output),
         name=fused_name,
         domain=""
     )
 
-    # --------------------------------------------------------
-    # 🔧 Extract ONLY 3 Conv weights + biases
-    # --------------------------------------------------------
-    conv_weights = []
-    conv_biases = []
-
-    for n in block:
-        if n.op_type == "Conv":
-            for inp in n.input:
-                if inp in initializer_map:
-                    tensor = initializer_map[inp]
-                    used_initializers.add(inp)
-
-                    if len(tensor.dims) == 4:
-                        conv_weights.append(tensor)
-                    elif len(tensor.dims) == 1:
-                        conv_biases.append(tensor)
-
-    assert len(conv_weights) == 3, "Expected exactly 3 Conv weights"
-    assert len(conv_biases) == 3, "Expected exactly 3 Conv biases"
-
-    # Attach attributes in deterministic order
-    for i in range(3):
-        fused_node.attribute.append(
-            helper.make_attribute(f"conv{i}_weight", conv_weights[i])
-        )
-        fused_node.attribute.append(
-            helper.make_attribute(f"conv{i}_bias", conv_biases[i])
-        )
-
-    # --------------------------------------------------------
-    # 🔧 Attention scaling factor
-    # --------------------------------------------------------
     fused_node.attribute.append(
         helper.make_attribute("attn_scale", ATTN_SCALE)
     )
@@ -109,12 +110,12 @@ for block in blocks:
 
     fusion_report.append({
         "fused_op": fused_name,
-        "convs": 3,
+        "inputs": fused_inputs,
         "attn_scale": ATTN_SCALE
     })
 
 # ------------------------------------------------------------
-# Step 3: Replace nodes (UNCHANGED)
+# Step 3: Replace nodes
 # ------------------------------------------------------------
 all_block_names = {n.name for b in blocks for n in b}
 final_nodes = []
@@ -137,12 +138,16 @@ graph.ClearField("node")
 graph.node.extend(final_nodes)
 
 # ------------------------------------------------------------
-# Remove consumed initializers
+# Step 4: SAFE initializer pruning
 # ------------------------------------------------------------
+used_inputs = set()
+for n in graph.node:
+    used_inputs.update(n.input)
+
 graph.ClearField("initializer")
 graph.initializer.extend(
     i for i in initializer_map.values()
-    if i.name not in used_initializers
+    if i.name in used_inputs
 )
 
 # ------------------------------------------------------------
