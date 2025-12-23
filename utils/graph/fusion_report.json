@@ -24,6 +24,18 @@
             "/model.6/m.0/m.0.0/attn/Add",
             "/model.6/m.0/m.0.0/attn/proj/conv/Conv"
         ],
+        "weights": [
+            "model.6.m.0.0.attn.qkv.conv.weight",
+            "model.6.m.0.0.attn.qkv.conv.bias",
+            "/model.6/m.0/m.0.0/attn/Concat_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_5_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_10_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_6_output_0",
+            "model.6.m.0.0.attn.pe.conv.weight",
+            "model.6.m.0.0.attn.pe.conv.bias",
+            "model.6.m.0.0.attn.proj.conv.weight",
+            "model.6.m.0.0.attn.proj.conv.bias"
+        ],
         "inputs": [
             {
                 "name": "/model.6/cv1/act/Mul_output_0",
@@ -93,6 +105,18 @@
             "/model.6/m.0/m.0.1/attn/Transpose_6",
             "/model.6/m.0/m.0.1/attn/Add",
             "/model.6/m.0/m.0.1/attn/proj/conv/Conv"
+        ],
+        "weights": [
+            "model.6.m.0.1.attn.qkv.conv.weight",
+            "model.6.m.0.1.attn.qkv.conv.bias",
+            "/model.6/m.0/m.0.0/attn/Concat_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_5_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_10_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_6_output_0",
+            "model.6.m.0.1.attn.pe.conv.weight",
+            "model.6.m.0.1.attn.pe.conv.bias",
+            "model.6.m.0.1.attn.proj.conv.weight",
+            "model.6.m.0.1.attn.proj.conv.bias"
         ],
         "inputs": [
             {
@@ -164,6 +188,18 @@
             "/model.6/m.1/m.1.0/attn/Add",
             "/model.6/m.1/m.1.0/attn/proj/conv/Conv"
         ],
+        "weights": [
+            "model.6.m.1.0.attn.qkv.conv.weight",
+            "model.6.m.1.0.attn.qkv.conv.bias",
+            "/model.6/m.0/m.0.0/attn/Concat_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_5_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_10_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_6_output_0",
+            "model.6.m.1.0.attn.pe.conv.weight",
+            "model.6.m.1.0.attn.pe.conv.bias",
+            "model.6.m.1.0.attn.proj.conv.weight",
+            "model.6.m.1.0.attn.proj.conv.bias"
+        ],
         "inputs": [
             {
                 "name": "/model.6/m.0/m.0.1/Add_1_output_0",
@@ -233,6 +269,18 @@
             "/model.6/m.1/m.1.1/attn/Transpose_6",
             "/model.6/m.1/m.1.1/attn/Add",
             "/model.6/m.1/m.1.1/attn/proj/conv/Conv"
+        ],
+        "weights": [
+            "model.6.m.1.1.attn.qkv.conv.weight",
+            "model.6.m.1.1.attn.qkv.conv.bias",
+            "/model.6/m.0/m.0.0/attn/Concat_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_5_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_10_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_6_output_0",
+            "model.6.m.1.1.attn.pe.conv.weight",
+            "model.6.m.1.1.attn.pe.conv.bias",
+            "model.6.m.1.1.attn.proj.conv.weight",
+            "model.6.m.1.1.attn.proj.conv.bias"
         ],
         "inputs": [
             {
@@ -304,6 +352,18 @@
             "/model.8/m.0/m.0.0/attn/Add",
             "/model.8/m.0/m.0.0/attn/proj/conv/Conv"
         ],
+        "weights": [
+            "model.8.m.0.0.attn.qkv.conv.weight",
+            "model.8.m.0.0.attn.qkv.conv.bias",
+            "/model.8/m.0/m.0.0/attn/Concat_output_0",
+            "/model.8/m.0/m.0.0/attn/Constant_4_output_0",
+            "/model.8/m.0/m.0.0/attn/Constant_7_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_6_output_0",
+            "model.8.m.0.0.attn.pe.conv.weight",
+            "model.8.m.0.0.attn.pe.conv.bias",
+            "model.8.m.0.0.attn.proj.conv.weight",
+            "model.8.m.0.0.attn.proj.conv.bias"
+        ],
         "inputs": [
             {
                 "name": "/model.8/cv1/act/Mul_output_0",
@@ -373,6 +433,18 @@
             "/model.8/m.0/m.0.1/attn/Transpose_6",
             "/model.8/m.0/m.0.1/attn/Add",
             "/model.8/m.0/m.0.1/attn/proj/conv/Conv"
+        ],
+        "weights": [
+            "model.8.m.0.1.attn.qkv.conv.weight",
+            "model.8.m.0.1.attn.qkv.conv.bias",
+            "/model.8/m.0/m.0.0/attn/Concat_output_0",
+            "/model.8/m.0/m.0.0/attn/Constant_4_output_0",
+            "/model.8/m.0/m.0.0/attn/Constant_7_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_6_output_0",
+            "model.8.m.0.1.attn.pe.conv.weight",
+            "model.8.m.0.1.attn.pe.conv.bias",
+            "model.8.m.0.1.attn.proj.conv.weight",
+            "model.8.m.0.1.attn.proj.conv.bias"
         ],
         "inputs": [
             {
@@ -444,6 +516,18 @@
             "/model.8/m.1/m.1.0/attn/Add",
             "/model.8/m.1/m.1.0/attn/proj/conv/Conv"
         ],
+        "weights": [
+            "model.8.m.1.0.attn.qkv.conv.weight",
+            "model.8.m.1.0.attn.qkv.conv.bias",
+            "/model.8/m.0/m.0.0/attn/Concat_output_0",
+            "/model.8/m.0/m.0.0/attn/Constant_4_output_0",
+            "/model.8/m.0/m.0.0/attn/Constant_7_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_6_output_0",
+            "model.8.m.1.0.attn.pe.conv.weight",
+            "model.8.m.1.0.attn.pe.conv.bias",
+            "model.8.m.1.0.attn.proj.conv.weight",
+            "model.8.m.1.0.attn.proj.conv.bias"
+        ],
         "inputs": [
             {
                 "name": "/model.8/m.0/m.0.1/Add_1_output_0",
@@ -513,6 +597,18 @@
             "/model.8/m.1/m.1.1/attn/Transpose_6",
             "/model.8/m.1/m.1.1/attn/Add",
             "/model.8/m.1/m.1.1/attn/proj/conv/Conv"
+        ],
+        "weights": [
+            "model.8.m.1.1.attn.qkv.conv.weight",
+            "model.8.m.1.1.attn.qkv.conv.bias",
+            "/model.8/m.0/m.0.0/attn/Concat_output_0",
+            "/model.8/m.0/m.0.0/attn/Constant_4_output_0",
+            "/model.8/m.0/m.0.0/attn/Constant_7_output_0",
+            "/model.6/m.0/m.0.0/attn/Constant_6_output_0",
+            "model.8.m.1.1.attn.pe.conv.weight",
+            "model.8.m.1.1.attn.pe.conv.bias",
+            "model.8.m.1.1.attn.proj.conv.weight",
+            "model.8.m.1.1.attn.proj.conv.bias"
         ],
         "inputs": [
             {
