@@ -8,8 +8,16 @@
 namespace custom
 {
 
-// Forward declaration of the kernel launcher
-int computeFusedAttn(cudaStream_t stream, int n, const float* input, float* output);
+// Updated launcher signature
+int computeFusedAttn(cudaStream_t stream, 
+    int batchSize, int seqLen, int hiddenDim, 
+    const float* input, 
+    const float* w1, const float* b1, // Proj 1 (QKV)
+    const float* w2, const float* b2, // DW Conv
+    const float* w3, const float* b3, // Proj 2 (Out)
+    float* output, 
+    void* workspace, 
+    float attnScale);
 
 class FusedAttnPlugin : public nvinfer1::IPluginV2DynamicExt
 {
@@ -17,10 +25,8 @@ public:
     FusedAttnPlugin(const std::string name, float attnScale);
     FusedAttnPlugin(const std::string name, const void* data, size_t length);
 
-    // Delete default constructor
     FusedAttnPlugin() = delete;
 
-    // IPluginV2DynamicExt Methods
     nvinfer1::IPluginV2DynamicExt* clone() const override;
     nvinfer1::DimsExprs getOutputDimensions(
         int outputIndex, const nvinfer1::DimsExprs* inputs, int nbInputs, nvinfer1::IExprBuilder& exprBuilder) override;
@@ -33,10 +39,8 @@ public:
     int enqueue(const nvinfer1::PluginTensorDesc* inputDesc, const nvinfer1::PluginTensorDesc* outputDesc,
         const void* const* inputs, void* const* outputs, void* workspace, cudaStream_t stream) override;
 
-    // IPluginV2Ext Methods
     nvinfer1::DataType getOutputDataType(int index, const nvinfer1::DataType* inputTypes, int nbInputs) const override;
 
-    // IPluginV2 Methods
     const char* getPluginType() const override;
     const char* getPluginVersion() const override;
     int getNbOutputs() const override;
@@ -60,17 +64,11 @@ public:
     FusedAttnPluginCreator();
 
     const char* getPluginName() const override;
-
     const char* getPluginVersion() const override;
-
     const nvinfer1::PluginFieldCollection* getFieldNames() override;
-
     nvinfer1::IPluginV2* createPlugin(const char* name, const nvinfer1::PluginFieldCollection* fc) override;
-
     nvinfer1::IPluginV2* deserializePlugin(const char* name, const void* serialData, size_t serialLength) override;
-
     void setPluginNamespace(const char* pluginNamespace) override;
-
     const char* getPluginNamespace() const override;
 
 private:

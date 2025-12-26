@@ -1,6 +1,3 @@
-// Create a TensorRT engine building program that builds an engine from an ONNX
-// file and uses a custom plugin.
-
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -139,7 +136,7 @@ int main(int argc, char** argv)
     }
 
     // FIX 2: Use setMaxWorkspaceSize instead of setMemoryPoolLimit for older TRT compatibility
-    config->setMaxWorkspaceSize(1U << 20); // 1 MB workspace, increase if needed (e.g., 1U << 30 for 1GB)
+    config->setMaxWorkspaceSize(1U << 30); // 1 MB workspace, increase if needed (e.g., 1U << 30 for 1GB)
     
     if (builder->platformHasFastFp16())
     {

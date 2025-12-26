@@ -1,106 +1,16 @@
-[
-    {
-        "fused_op": "custom.attn_0",
-        "inputs": [
-            "/model.6/cv1/act/Mul_output_0",
-            "model.6.m.0.0.attn.qkv.conv.weight",
-            "model.6.m.0.0.attn.qkv.conv.bias",
-            "model.6.m.0.0.attn.pe.conv.weight",
-            "model.6.m.0.0.attn.pe.conv.bias",
-            "model.6.m.0.0.attn.proj.conv.weight",
-            "model.6.m.0.0.attn.proj.conv.bias"
-        ],
-        "attn_scale": 0.1767766922712326
-    },
-    {
-        "fused_op": "custom.attn_1",
-        "inputs": [
-            "/model.6/m.0/m.0.0/Add_1_output_0",
-            "model.6.m.0.1.attn.qkv.conv.weight",
-            "model.6.m.0.1.attn.qkv.conv.bias",
-            "model.6.m.0.1.attn.pe.conv.weight",
-            "model.6.m.0.1.attn.pe.conv.bias",
-            "model.6.m.0.1.attn.proj.conv.weight",
-            "model.6.m.0.1.attn.proj.conv.bias"
-        ],
-        "attn_scale": 0.1767766922712326
-    },
-    {
-        "fused_op": "custom.attn_2",
-        "inputs": [
-            "/model.6/m.0/m.0.1/Add_1_output_0",
-            "model.6.m.1.0.attn.qkv.conv.weight",
-            "model.6.m.1.0.attn.qkv.conv.bias",
-            "model.6.m.1.0.attn.pe.conv.weight",
-            "model.6.m.1.0.attn.pe.conv.bias",
-            "model.6.m.1.0.attn.proj.conv.weight",
-            "model.6.m.1.0.attn.proj.conv.bias"
-        ],
-        "attn_scale": 0.1767766922712326
-    },
-    {
-        "fused_op": "custom.attn_3",
-        "inputs": [
-            "/model.6/m.1/m.1.0/Add_1_output_0",
-            "model.6.m.1.1.attn.qkv.conv.weight",
-            "model.6.m.1.1.attn.qkv.conv.bias",
-            "model.6.m.1.1.attn.pe.conv.weight",
-            "model.6.m.1.1.attn.pe.conv.bias",
-            "model.6.m.1.1.attn.proj.conv.weight",
-            "model.6.m.1.1.attn.proj.conv.bias"
-        ],
-        "attn_scale": 0.1767766922712326
-    },
-    {
-        "fused_op": "custom.attn_4",
-        "inputs": [
-            "/model.8/cv1/act/Mul_output_0",
-            "model.8.m.0.0.attn.qkv.conv.weight",
-            "model.8.m.0.0.attn.qkv.conv.bias",
-            "model.8.m.0.0.attn.pe.conv.weight",
-            "model.8.m.0.0.attn.pe.conv.bias",
-            "model.8.m.0.0.attn.proj.conv.weight",
-            "model.8.m.0.0.attn.proj.conv.bias"
-        ],
-        "attn_scale": 0.1767766922712326
-    },
-    {
-        "fused_op": "custom.attn_5",
-        "inputs": [
-            "/model.8/m.0/m.0.0/Add_1_output_0",
-            "model.8.m.0.1.attn.qkv.conv.weight",
-            "model.8.m.0.1.attn.qkv.conv.bias",
-            "model.8.m.0.1.attn.pe.conv.weight",
-            "model.8.m.0.1.attn.pe.conv.bias",
-            "model.8.m.0.1.attn.proj.conv.weight",
-            "model.8.m.0.1.attn.proj.conv.bias"
-        ],
-        "attn_scale": 0.1767766922712326
-    },
-    {
-        "fused_op": "custom.attn_6",
-        "inputs": [
-            "/model.8/m.0/m.0.1/Add_1_output_0",
-            "model.8.m.1.0.attn.qkv.conv.weight",
-            "model.8.m.1.0.attn.qkv.conv.bias",
-            "model.8.m.1.0.attn.pe.conv.weight",
-            "model.8.m.1.0.attn.pe.conv.bias",
-            "model.8.m.1.0.attn.proj.conv.weight",
-            "model.8.m.1.0.attn.proj.conv.bias"
-        ],
-        "attn_scale": 0.1767766922712326
-    },
-    {
-        "fused_op": "custom.attn_7",
-        "inputs": [
-            "/model.8/m.1/m.1.0/Add_1_output_0",
-            "model.8.m.1.1.attn.qkv.conv.weight",
-            "model.8.m.1.1.attn.qkv.conv.bias",
-            "model.8.m.1.1.attn.pe.conv.weight",
-            "model.8.m.1.1.attn.pe.conv.bias",
-            "model.8.m.1.1.attn.proj.conv.weight",
-            "model.8.m.1.1.attn.proj.conv.bias"
-        ],
-        "attn_scale": 0.1767766922712326
-    }
-]
+{
+    "target_block_index": 0,
+    "fused_op": "custom.attn",
+    "inputs": [
+        "/model.6/cv1/act/Mul_output_0",
+        "model.6.m.0.0.attn.qkv.conv.weight",
+        "model.6.m.0.0.attn.qkv.conv.bias",
+        "model.6.m.0.0.attn.pe.conv.weight",
+        "model.6.m.0.0.attn.pe.conv.bias",
+        "model.6.m.0.0.attn.proj.conv.weight",
+        "model.6.m.0.0.attn.proj.conv.bias"
+    ],
+    "ref_output": "/model.6/m.0/m.0.0/attn/proj/conv/Conv_output_0_ref",
+    "fused_output": "/model.6/m.0/m.0.0/attn/proj/conv/Conv_output_0_fused",
+    "attn_scale": 0.1767766922712326
+}
