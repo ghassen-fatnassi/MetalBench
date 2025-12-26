@@ -95,7 +95,7 @@ for block in blocks:
     assert len(fused_inputs) == 7
 
     fused_node = helper.make_node(
-        op_type="FusedAttnOp",
+        op_type="FusedattnopIPluginV2DynamicExt",
         inputs=fused_inputs,
         outputs=list(end.output),
         name=fused_name,

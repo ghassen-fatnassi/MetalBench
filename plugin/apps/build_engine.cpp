@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <vector>
 
 #include <dlfcn.h>
 
@@ -23,12 +24,16 @@ class CustomLogger : public nvinfer1::ILogger
     }
 };
 
+// FIX 1: TensorRT objects must be destroyed via destroy(), not delete
 struct InferDeleter
 {
     template <typename T>
     void operator()(T* obj) const
     {
-        delete obj;
+        if (obj)
+        {
+            obj->destroy();
+        }
     }
 };
 
@@ -64,23 +69,19 @@ int main(int argc, char** argv)
 
     // dlopen the plugin library using RAII.
     // The plugin will be registered automatically when the library is loaded.
-    // Library will be automatically closed when the unique_ptr goes out of
-    // scope
-    std::unique_ptr<void, decltype(&dlclose)> plugin_handle{
-        dlopen(plugin_library_path.c_str(), RTLD_LAZY), &dlclose};
+    auto dlclose_deleter = [](void* handle) { dlclose(handle); };
+    std::unique_ptr<void, decltype(dlclose_deleter)> plugin_handle{
+        dlopen(plugin_library_path.c_str(), RTLD_LAZY), dlclose_deleter};
+    
     if (plugin_handle == nullptr)
     {
         std::cerr << "Failed to load the plugin library: " << dlerror()
                   << std::endl;
         return EXIT_FAILURE;
     }
-    // Plugin now loaded and will be automatically unloaded at the end of main()
 
     // Create the network.
     uint32_t flag{0U};
-    // For TensorRT < 10.0, explicit dimension has to be specified to
-    // distinguish from the implicit dimension. For TensorRT >= 10.0, explicit
-    // dimension is the only choice and this flag has been deprecated.
     if (getInferLibVersion() < 100000)
     {
         flag |= 1U << static_cast<uint32_t>(
@@ -110,14 +111,23 @@ int main(int argc, char** argv)
         std::cout << parser->getError(i)->desc() << std::endl;
     }
 
-    // Set the allowed IO tensor formats.
-    uint32_t const formats{
-        1U << static_cast<uint32_t>(nvinfer1::TensorFormat::kLINEAR)};
-    nvinfer1::DataType const dtype{nvinfer1::DataType::kFLOAT};
-    network->getInput(0)->setAllowedFormats(formats);
-    network->getInput(0)->setType(dtype);
-    network->getOutput(0)->setAllowedFormats(formats);
-    network->getOutput(0)->setType(dtype);
+    // Check input/output validity before setting formats
+    if (network->getNbInputs() > 0 && network->getNbOutputs() > 0)
+    {
+        // Set the allowed IO tensor formats.
+        uint32_t const formats{
+            1U << static_cast<uint32_t>(nvinfer1::TensorFormat::kLINEAR)};
+        nvinfer1::DataType const dtype{nvinfer1::DataType::kFLOAT};
+        network->getInput(0)->setAllowedFormats(formats);
+        network->getInput(0)->setType(dtype);
+        network->getOutput(0)->setAllowedFormats(formats);
+        network->getOutput(0)->setType(dtype);
+    }
+    else
+    {
+        std::cerr << "Network has no inputs or outputs!" << std::endl;
+        // Proceeding might crash, but we'll let TRT handle the error
+    }
 
     // Build the engine.
     std::unique_ptr<nvinfer1::IBuilderConfig, InferDeleter> config{
@@ -127,11 +137,35 @@ int main(int argc, char** argv)
         std::cerr << "Failed to create the builder config." << std::endl;
         return EXIT_FAILURE;
     }
-    config->setMemoryPoolLimit(nvinfer1::MemoryPoolType::kWORKSPACE, 1U << 20);
-    config->setFlag(nvinfer1::BuilderFlag::kFP16);
+
+    // FIX 2: Use setMaxWorkspaceSize instead of setMemoryPoolLimit for older TRT compatibility
+    config->setMaxWorkspaceSize(1U << 20); // 1 MB workspace, increase if needed (e.g., 1U << 30 for 1GB)
+    
+    if (builder->platformHasFastFp16())
+    {
+        config->setFlag(nvinfer1::BuilderFlag::kFP16);
+    }
+
+    // FIX 3: Use buildEngineWithConfig + serialize for older TRT compatibility
+    // instead of buildSerializedNetwork
+    std::cout << "Building engine..." << std::endl;
+    std::unique_ptr<nvinfer1::ICudaEngine, InferDeleter> engine{
+        builder->buildEngineWithConfig(*network, *config)};
+        
+    if (engine == nullptr)
+    {
+        std::cerr << "Failed to build the engine." << std::endl;
+        return EXIT_FAILURE;
+    }
 
     std::unique_ptr<nvinfer1::IHostMemory, InferDeleter> serializedModel{
-        builder->buildSerializedNetwork(*network, *config)};
+        engine->serialize()};
+
+    if (serializedModel == nullptr)
+    {
+        std::cerr << "Failed to serialize the engine." << std::endl;
+        return EXIT_FAILURE;
+    }
 
     // Write the serialized engine to a file.
     std::ofstream engineFile{engine_file_path.c_str(), std::ios::binary};
