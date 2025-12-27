@@ -132,7 +132,7 @@ int FusedAttnPlugin::enqueue(const nvinfer1::PluginTensorDesc* inputDesc,
     // 6: B3 (64)
     
     return computeFusedAttn(stream, 
-        n, h * w, c, // Batch, SeqLen (HW), Hidden
+        n, h, w, c, // Batch, SeqLen (HW), Hidden
         static_cast<const float*>(inputs[0]),
         static_cast<const float*>(inputs[1]),
         static_cast<const float*>(inputs[2]),

@@ -10,7 +10,7 @@ namespace custom
 
 // Updated launcher signature
 int computeFusedAttn(cudaStream_t stream, 
-    int batchSize, int seqLen, int hiddenDim, 
+    int batchSize, int height,int width, int hiddenDim, 
     const float* input, 
     const float* w1, const float* b1, // Proj 1 (QKV)
     const float* w2, const float* b2, // DW Conv
