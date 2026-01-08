@@ -1,17 +1,18 @@
 import onnx
 from onnx import helper, TensorProto
-import json
+import os
 
 # ================= CONFIG =================
 MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx"
-OUTPUT_MODEL_PATH = "model_attn_validation.onnx"
-REPORT_PATH = "fusion_report.json"
+REF_MODEL_PATH = "model_ref.onnx"
+FUSED_MODEL_PATH = "model_fused.onnx"
 
 ATTN_SCALE = 0.1767766922712326
 TARGET_BLOCK_INDEX = 0
-INPUT_SHAPE = [1, 64, 40, 40]  # fixed shape
+INPUT_SHAPE = [1, 64, 40, 40]  # Input shape for the block
 
 # ================= LOAD MODEL =================
+print(f"Loading {MODEL_PATH}...")
 model = onnx.load(MODEL_PATH)
 graph = model.graph
 nodes = list(graph.node)
@@ -37,19 +38,45 @@ if current_block:
     blocks.append(current_block)
 
 target_block = blocks[TARGET_BLOCK_INDEX]
+print(f"Found {len(blocks)} attention blocks. Targeting index {TARGET_BLOCK_INDEX} with {len(target_block)} nodes.")
 
 # ================= BLOCK IO =================
-start = target_block[0]
-end = target_block[-1]
+start_node = target_block[0]
+end_node = target_block[-1]
 
-block_input = start.input[0]
-block_output = end.output[0]
+block_input_name = start_node.input[0]
+block_output_name = end_node.output[0]
 
-ref_output = block_output + "_ref"
-fused_output = block_output + "_fused"
-end.output[0] = ref_output
+# ================= GATHER INITIALIZERS =================
+# We need the weights specifically for this block
+used_input_names = set()
+for n in target_block:
+    for inp in n.input:
+        used_input_names.add(inp)
 
-# ================= CONV PARAMS =================
+block_initializers = [initializer_map[name] for name in used_input_names if name in initializer_map]
+
+# ================= 1. GENERATE REFERENCE MODEL =================
+# This model contains the original decomposed graph
+ref_graph = helper.make_graph(
+    nodes=target_block,
+    name="reference_graph",
+    inputs=[helper.make_tensor_value_info(block_input_name, TensorProto.FLOAT, INPUT_SHAPE)],
+    outputs=[helper.make_tensor_value_info(block_output_name, TensorProto.FLOAT, INPUT_SHAPE)],
+    initializer=block_initializers
+)
+
+ref_model = helper.make_model(ref_graph, producer_name="ref_generator")
+ref_model.opset_import.extend(model.opset_import)
+
+onnx.save(ref_model, REF_MODEL_PATH)
+print(f"✅ Saved Reference Model: {REF_MODEL_PATH}")
+
+
+# ================= 2. GENERATE FUSED MODEL =================
+# This model replaces the block with FusedAttnOp
+
+# Extract Conv weights in order (QKV, PE, Proj)
 conv_params = []
 for n in target_block:
     if n.op_type == "Conv":
@@ -63,72 +90,29 @@ for n in target_block:
                     b = t.name
         conv_params.append((w, b))
 
-# ================= FUSED ATTENTION NODE =================
-fused_inputs = [block_input]
+# Construct inputs for FusedOp: [Input, W1, B1, W2, B2, W3, B3]
+fused_inputs = [block_input_name]
 for w, b in conv_params:
     fused_inputs.extend([w, b])
 
 fused_node = helper.make_node(
     "FusedAttnOp",
     fused_inputs,
-    [fused_output],
-    name="custom.attn"
-)
-fused_node.attribute.append(helper.make_attribute("attn_scale", ATTN_SCALE))
-
-# ================= DIFF + REDUCE =================
-sub_node = helper.make_node("Sub", [ref_output, fused_output], ["attn_diff_raw"], name="attn_diff_sub")
-abs_node = helper.make_node("Abs", ["attn_diff_raw"], ["attn_diff_abs"], name="attn_diff_abs")
-reduce_node = helper.make_node("ReduceMax", ["attn_diff_abs"], ["attn_max_diff"], name="attn_diff_max", keepdims=0)
-
-# ================= BUILD MINIMAL GRAPH =================
-# collect only the initializers used by the block
-used_input_names = []
-for n in target_block:
-    used_input_names.extend(list(n.input))
-
-used_initializers = [initializer_map[i] for i in initializer_map if i in used_input_names]
-
-new_graph = helper.make_graph(
-    nodes=[*target_block, fused_node, sub_node, abs_node, reduce_node],
-    name="attn_validation_graph",
-    inputs=[helper.make_tensor_value_info(block_input, TensorProto.FLOAT, INPUT_SHAPE)],
-    outputs=[helper.make_tensor_value_info("attn_max_diff", TensorProto.FLOAT, [])],
-    initializer=used_initializers
+    ["fused_output"],
+    name="custom.attn",
+    attn_scale=ATTN_SCALE
 )
 
-# ================= ADD VALUE INFO FOR VISUALIZATION =================
-# Fused output same shape as input
-new_graph.value_info.extend([
-    helper.make_tensor_value_info(fused_output, TensorProto.FLOAT, INPUT_SHAPE),
-    helper.make_tensor_value_info(ref_output, TensorProto.FLOAT, INPUT_SHAPE),
-    helper.make_tensor_value_info("attn_diff_raw", TensorProto.FLOAT, INPUT_SHAPE),
-    helper.make_tensor_value_info("attn_diff_abs", TensorProto.FLOAT, INPUT_SHAPE),
-    helper.make_tensor_value_info("attn_max_diff", TensorProto.FLOAT, [])
-])
+fused_graph = helper.make_graph(
+    nodes=[fused_node],
+    name="fused_graph",
+    inputs=[helper.make_tensor_value_info(block_input_name, TensorProto.FLOAT, INPUT_SHAPE)],
+    outputs=[helper.make_tensor_value_info("fused_output", TensorProto.FLOAT, INPUT_SHAPE)],
+    initializer=block_initializers # We can pass the same initializers, unused ones are ignored usually
+)
 
-new_model = helper.make_model(new_graph, producer_name="attn_validation")
+fused_model = helper.make_model(fused_graph, producer_name="fused_generator")
+fused_model.opset_import.extend(model.opset_import)
 
-# preserve original opset safely
-while len(new_model.opset_import) > 0:
-    del new_model.opset_import[0]
-for o in model.opset_import:
-    new_model.opset_import.append(o)
-
-# ================= SAVE =================
-onnx.save(new_model, OUTPUT_MODEL_PATH)
-
-fusion_report = {
-    "target_block_index": TARGET_BLOCK_INDEX,
-    "fused_op": fused_node.name,
-    "inputs": fused_inputs,
-    "ref_output": ref_output,
-    "fused_output": fused_output,
-    "attn_scale": ATTN_SCALE
-}
-
-with open(REPORT_PATH, "w") as f:
-    json.dump(fusion_report, f, indent=4)
-
-print("✅ Minimal attention validation model generated")
-print("📤 Output tensor: attn_max_diff")
+onnx.save(fused_model, FUSED_MODEL_PATH)
+print(f"✅ Saved Fused Model: {FUSED_MODEL_PATH}")
