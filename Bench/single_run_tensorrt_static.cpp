@@ -6,11 +6,10 @@
 #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
 #include <onnxruntime/core/session/onnxruntime_c_api.h>
 
-const std::string MODEL_PATH = "Models/yolo12n_op12_static_1_640.onnx";
-const int BATCH_SIZE = 1;
+const std::string MODEL_PATH = "Models/yolo12n_dynamic_batch.onnx";
 const int IMG_SIZE = 640;
 const int NUM_WARMUP = 5;
-const int NUM_RUNS   = 10;
+const int NUM_RUNS = 10;
 
 int main() {
     Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "Bench");
@@ -23,25 +22,16 @@ int main() {
     session_options.SetInterOpNumThreads(4);
 
     try {
-        int device_id=0;
+        int device_id = 0;
         Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(session_options, device_id));
-        std::cout << "CUDA Provider Appended.\n";
+        std::cout << "TensorRT Provider Appended.\n";
     } catch (...) {
-        std::cerr << "WARNING: Could not append CUDA provider.\n";
+        std::cerr << "WARNING: Could not append TensorRT provider.\n";
     }
 
     try {
         std::cout << "Loading model: " << MODEL_PATH << std::endl;
         Ort::Session session(env, MODEL_PATH.c_str(), session_options);
-
-        // Prepare data
-        std::vector<int64_t> input_dims = {BATCH_SIZE, 3, IMG_SIZE, IMG_SIZE};
-        size_t input_size = BATCH_SIZE * 3 * IMG_SIZE * IMG_SIZE;
-        std::vector<float> input_data(input_size);
-
-        std::mt19937 gen(42);
-        std::uniform_real_distribution<float> dis(0.0f, 1.0f);
-        for (auto& v : input_data) v = dis(gen);
 
         Ort::AllocatorWithDefaultOptions allocator;
         std::string input_name_str = session.GetInputName(0, allocator);
@@ -51,50 +41,58 @@ int main() {
         const char* output_names[] = {output_name_str.c_str()};
 
         auto mem_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-        Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
-            mem_info, input_data.data(), input_size,
-            input_dims.data(), input_dims.size()
-        );
 
-        // Warmup
-        std::cout << "Warmup...\n";
-        for (int i = 0; i < NUM_WARMUP; i++) {
-            session.Run(Ort::RunOptions{nullptr},
-                        input_names, &input_tensor, 1,
-                        output_names, 1);
+        std::mt19937 gen(42);
+        std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+
+        std::vector<int> batch_sizes = {1, 2, 4, 8, 16};
+
+        for (int batch_size : batch_sizes) {
+            // Prepare input tensor
+            std::vector<int64_t> input_dims = {batch_size, 3, IMG_SIZE, IMG_SIZE};
+            size_t input_size = static_cast<size_t>(batch_size) * 3 * IMG_SIZE * IMG_SIZE;
+            std::vector<float> input_data(input_size);
+            for (auto& v : input_data) v = dis(gen);
+
+            Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
+                mem_info, input_data.data(), input_size,
+                input_dims.data(), input_dims.size()
+            );
+
+            // Warmup
+            for (int i = 0; i < NUM_WARMUP; i++) {
+                session.Run(Ort::RunOptions{nullptr},
+                            input_names, &input_tensor, 1,
+                            output_names, 1);
+            }
+
+            // Benchmark
+            std::vector<double> times;
+            times.reserve(NUM_RUNS);
+
+            for (int i = 0; i < NUM_RUNS; i++) {
+                auto t0 = std::chrono::high_resolution_clock::now();
+                session.Run(Ort::RunOptions{nullptr},
+                            input_names, &input_tensor, 1,
+                            output_names, 1);
+                auto t1 = std::chrono::high_resolution_clock::now();
+                times.push_back(std::chrono::duration<double, std::milli>(t1 - t0).count());
+            }
+
+            double sum = 0, mn = 1e9, mx = 0;
+            for (auto v : times) {
+                sum += v;
+                if (v < mn) mn = v;
+                if (v > mx) mx = v;
+            }
+            double avg = sum / times.size();
+
+            std::cout << "\n---- BATCH " << batch_size << " ----\n";
+            std::cout << "Avg: " << avg << " ms\n";
+            std::cout << "Min: " << mn << " ms\n";
+            std::cout << "Max: " << mx << " ms\n";
+            std::cout << "FPS: " << (1000.0 / avg) * batch_size << "\n";
         }
-
-        // Benchmark
-        std::vector<double> times;
-        times.reserve(NUM_RUNS);
-
-        std::cout << "Benchmarking...\n";
-        for (int i = 0; i < NUM_RUNS; i++) {
-            auto t0 = std::chrono::high_resolution_clock::now();
-
-            session.Run(Ort::RunOptions{nullptr},
-                        input_names, &input_tensor, 1,
-                        output_names, 1);
-
-            auto t1 = std::chrono::high_resolution_clock::now();
-            double ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
-            times.push_back(ms);
-        }
-
-        // Stats
-        double sum = 0, mn = 1e9, mx = 0;
-        for (auto v : times) {
-            sum += v;
-            if (v < mn) mn = v;
-            if (v > mx) mx = v;
-        }
-        double avg = sum / times.size();
-
-        std::cout << "\n---- RESULTS (" << NUM_RUNS << " runs) ----\n";
-        std::cout << "Avg: " << avg << " ms\n";
-        std::cout << "Min: " << mn << " ms\n";
-        std::cout << "Max: " << mx << " ms\n";
-        std::cout << "FPS: " << 1000.0 / avg << "\n";
 
     } catch (const Ort::Exception& e) {
         std::cerr << "ORT Error: " << e.what() << std::endl;
