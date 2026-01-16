@@ -1,0 +1,32 @@
+=== Log started:  Fri Jan 16 12:55:07 2026
+=== Config: mobilenetv2 fp32 batch=1 TensorRT
+
+[INFO] TensorRT Provider appended
+[INFO] Loading model...
+[INFO] Model loaded in 28916 ms
+[INFO] Warmup (10 runs)...
+[INFO] Warmup complete
+[INFO] Benchmarking (100 runs)...
+[INFO] Progress: 25/100
+[INFO] Progress: 50/100
+[INFO] Progress: 75/100
+[INFO] Progress: 100/100
+
+[INFO] Saving results...
+
+[RESULTS]
+  Throughput:       67.56 FPS
+  Latency (mean):  14.79 ms
+  Latency (P50):   14.74 ms
+  Latency (P90):   14.97 ms
+  Latency (P95):   15.09 ms
+  Latency (P99):   15.15 ms
+  Latency (min):   14.49 ms
+  Latency (max):   17.11 ms
+  Jitter:           2.62 ms
+  Variance ratio:   1.18x
+  Max RSS:         1289104 KB
+
+[OUTPUT FILES]
+  Metrics:  profiling_results_trt/mobilenetv2/static_batch1_trt_fp32_metrics.json
+  Log:      profiling_results_trt/mobilenetv2/static_batch1_trt_fp32.log

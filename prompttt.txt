@@ -1,0 +1,52 @@
+unet static:
+
+    [RESULTS] of cuda fp32
+    Throughput:       4.73 FPS
+    Latency (mean):  211.26 ms
+    Latency (P99):   215.53 ms
+    Jitter:           13.44 ms
+    Variance ratio:  1.07x
+    Power (avg):     0 mW
+    Energy/inf:      0.00 mJ
+    CPU util:        14.4 %
+    GPU util:         98.0 %
+
+    [RESULTS] of trt fp32
+    Throughput:       6.01 FPS
+    Latency (mean):  166.29 ms
+    Latency (P50):   165.99 ms
+    Latency (P90):   169.55 ms
+    Latency (P95):   170.67 ms
+    Latency (P99):   172.97 ms
+    Latency (min):   161.21 ms
+    Latency (max):   176.21 ms
+    Jitter:           15.00 ms
+    Variance ratio:   1.09x
+    Max RSS:         1289104 KB
+
+mobileNetV2 :
+
+    [RESULTS] of cuda fp32
+    Throughput:       38.24 FPS
+    Latency (mean):  26.13 ms
+    Latency (P99):   27.55 ms
+    Jitter:           4.56 ms
+    Variance ratio:  1.18x
+    Power (avg):     0 mW
+    Energy/inf:      0.00 mJ
+    CPU util:        19.9 %
+    GPU util:         88.1 %
+
+
+    [RESULTS] of trt fp32
+    Throughput:       67.56 FPS
+    Latency (mean):  14.79 ms
+    Latency (P50):   14.74 ms
+    Latency (P90):   14.97 ms
+    Latency (P95):   15.09 ms
+    Latency (P99):   15.15 ms
+    Latency (min):   14.49 ms
+    Latency (max):   17.11 ms
+    Jitter:           2.62 ms
+    Variance ratio:   1.18x
+    Max RSS:         1289104 KB

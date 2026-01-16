@@ -1,0 +1,1270 @@
+=== Log started:  Fri Jan 16 01:30:15 2026
+=== Config: yolov3 dynamic batch=4 cuda
+
+[INFO] CUDA Execution Provider appended
+[INFO] Loading model...
+2026-01-16 01:30:15.376357843 [I:onnxruntime:, inference_session.cc:230 ConstructorCommon] Creating and using per session threadpools since use_per_session_threads_ is true
+2026-01-16 01:30:34.083301491 [I:onnxruntime:, inference_session.cc:1081 Initialize] Initializing session.
+2026-01-16 01:30:34.083397171 [I:onnxruntime:, inference_session.cc:1106 Initialize] Adding default CPU execution provider.
+2026-01-16 01:30:34.099647872 [I:onnxruntime:, reshape_fusion.cc:33 ApplyImpl] Fused reshape node: /model.28/dfl/Reshape_output_0
+2026-01-16 01:30:34.109525339 [I:onnxruntime:, reshape_fusion.cc:37 ApplyImpl] Total fused reshape node count: 1
+2026-01-16 01:30:34.122980009 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/model.28/dfl/Constant_2_output_0'. It is no longer used by any node.
+2026-01-16 01:30:34.123116940 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/model.28/dfl/Constant_3_output_0'. It is no longer used by any node.
+2026-01-16 01:30:34.131294767 [I:onnxruntime:, reshape_fusion.cc:37 ApplyImpl] Total fused reshape node count: 0
+2026-01-16 01:30:34.145798065 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/Gather
+2026-01-16 01:30:34.145919163 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/Unsqueeze_5
+2026-01-16 01:30:34.146000989 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/Concat_6
+2026-01-16 01:30:34.146069272 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/Concat_5
+2026-01-16 01:30:34.146137191 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/Concat_4
+2026-01-16 01:30:34.146204121 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/Concat_2
+2026-01-16 01:30:34.146271467 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/Concat_1
+2026-01-16 01:30:34.146335583 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/Concat
+2026-01-16 01:30:34.146393658 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/dfl/Gather_1
+2026-01-16 01:30:34.146442045 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/dfl/Unsqueeze_3
+2026-01-16 01:30:34.146495901 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/dfl/Gather
+2026-01-16 01:30:34.146540122 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/dfl/Unsqueeze_2
+2026-01-16 01:30:34.146592727 [W:onnxruntime:JetsonProfiler, fallback_cpu_capability.h:140 GetCpuPreferedNodes] Force fallback to CPU execution for node: /model.28/dfl/Concat_1
+2026-01-16 01:30:34.156840154 [I:onnxruntime:, reshape_fusion.cc:37 ApplyImpl] Total fused reshape node count: 0
+2026-01-16 01:30:34.672170765 [I:onnxruntime:, session_state_utils.cc:100 SaveInitializedTensors] Saving initialized tensors.
+2026-01-16 01:30:35.275789023 [I:onnxruntime:, session_state_utils.cc:170 SaveInitializedTensors] [Memory] SessionStateInitializer statically allocates 414977536 bytes for Cuda
+
+2026-01-16 01:30:35.276496703 [I:onnxruntime:, session_state_utils.cc:170 SaveInitializedTensors] [Memory] SessionStateInitializer statically allocates 5376 bytes for Cpu
+
+2026-01-16 01:30:36.172763625 [I:onnxruntime:, session_state_utils.cc:212 SaveInitializedTensors] Done saving initialized tensors
+2026-01-16 01:30:36.313601002 [I:onnxruntime:, inference_session.cc:1256 Initialize] Session successfully initialized.
+[INFO] Model loaded in 20937 ms
+[INFO] Warmup (10 runs)...
+2026-01-16 01:30:36.978942837 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:32.832673198 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 256 bytes for Cpu
+
+2026-01-16 01:31:32.833912354 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 883597504 bytes for Cuda
+
+2026-01-16 01:31:32.834012983 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:32.834048661 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 192 bytes for CUDA_CPU
+
+2026-01-16 01:31:32.923145905 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:35.581443050 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:35.581588159 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:35.581660974 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:35.581723164 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:35.581782645 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:35.591382236 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:38.253612099 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:38.253806429 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:38.253908463 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:38.254001435 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:38.254091230 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:38.263838013 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:40.936465341 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:40.936765716 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:40.936844156 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:40.936906450 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:40.936967546 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:40.946801728 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:43.609649024 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:43.609797206 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:43.609869188 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:43.609985233 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:43.610045340 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:43.618931417 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:46.286675787 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:46.286864804 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:46.286965276 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:46.287056477 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:46.287147782 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:46.297245514 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:48.968981458 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:48.969136203 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:48.969216883 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:48.969294958 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:48.969370482 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:48.982060644 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:51.648167997 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:51.648434569 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:51.648783226 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:51.649559502 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:51.649680339 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:51.661329999 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:54.334743360 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:54.334927272 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:54.335024046 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:54.335113216 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:54.335198791 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:54.345275429 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:57.007069688 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:57.007313030 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:57.007511839 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:57.007633041 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:57.007745805 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+[INFO] Warmup complete
+[INFO] Benchmarking (100 runs)...
+2026-01-16 01:31:57.226269699 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:31:59.898708201 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:31:59.898914458 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:31:59.899022482 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:31:59.899114100 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:31:59.899200665 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:31:59.912036770 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:02.588231265 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:02.588386843 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:02.588466220 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:02.588538775 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:02.588666956 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:02.597489646 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:05.267118333 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:05.267310318 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:05.267411051 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:05.267503398 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:05.267592723 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:05.277349038 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:07.945061811 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:07.945244525 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:07.945344789 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:07.945436198 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:07.945528389 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:07.955714301 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:10.619885585 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:10.619996370 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:10.620049288 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:10.620098248 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:10.620148354 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:10.629910867 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:13.297036972 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:13.297137809 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:13.297181508 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:13.297221197 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:13.297260053 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:13.307321898 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:15.981000185 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:15.981144929 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:15.981228057 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:15.981310247 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:15.981393271 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:15.991132657 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:18.663062535 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:18.663187071 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:18.663251656 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:18.663312700 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:18.663374369 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:18.672733430 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:21.341246043 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:21.341390475 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:21.341467301 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:21.341537251 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:21.341651057 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:21.354756805 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:24.029196422 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:24.029313510 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:24.029370959 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:24.029426690 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:24.029483151 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:24.038899818 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:26.705004506 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:26.705151334 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:26.705226336 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:26.705294568 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:26.705362122 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:26.714043661 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:29.384771403 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:29.384886459 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:29.384940003 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:29.384989744 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:29.385041881 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:29.395858074 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:32.065516338 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:32.065704938 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:32.065802910 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:32.065890257 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:32.065976614 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:32.075749699 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:34.743394235 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:34.743629816 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:34.743818103 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:34.744031079 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:34.744155614 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:34.754600753 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:37.423954080 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:37.424205130 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:37.424337217 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:37.424454044 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:37.424668010 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:37.434688134 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:40.105797649 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:40.105982603 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:40.106084430 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:40.106174485 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:40.106260894 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:40.116059865 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:42.785683690 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:42.785801975 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:42.785858384 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:42.785910573 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:42.785962502 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:42.798026496 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:45.471822996 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:45.471954146 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:45.472026388 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:45.472095088 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:45.472163216 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:45.481205443 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:48.140053880 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:48.140153414 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:48.140226177 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:48.140263626 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:48.140296752 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:48.148799378 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:50.817128427 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:50.817290619 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:50.817383227 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:50.817472500 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:50.817560108 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:50.827710132 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:53.496793044 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:53.496943257 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:53.496997634 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:53.497046698 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:53.497093523 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:53.507126148 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:56.182916403 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:56.183145160 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:56.183273394 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:56.183391627 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:56.183503974 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:56.193984478 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:32:58.861894926 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:32:58.862085296 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:32:58.862182904 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:32:58.862274626 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:32:58.862361764 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:32:58.872051773 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:01.547070462 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:01.547302553 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:01.547434849 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:01.547551780 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:01.547665325 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:01.558638554 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:04.224737557 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:04.224854592 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:04.224908344 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:04.224959283 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:04.225011368 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+[INFO] Progress: 25/100
+2026-01-16 01:33:04.235800319 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:06.897578748 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:06.897667813 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:06.897707971 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:06.897744795 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:06.897779484 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:06.905940535 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:09.575074505 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:09.575230604 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:09.575309617 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:09.575380765 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:09.575450143 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:09.584227621 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:12.254131914 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:12.254288221 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:12.254366453 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:12.254437029 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:12.254503645 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:12.263286645 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:14.941206241 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:14.941386351 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:14.941485000 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:14.941576253 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:14.941665163 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:14.952541929 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:17.627970959 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:17.628232479 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:17.628304929 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:17.628368941 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:17.628431912 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:17.640844459 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:20.308927450 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:20.309043235 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:20.309102300 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:20.309159645 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:20.309217772 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:20.319613012 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:22.984757975 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:22.984959545 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:22.985066215 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:22.985163510 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:22.985254086 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:22.995249885 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:25.668849384 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:25.668999806 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:25.669079757 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:25.669200542 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:25.669271586 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:25.678298447 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:28.348023742 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:28.348274271 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:28.348403077 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:28.348520373 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:28.348737046 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:28.359937105 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:31.029574830 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:31.029721501 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:31.029800671 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:31.029870621 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:31.029937082 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:31.040745460 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:33.712263494 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:33.712359643 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:33.712399279 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:33.712436364 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:33.712471000 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:33.722017254 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:36.385699649 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:36.385853873 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:36.385932730 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:36.386003878 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:36.386073933 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:36.394257172 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:39.069089246 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:39.069230188 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:39.069348109 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:39.069417955 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:39.069485717 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:39.078524662 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:41.752065741 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:41.752208090 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:41.752289863 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:41.752374189 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:41.752459452 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:41.763058970 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:44.436773583 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:44.436901243 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:44.436957391 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:44.437008070 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:44.437058175 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:44.447416487 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:47.115827838 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:47.116057376 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:47.116186599 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:47.116303374 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:47.116415774 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:47.130471135 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:49.812784702 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:49.812913092 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:49.812969083 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:49.813019970 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:49.813070805 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:49.824858799 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:52.500713546 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:52.500949491 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:52.501019754 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:52.501085537 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:52.501154602 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:52.510910550 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:55.185177678 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:55.185327683 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:55.185405498 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:55.185478730 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:55.185550972 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:55.194960866 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:33:57.858146521 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:33:57.858242253 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:33:57.858280015 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:33:57.858313662 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:33:57.858346319 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:33:57.866255435 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:00.534424105 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:00.534545776 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:00.534605466 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:00.534658176 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:00.534707709 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:00.544212606 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:03.229537508 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:03.229785172 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:03.229917052 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:03.230118204 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:03.230234822 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:03.240662563 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:05.909061735 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:05.909191011 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:05.909261221 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:05.909328098 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:05.909393934 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:05.920361901 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:08.594306503 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:08.594458800 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:08.594534271 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:08.594603961 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:08.594673495 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:08.603709210 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:11.276395998 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:11.276832575 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:11.276892577 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:11.276942057 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:11.276989403 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+[INFO] Progress: 50/100
+2026-01-16 01:34:11.288319725 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:13.964589743 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:13.964698549 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:13.964744071 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:13.964783083 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:13.964819699 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:13.973956198 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:16.643764532 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:16.643910422 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:16.643989122 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:16.644060896 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:16.644176004 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:16.653176926 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:19.311965299 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:19.312159628 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:19.312263955 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:19.312356927 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:19.312448180 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:19.321527438 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:21.995539322 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:21.995793966 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:21.995934908 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:21.996054547 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:21.996171634 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:22.007047045 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:24.675589100 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:24.675789003 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:24.675894579 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:24.675990051 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:24.676082033 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:24.685532345 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:27.355249531 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:27.355443079 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:27.355551728 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:27.355649231 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:27.355741109 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:27.365317571 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:30.030062965 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:30.030216616 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:30.030349121 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:30.030424384 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:30.030493501 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:30.039228841 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:32.713367449 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:32.713544851 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:32.713646625 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:32.713737721 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:32.713826214 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:32.722394361 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:35.395246612 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:35.395366408 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:35.395425056 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:35.395483287 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:35.395541674 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:35.404661506 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:38.079549125 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:38.079790539 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:38.079925231 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:38.080048724 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:38.080167947 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:38.091461236 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:40.766786513 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:40.766899589 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:40.766957143 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:40.767011364 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:40.767065793 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:40.776929139 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:43.447255644 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:43.447477579 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:43.447559040 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:43.447630657 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:43.447700763 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:43.455891971 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:46.124393091 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:46.124542732 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:46.124732946 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:46.124772479 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:46.124806751 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:46.133385419 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:48.800739510 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:48.800831180 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:48.800865869 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:48.800899568 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:48.800931288 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:48.811266472 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:51.482975955 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:51.483113512 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:51.483189816 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:51.483260808 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:51.483335030 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:51.493082590 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:54.165425520 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:54.165611151 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:54.165708550 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:54.165800428 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:54.165889025 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:54.176778498 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:56.852456943 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:56.852861279 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:56.852917479 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:56.852969512 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:56.853018055 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:56.865644617 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:34:59.539642264 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:34:59.539836854 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:34:59.539939045 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:34:59.540031444 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:34:59.540119832 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:34:59.549548997 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:02.228296685 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:02.228448357 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:02.228526536 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:02.228652530 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:02.228725501 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:02.238377798 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:04.911233874 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:04.911511696 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:04.911658732 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:04.911781132 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:04.911901552 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:04.923318699 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:07.597275685 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:07.597426783 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:07.597509547 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:07.597583507 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:07.597705334 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:07.606714850 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:10.278202107 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:10.278357737 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:10.278435865 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:10.278505867 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:10.278578161 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:10.287166100 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:12.956508015 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:12.956801983 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:12.956858443 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:12.956909695 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:12.956959696 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:12.966186406 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:15.636624022 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:15.636752985 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:15.636790798 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:15.636825331 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:15.636857832 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:15.646643467 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:18.319138847 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:18.319284060 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:18.319364063 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:18.319438128 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:18.319505370 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+[INFO] Progress: 75/100
+2026-01-16 01:35:18.328049349 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:21.003371947 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:21.003489294 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:21.003584558 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:21.003638987 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:21.003691280 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:21.012606886 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:23.687163561 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:23.687349036 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:23.687452373 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:23.687544303 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:23.687630868 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:23.697029042 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:26.373513270 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:26.373667650 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:26.373746090 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:26.373820103 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:26.373890522 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:26.382539973 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:29.054837229 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:29.054989474 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:29.055069112 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:29.055139895 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:29.055208752 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:29.063707938 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:31.733781619 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:31.733920269 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:31.733991001 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:31.734053607 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:31.734113713 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:31.742801551 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:34.416382108 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:34.416798997 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:34.416888479 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:34.416940876 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:34.416989263 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:34.427990302 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:37.099807665 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:37.099948503 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:37.100020849 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:37.100087882 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:37.100152728 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:37.111204498 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:39.791814222 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:39.792599612 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:39.792710658 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:39.792784723 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:39.792855767 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:39.801831843 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:42.480109500 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:42.480246119 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:42.480324924 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:42.480397843 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:42.480468053 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:42.489448088 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:45.158762471 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:45.158925706 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:45.159003156 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:45.159075190 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:45.159145036 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:45.167933970 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:47.843694179 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:47.843934708 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:47.844069348 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:47.844191227 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:47.844309356 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:47.854790950 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:50.521727420 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:50.521864248 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:50.521931646 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:50.521993054 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:50.522052691 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:50.530380986 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:53.202968933 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:53.203151231 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:53.203260610 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:53.203357644 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:53.203447960 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:53.213749236 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:55.887909880 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:55.888105512 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:55.888209109 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:55.888303174 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:55.888393698 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:55.897678118 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:35:58.576418590 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:35:58.577338932 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:35:58.577427060 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:35:58.577495083 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:35:58.577620244 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:35:58.587319937 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:01.263891005 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:01.264009863 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:01.264072104 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:01.264135023 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:01.264196640 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:01.273771694 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:03.952954138 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:03.953077892 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:03.953140603 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:03.953203521 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:03.953265294 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:03.963014521 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:06.635387668 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:06.635587414 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:06.635692105 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:06.635788411 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:06.635880549 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:06.645616754 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:09.318797782 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:09.318962371 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:09.319046332 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:09.319119460 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:09.319190035 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:09.327434785 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:12.001074360 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:12.001193582 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:12.001257543 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:12.001359734 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:12.001422027 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:12.009976787 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:14.680175926 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:14.680333483 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:14.680414788 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:14.680486926 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:14.680605211 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:14.688811783 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:17.354209347 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:17.354339716 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:17.354407895 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:17.354469252 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:17.354528785 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:17.363062867 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:20.037743122 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:20.037865105 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:20.037923597 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:20.037978599 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:20.038030684 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:20.046689406 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:22.711469482 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:22.711590736 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:22.711649904 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:22.711704073 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:22.711756262 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+2026-01-16 01:36:22.720538738 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 01:36:25.393076923 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 265814016 bytes for Cuda
+
+2026-01-16 01:36:25.393213907 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 192 bytes for Cpu
+
+2026-01-16 01:36:25.393334223 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 64 bytes for CUDA_CPU
+
+2026-01-16 01:36:25.393406361 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 128 bytes for CudaPinned
+
+2026-01-16 01:36:25.393475374 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 32329024 bytes for Cuda
+
+[INFO] Progress: 100/100
+2026-01-16 01:36:25.501930652 [I:onnxruntime:, profiler.cc:98 EndProfiling] Writing profiler data to file profiling_results/yolov3/dynamic_batch4_cuda_onnx_2026-01-16_01-30-15.json
+
+[INFO] Saving results...
+
+[RESULTS]
+  Throughput:       0.37 FPS
+  Latency (mean):  2681.81 ms
+  Latency (P99):   2695.16 ms
+  Jitter:           28.83 ms
+  Variance ratio:  1.01x
+  Power (avg):     0 mW
+  Energy/inf:      0.00 mJ
+  CPU util:        13.0 %
+  GPU util:         98.5 %
+
+[OUTPUT FILES]
+  Metrics:     profiling_results/yolov3/dynamic_batch4_cuda_metrics.json
+  Tegrastats:  profiling_results/yolov3/dynamic_batch4_cuda_tegrastats.json
+  ONNX prof:   profiling_results/yolov3/dynamic_batch4_cuda_onnx_2026-01-16_01-30-15.json
+  Log:         profiling_results/yolov3/dynamic_batch4_cuda.log

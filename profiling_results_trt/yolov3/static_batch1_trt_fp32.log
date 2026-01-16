@@ -1,0 +1,5 @@
+=== Log started:  Fri Jan 16 12:46:20 2026
+=== Config: yolov3 fp32 batch=1 TensorRT
+
+[INFO] TensorRT Provider appended
+[INFO] Loading model...

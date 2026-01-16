@@ -1,0 +1,32 @@
+=== Log started:  Fri Jan 16 12:51:24 2026
+=== Config: unet fp32 batch=1 TensorRT
+
+[INFO] TensorRT Provider appended
+[INFO] Loading model...
+[INFO] Model loaded in 117068 ms
+[INFO] Warmup (10 runs)...
+[INFO] Warmup complete
+[INFO] Benchmarking (100 runs)...
+[INFO] Progress: 25/100
+[INFO] Progress: 50/100
+[INFO] Progress: 75/100
+[INFO] Progress: 100/100
+
+[INFO] Saving results...
+
+[RESULTS]
+  Throughput:       6.01 FPS
+  Latency (mean):  166.29 ms
+  Latency (P50):   165.99 ms
+  Latency (P90):   169.55 ms
+  Latency (P95):   170.67 ms
+  Latency (P99):   172.97 ms
+  Latency (min):   161.21 ms
+  Latency (max):   176.21 ms
+  Jitter:           15.00 ms
+  Variance ratio:   1.09x
+  Max RSS:         1289104 KB
+
+[OUTPUT FILES]
+  Metrics:  profiling_results_trt/unet/static_batch1_trt_fp32_metrics.json
+  Log:      profiling_results_trt/unet/static_batch1_trt_fp32.log

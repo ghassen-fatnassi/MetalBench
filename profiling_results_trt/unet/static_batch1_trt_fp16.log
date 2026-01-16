@@ -1,0 +1,32 @@
+=== Log started:  Fri Jan 16 12:53:43 2026
+=== Config: unet fp16 batch=1 TensorRT
+
+[INFO] TensorRT Provider appended
+[INFO] Loading model...
+[INFO] Model loaded in 64740 ms
+[INFO] Warmup (10 runs)...
+[INFO] Warmup complete
+[INFO] Benchmarking (100 runs)...
+[INFO] Progress: 25/100
+[INFO] Progress: 50/100
+[INFO] Progress: 75/100
+[INFO] Progress: 100/100
+
+[INFO] Saving results...
+
+[RESULTS]
+  Throughput:       6.16 FPS
+  Latency (mean):  162.37 ms
+  Latency (P50):   162.41 ms
+  Latency (P90):   165.06 ms
+  Latency (P95):   166.46 ms
+  Latency (P99):   168.41 ms
+  Latency (min):   157.00 ms
+  Latency (max):   173.45 ms
+  Jitter:           16.45 ms
+  Variance ratio:   1.10x
+  Max RSS:         1289104 KB
+
+[OUTPUT FILES]
+  Metrics:  profiling_results_trt/unet/static_batch1_trt_fp16_metrics.json
+  Log:      profiling_results_trt/unet/static_batch1_trt_fp16.log

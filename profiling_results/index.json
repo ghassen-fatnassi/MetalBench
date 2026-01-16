@@ -1,0 +1,317 @@
+{
+  "profiling_config": {
+    "warmup_runs":  10,
+    "benchmark_runs":  100,
+    "tegrastats_interval_ms": 100
+  },
+  "runs": [
+    {
+      "model": "yolov3",
+      "variant":  "static",
+      "batch_size": 1,
+      "provider": "cuda",
+      "files": {
+        "metrics": "yolov3/static_batch1_cuda_metrics.json",
+        "tegrastats": "yolov3/static_batch1_cuda_tegrastats.json",
+        "log": "yolov3/static_batch1_cuda.log"
+      }
+    },
+    {
+      "model": "yolov3",
+      "variant":  "dynamic",
+      "batch_size": 1,
+      "provider": "cuda",
+      "files": {
+        "metrics": "yolov3/dynamic_batch1_cuda_metrics.json",
+        "tegrastats": "yolov3/dynamic_batch1_cuda_tegrastats.json",
+        "log": "yolov3/dynamic_batch1_cuda.log"
+      }
+    },
+    {
+      "model": "yolov3",
+      "variant":  "dynamic",
+      "batch_size": 2,
+      "provider": "cuda",
+      "files": {
+        "metrics": "yolov3/dynamic_batch2_cuda_metrics.json",
+        "tegrastats": "yolov3/dynamic_batch2_cuda_tegrastats.json",
+        "log": "yolov3/dynamic_batch2_cuda.log"
+      }
+    },
+    {
+      "model": "yolov3",
+      "variant":  "dynamic",
+      "batch_size": 4,
+      "provider": "cuda",
+      "files": {
+        "metrics": "yolov3/dynamic_batch4_cuda_metrics.json",
+        "tegrastats": "yolov3/dynamic_batch4_cuda_tegrastats.json",
+        "log": "yolov3/dynamic_batch4_cuda.log"
+      }
+    },
+    {
+      "model": "yolov3",
+      "variant":  "static",
+      "batch_size": 1,
+      "provider": "cpu",
+      "files": {
+        "metrics": "yolov3/static_batch1_cpu_metrics.json",
+        "tegrastats": "yolov3/static_batch1_cpu_tegrastats.json",
+        "log": "yolov3/static_batch1_cpu.log"
+      }
+    },
+    {
+      "model": "yolov3",
+      "variant":  "dynamic",
+      "batch_size": 1,
+      "provider": "cpu",
+      "files": {
+        "metrics": "yolov3/dynamic_batch1_cpu_metrics.json",
+        "tegrastats": "yolov3/dynamic_batch1_cpu_tegrastats.json",
+        "log": "yolov3/dynamic_batch1_cpu.log"
+      }
+    },
+    {
+      "model": "yolov3",
+      "variant":  "dynamic",
+      "batch_size": 2,
+      "provider": "cpu",
+      "files": {
+        "metrics": "yolov3/dynamic_batch2_cpu_metrics.json",
+        "tegrastats": "yolov3/dynamic_batch2_cpu_tegrastats.json",
+        "log": "yolov3/dynamic_batch2_cpu.log"
+      }
+    },
+    {
+      "model": "yolov3",
+      "variant":  "dynamic",
+      "batch_size": 4,
+      "provider": "cpu",
+      "files": {
+        "metrics": "yolov3/dynamic_batch4_cpu_metrics.json",
+        "tegrastats": "yolov3/dynamic_batch4_cpu_tegrastats.json",
+        "log": "yolov3/dynamic_batch4_cpu.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "static",
+      "batch_size": 1,
+      "provider": "cuda",
+      "files": {
+        "metrics": "unet/static_batch1_cuda_metrics.json",
+        "tegrastats": "unet/static_batch1_cuda_tegrastats.json",
+        "log": "unet/static_batch1_cuda.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "dynamic",
+      "batch_size": 1,
+      "provider": "cuda",
+      "files": {
+        "metrics": "unet/dynamic_batch1_cuda_metrics.json",
+        "tegrastats": "unet/dynamic_batch1_cuda_tegrastats.json",
+        "log": "unet/dynamic_batch1_cuda.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "dynamic",
+      "batch_size": 2,
+      "provider": "cuda",
+      "files": {
+        "metrics": "unet/dynamic_batch2_cuda_metrics.json",
+        "tegrastats": "unet/dynamic_batch2_cuda_tegrastats.json",
+        "log": "unet/dynamic_batch2_cuda.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "dynamic",
+      "batch_size": 4,
+      "provider": "cuda",
+      "files": {
+        "metrics": "unet/dynamic_batch4_cuda_metrics.json",
+        "tegrastats": "unet/dynamic_batch4_cuda_tegrastats.json",
+        "log": "unet/dynamic_batch4_cuda.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "dynamic",
+      "batch_size": 8,
+      "provider": "cuda",
+      "files": {
+        "metrics": "unet/dynamic_batch8_cuda_metrics.json",
+        "tegrastats": "unet/dynamic_batch8_cuda_tegrastats.json",
+        "log": "unet/dynamic_batch8_cuda.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "static",
+      "batch_size": 1,
+      "provider": "cpu",
+      "files": {
+        "metrics": "unet/static_batch1_cpu_metrics.json",
+        "tegrastats": "unet/static_batch1_cpu_tegrastats.json",
+        "log": "unet/static_batch1_cpu.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "dynamic",
+      "batch_size": 1,
+      "provider": "cpu",
+      "files": {
+        "metrics": "unet/dynamic_batch1_cpu_metrics.json",
+        "tegrastats": "unet/dynamic_batch1_cpu_tegrastats.json",
+        "log": "unet/dynamic_batch1_cpu.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "dynamic",
+      "batch_size": 2,
+      "provider": "cpu",
+      "files": {
+        "metrics": "unet/dynamic_batch2_cpu_metrics.json",
+        "tegrastats": "unet/dynamic_batch2_cpu_tegrastats.json",
+        "log": "unet/dynamic_batch2_cpu.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "dynamic",
+      "batch_size": 4,
+      "provider": "cpu",
+      "files": {
+        "metrics": "unet/dynamic_batch4_cpu_metrics.json",
+        "tegrastats": "unet/dynamic_batch4_cpu_tegrastats.json",
+        "log": "unet/dynamic_batch4_cpu.log"
+      }
+    },
+    {
+      "model": "unet",
+      "variant":  "dynamic",
+      "batch_size": 8,
+      "provider": "cpu",
+      "files": {
+        "metrics": "unet/dynamic_batch8_cpu_metrics.json",
+        "tegrastats": "unet/dynamic_batch8_cpu_tegrastats.json",
+        "log": "unet/dynamic_batch8_cpu.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "static",
+      "batch_size": 1,
+      "provider": "cuda",
+      "files": {
+        "metrics": "mobilenetv2/static_batch1_cuda_metrics.json",
+        "tegrastats": "mobilenetv2/static_batch1_cuda_tegrastats.json",
+        "log": "mobilenetv2/static_batch1_cuda.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "dynamic",
+      "batch_size": 1,
+      "provider": "cuda",
+      "files": {
+        "metrics": "mobilenetv2/dynamic_batch1_cuda_metrics.json",
+        "tegrastats": "mobilenetv2/dynamic_batch1_cuda_tegrastats.json",
+        "log": "mobilenetv2/dynamic_batch1_cuda.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "dynamic",
+      "batch_size": 2,
+      "provider": "cuda",
+      "files": {
+        "metrics": "mobilenetv2/dynamic_batch2_cuda_metrics.json",
+        "tegrastats": "mobilenetv2/dynamic_batch2_cuda_tegrastats.json",
+        "log": "mobilenetv2/dynamic_batch2_cuda.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "dynamic",
+      "batch_size": 4,
+      "provider": "cuda",
+      "files": {
+        "metrics": "mobilenetv2/dynamic_batch4_cuda_metrics.json",
+        "tegrastats": "mobilenetv2/dynamic_batch4_cuda_tegrastats.json",
+        "log": "mobilenetv2/dynamic_batch4_cuda.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "dynamic",
+      "batch_size": 8,
+      "provider": "cuda",
+      "files": {
+        "metrics": "mobilenetv2/dynamic_batch8_cuda_metrics.json",
+        "tegrastats": "mobilenetv2/dynamic_batch8_cuda_tegrastats.json",
+        "log": "mobilenetv2/dynamic_batch8_cuda.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "static",
+      "batch_size": 1,
+      "provider": "cpu",
+      "files": {
+        "metrics": "mobilenetv2/static_batch1_cpu_metrics.json",
+        "tegrastats": "mobilenetv2/static_batch1_cpu_tegrastats.json",
+        "log": "mobilenetv2/static_batch1_cpu.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "dynamic",
+      "batch_size": 1,
+      "provider": "cpu",
+      "files": {
+        "metrics": "mobilenetv2/dynamic_batch1_cpu_metrics.json",
+        "tegrastats": "mobilenetv2/dynamic_batch1_cpu_tegrastats.json",
+        "log": "mobilenetv2/dynamic_batch1_cpu.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "dynamic",
+      "batch_size": 2,
+      "provider": "cpu",
+      "files": {
+        "metrics": "mobilenetv2/dynamic_batch2_cpu_metrics.json",
+        "tegrastats": "mobilenetv2/dynamic_batch2_cpu_tegrastats.json",
+        "log": "mobilenetv2/dynamic_batch2_cpu.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "dynamic",
+      "batch_size": 4,
+      "provider": "cpu",
+      "files": {
+        "metrics": "mobilenetv2/dynamic_batch4_cpu_metrics.json",
+        "tegrastats": "mobilenetv2/dynamic_batch4_cpu_tegrastats.json",
+        "log": "mobilenetv2/dynamic_batch4_cpu.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "variant":  "dynamic",
+      "batch_size": 8,
+      "provider": "cpu",
+      "files": {
+        "metrics": "mobilenetv2/dynamic_batch8_cpu_metrics.json",
+        "tegrastats": "mobilenetv2/dynamic_batch8_cpu_tegrastats.json",
+        "log": "mobilenetv2/dynamic_batch8_cpu.log"
+      }
+    }
+  ]
+}

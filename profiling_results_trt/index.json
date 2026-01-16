@@ -1,0 +1,49 @@
+{
+  "profiling_config": {
+    "warmup_runs":  10,
+    "benchmark_runs":  100,
+    "execution_provider": "tensorrt"
+  },
+  "runs": [
+    {
+      "model": "unet",
+      "precision":  "fp32",
+      "batch_size": 1,
+      "provider":  "tensorrt",
+      "files": {
+        "metrics": "unet/static_batch1_trt_fp32_metrics.json",
+        "log": "unet/static_batch1_trt_fp32.log"
+      }
+    },
+    {
+      "model": "unet",
+      "precision":  "fp16",
+      "batch_size": 1,
+      "provider":  "tensorrt",
+      "files": {
+        "metrics": "unet/static_batch1_trt_fp16_metrics.json",
+        "log": "unet/static_batch1_trt_fp16.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "precision":  "fp32",
+      "batch_size": 1,
+      "provider":  "tensorrt",
+      "files": {
+        "metrics": "mobilenetv2/static_batch1_trt_fp32_metrics.json",
+        "log": "mobilenetv2/static_batch1_trt_fp32.log"
+      }
+    },
+    {
+      "model": "mobilenetv2",
+      "precision":  "fp16",
+      "batch_size": 1,
+      "provider":  "tensorrt",
+      "files": {
+        "metrics": "mobilenetv2/static_batch1_trt_fp16_metrics.json",
+        "log": "mobilenetv2/static_batch1_trt_fp16.log"
+      }
+    }
+  ]
+}

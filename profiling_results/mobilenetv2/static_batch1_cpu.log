@@ -1,0 +1,661 @@
+=== Log started:  Fri Jan 16 03:33:45 2026
+=== Config: mobilenetv2 static batch=1 cpu
+
+[INFO] Using CPU Execution Provider
+[INFO] Loading model...
+2026-01-16 03:33:45.234413688 [I:onnxruntime:, inference_session.cc:230 ConstructorCommon] Creating and using per session threadpools since use_per_session_threads_ is true
+2026-01-16 03:33:45.258336443 [I:onnxruntime:, inference_session.cc:1081 Initialize] Initializing session.
+2026-01-16 03:33:45.258414310 [I:onnxruntime:, inference_session.cc:1106 Initialize] Adding default CPU execution provider.
+2026-01-16 03:33:45.259749509 [I:onnxruntime:, reshape_fusion.cc:37 ApplyImpl] Total fused reshape node count: 0
+2026-01-16 03:33:45.262070470 [I:onnxruntime:, reshape_fusion.cc:37 ApplyImpl] Total fused reshape node count: 0
+2026-01-16 03:33:45.267138863 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.18/features.18.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267223710 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.18/features.18.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267260065 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.17/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267291525 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.16/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267320067 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.16/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267349599 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.0/features.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267378715 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.6/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267408612 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.3/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267437050 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.4/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267468718 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.4/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267499500 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.4/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267529918 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.16/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267559398 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.13/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267588357 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.10/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267617473 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.3/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267645442 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.6/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267673620 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.1/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267745862 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.9/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267778259 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.4/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267807166 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.15/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267835344 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.11/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267862845 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.5/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267891284 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.8/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267919878 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.12/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267948473 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.8/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.267978995 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.2/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268007277 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.10/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268034309 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.5/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268061289 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.8/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268089728 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.9/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268116760 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.2/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268144990 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.14/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268174991 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.17/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268206294 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.13/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268236086 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.17/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268264056 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.16/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268291557 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.0/features.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268338486 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.7/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268368539 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.14/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268395675 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.1/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268424218 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.17/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268451198 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.2/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268479324 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.2/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268507085 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.3/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268533492 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.3/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268595786 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.5/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268632193 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.10/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268663496 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.5/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268692143 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.11/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268720321 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.14/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268749749 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.6/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268778344 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.6/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268804803 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.7/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268832200 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.15/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268858815 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.7/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268885899 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.8/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268914077 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.9/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268961631 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.9/conv/conv.1/conv.1.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.268991736 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.10/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269018560 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.11/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269045956 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.11/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269073926 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.12/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269100906 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.12/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269128042 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.7/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269155023 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.12/conv/conv.1/conv.1.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269187211 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.13/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269216639 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.13/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269245182 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.14/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269274349 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.15/conv/conv.0/conv.0.2/Constant_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.269303725 [I:onnxruntime:, graph.cc:3096 CleanUnusedInitializers] Removing initializer '/features/features.15/conv/conv.0/conv.0.2/Constant_1_output_0'. It is no longer used by any node.
+2026-01-16 03:33:45.283917637 [I:onnxruntime:, session_state_utils.cc:100 SaveInitializedTensors] Saving initialized tensors.
+2026-01-16 03:33:45.284374318 [I:onnxruntime:, session_state_utils.cc:170 SaveInitializedTensors] [Memory] SessionStateInitializer statically allocates 13955072 bytes for Cpu
+
+2026-01-16 03:33:45.299937844 [I:onnxruntime:, session_state_utils.cc:212 SaveInitializedTensors] Done saving initialized tensors
+2026-01-16 03:33:45.307866955 [I:onnxruntime:, inference_session.cc:1256 Initialize] Session successfully initialized.
+[INFO] Model loaded in 74 ms
+[INFO] Warmup (10 runs)...
+2026-01-16 03:33:45.350214943 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:45.433933178 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 19446080 bytes for Cpu
+
+2026-01-16 03:33:45.434164227 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:45.512964231 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:45.513057307 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:45.513259553 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:45.592735151 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:45.592817237 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:45.592991513 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:45.673879709 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:45.674252273 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:45.674647234 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:45.756843962 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:45.757204338 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:45.757589559 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:45.837883257 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:45.838254102 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:45.838636198 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:45.917862152 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:45.918229352 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:45.918615302 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.012532357 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.012916276 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.013108991 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.092259162 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.092356977 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.092535316 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.173877381 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.178150488 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+[INFO] Warmup complete
+[INFO] Benchmarking (100 runs)...
+2026-01-16 03:33:46.379570405 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.471757197 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.472130490 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.472342997 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.558881116 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.558979661 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.559178105 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.647984422 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.648356934 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.648816688 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.727597472 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.727695132 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.727882481 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.809345904 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.809710343 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.810107544 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.899817953 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.899925352 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.900115358 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:46.983089872 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:46.983461915 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:46.983674995 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.066562839 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.066662269 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.066850296 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.153824575 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.154200212 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.154923725 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.236135161 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.236235528 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.236422514 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.322814794 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.322913079 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.323105741 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.412070501 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.412445461 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.412876673 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.498028757 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.498149438 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.498336267 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.584213115 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.584312389 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.584500259 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.670198715 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.670295906 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.670482683 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.751317023 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.751670368 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.751882354 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.833475729 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.833569951 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.833777874 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.913735206 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.913826616 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.914009851 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:47.994859868 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:47.994957111 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:47.995143627 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.079752673 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.079843509 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.080026328 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.164785274 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.165135234 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.165530194 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.246103067 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.246475007 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.246867051 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.329463687 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.329832658 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.330250379 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.413408701 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.413776890 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.414171538 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.496426914 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.496837188 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+[INFO] Progress: 25/100
+2026-01-16 03:33:48.497484031 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.586457542 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.586553586 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.586741457 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.671031013 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.671402432 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.671797913 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.751951867 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.752045880 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.752231459 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.836474868 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.836855088 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.837249841 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:48.919632616 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:48.920005233 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:48.920394204 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.005622228 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.005717127 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.005905674 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.089297962 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.089386715 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.089573544 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.173628926 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.173997115 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.174435202 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.253841996 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.254207893 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.255532780 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.336184457 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.336571762 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.336980629 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.416920305 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.417287712 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.417677725 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.497608129 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.497976631 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.498364404 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.583999681 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.584367922 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.584791373 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.664189052 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.664576773 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.664978713 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.750615032 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.750997648 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.751409849 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.832259137 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.832652744 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.833051767 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.915569443 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.915930601 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.916328999 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:49.998681826 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:49.999052671 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:49.999445601 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.086043148 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.086412796 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.086803798 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.167792049 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.168157061 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.168654004 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.255366816 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.255755683 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.256178144 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.341703470 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.342071971 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.342465474 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.426414029 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.426779718 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.427174158 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.509185359 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.509548548 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.509942884 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.594124311 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.594501771 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+[INFO] Progress: 50/100
+2026-01-16 03:33:50.595127781 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.674097634 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.674467958 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.674857242 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.755242348 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.755612100 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.756005550 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.837282248 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.837650177 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.838040658 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:50.922189064 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:50.922585067 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:50.923005549 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.007887156 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.008251855 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.008751559 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.088043661 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.088390339 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.088834468 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.170453260 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.170811397 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.171200941 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.260915569 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.261279695 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.261673875 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.343190841 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.343560957 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.343957272 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.423915334 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.424284564 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.424719422 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.507054019 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.507420802 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.507814513 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.591263260 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.591632283 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.592026045 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.674395852 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.674762218 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.675158741 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.762656214 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.763053466 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.763443739 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.845751148 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.846123504 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.846539819 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:51.929472404 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:51.929840750 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:51.930242898 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.016724453 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.017068057 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.017457653 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.099086550 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.100043404 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.100461803 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.185497738 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.185864260 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.186257033 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.268377821 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.268797627 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.269202848 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.351935062 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.352307418 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.352717014 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.436042164 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.436416447 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.436838701 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.519584769 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.519958636 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.520350159 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.605441564 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.605792044 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.606216745 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.687678345 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.688048617 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+[INFO] Progress: 75/100
+2026-01-16 03:33:52.688703847 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.771573201 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.771940452 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.772332392 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.854204057 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.854572611 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.854967207 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:52.938249960 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:52.939003213 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:52.939420623 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.022140545 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.022509515 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.022899424 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.106521875 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.106891418 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.107283670 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.191063783 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.191434420 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.191824016 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.380956451 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.381317400 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.381711007 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.489835034 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.490202285 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.490601725 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.571988531 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.572354220 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.572785276 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.655293628 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.655662911 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.656055945 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.738691124 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.739064001 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.739458857 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.825402842 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.825769781 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.826158804 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.906770741 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.907141639 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.907536131 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:53.989661085 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:53.990024743 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:53.990422464 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.070459434 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.070825957 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.071219980 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.152160261 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.152526939 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.152954505 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.238094402 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.238467174 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.238857760 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.319134790 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.319506677 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.319894762 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.401814711 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.402183577 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.402577860 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.482693635 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.483082762 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.483476161 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.565861957 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.566210927 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.566600627 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.654552385 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.654915418 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.655310274 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.740944822 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.741307594 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.741706826 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.822685337 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.823054203 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+2026-01-16 03:33:54.823449529 [I:onnxruntime:, sequential_executor.cc:157 Execute] Begin execution
+2026-01-16 03:33:54.908421034 [I:onnxruntime:, sequential_executor.cc:469 Execute] [Memory] ExecutionFrame statically allocates 6823936 bytes for Cpu
+
+2026-01-16 03:33:54.908816255 [I:onnxruntime:, sequential_executor.cc:474 Execute] [Memory] ExecutionFrame dynamically allocates 4032 bytes for Cpu
+
+[INFO] Progress: 100/100
+2026-01-16 03:33:55.034782527 [I:onnxruntime:, profiler.cc:98 EndProfiling] Writing profiler data to file profiling_results/mobilenetv2/static_batch1_cpu_onnx_2026-01-16_03-33-45.json
+
+[INFO] Saving results...
+
+[RESULTS]
+  Throughput:       11.72 FPS
+  Latency (mean):  85.28 ms
+  Latency (P99):   109.69 ms
+  Jitter:           110.82 ms
+  Variance ratio:  2.40x
+  Power (avg):     0 mW
+  Energy/inf:      0.00 mJ
+  CPU util:        98.5 %
+  GPU util:         0.0 %
+
+[OUTPUT FILES]
+  Metrics:     profiling_results/mobilenetv2/static_batch1_cpu_metrics.json
+  Tegrastats:  profiling_results/mobilenetv2/static_batch1_cpu_tegrastats.json
+  ONNX prof:   profiling_results/mobilenetv2/static_batch1_cpu_onnx_2026-01-16_03-33-45.json
+  Log:         profiling_results/mobilenetv2/static_batch1_cpu.log
